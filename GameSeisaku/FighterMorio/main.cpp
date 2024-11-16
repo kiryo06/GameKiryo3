@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	FILE* in = 0; freopen_s(&in, "CON", "r", stdin);   // stdin
 #endif
 	// フルスクリーンでなく、ウィンドウモードで開くようにする
-	ChangeWindowMode(Game::kDefaulWindowMode);
+	ChangeWindowMode(Game::kDefaultWindowMode);
 
 	// 画面のサイズを変更する。第三引数は色に使う情報量(ビット)
 	SetGraphMode(Game::kScreenWidth, Game::kScreenHeight, Game::kScreenBitNum);

@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "Application.h"/*
 #include "DxLib.h"
 #include <cassert>
 #include "game.h"
@@ -99,3 +99,4 @@ const Size& Application::GetWindowSize() const
 {
 	return windowSize_;
 }
+*/
