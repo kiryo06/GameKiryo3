@@ -35,6 +35,4 @@ public:
 	void Terminate();
 
 	const Size& GetWindowSize() const;
-};
-
-*/
+};*/

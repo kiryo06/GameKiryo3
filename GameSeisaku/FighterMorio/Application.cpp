@@ -98,5 +98,4 @@ void Application::Terminate()
 const Size& Application::GetWindowSize() const
 {
 	return windowSize_;
-}
-*/
+}*/

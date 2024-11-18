@@ -1,33 +1,11 @@
-/*
+#include "DxLib.h"
+#include "Screen.h"
 #include "Map.h"
-// プレイヤー
-//#include "Player.h"
-//#include "PlayerLight.h"
+#include "Camera.h"
+#include "game.h"
+#include "MapDate.h"
 
-// ギミック
-//#include "Wall.h"
-//#include "InColorFloor.h"
-//#include "OutColorFloor.h"
-//#include "DirWall.h"
-//#include "GoalPoint.h"
-
-// エフェクト
-//#include "EfectColor.h"
-
-// サウンド
-//#include "Sound.h"
-
-// BG
-//#include "GameBg.h"
-
-// ファイルデータ
-//#include "FileQuickTime.h"
-
-// プレイヤーカラーのBg
-//#include "pColorBg.h"
-
-//#include <cassert>
-
+#if 0
 Map::Map()
 {
 	for (int i = 0; i < kChipNumY; i++)
@@ -38,34 +16,11 @@ Map::Map()
 		}
 	}
 
-//	std::vector <std::shared_ptr<BaseMapChip>> temp;
-//	temp.push_back(std::make_shared<BaseMapChip>(0));
-//	m_chipData.push_back(temp);
-
+	std::vector <std::shared_ptr<BaseMapChip>> temp;
+	temp.push_back(std::make_shared<BaseMapChip>(0));
+	m_chipData.push_back(temp);
 }
-
-Map::~Map()
-{
-}
-
-void Map::Init(int mapNum)
-{
-}
-
-void Map::Update()
-{
-}
-
-void Map::Draw()
-{
-}
-*/
-
-
-#include "DxLib.h"
-#include "Screen.h"
-#include "Map.h"
-#include "Camera.h"
+#endif
 
 /// <summary>
 /// マップデータ TODO: 外部データ化
@@ -90,6 +45,8 @@ const int MapData[MapHeight][MapWidth] =
 	1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,1,
 	1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1,
 };
+
+constexpr int kStage[Game::kStageNum][kChipNumY][kChipNumX];
 
 /// <summary>
 /// マップ情報初期化

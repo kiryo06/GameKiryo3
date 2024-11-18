@@ -26,7 +26,7 @@ namespace Game
 //	constexpr int kColorDepth = 32;        //16 or 32
 
 	// ステージ数(サンプルステージ含む)
-	constexpr int kStageNum = 3;
+	constexpr int kStageNum = 1;
 
 	// BGMの数
 //	constexpr int kBGMNum = 4;
