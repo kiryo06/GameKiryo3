@@ -1,3 +1,4 @@
+/*
 //-----------------------------------------------------------------------------
 // 2024 Takeru Yui All Rights Reserved.
 //-----------------------------------------------------------------------------
@@ -319,3 +320,4 @@ void DrawPlayer(const Player& player, const Camera& camera)
 		rightBottom + static_cast<int>(camera.drawOffset.y),
 		GetColor(255, 0, 0), TRUE);
 }
+*/

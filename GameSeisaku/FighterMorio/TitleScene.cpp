@@ -33,7 +33,8 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
+	DrawBox(0, 0, 1280, 640, 0x00baa0, true);
 	DrawFormatString(0, 0, 0xffffff, "TitleScene", true);
-	DrawRotaGraph(640, 300, 0.8 , 0 , m_Graph,TRUE);
-//	DrawBox(100, 100, 640, 640,0x00aaaa, true);
+	DrawFormatString(550, 500, 0xffffff, "ZÉLÅ[ÇâüÇµÇƒÇ≠ÇæÇ≥Ç¢", true);
+	DrawRotaGraph(640, 225, 0.5 , 0 , m_Graph,TRUE);
 }

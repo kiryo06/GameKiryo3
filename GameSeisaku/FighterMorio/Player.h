@@ -1,11 +1,7 @@
+/*
 #pragma once
 #include <memory>
 #include "Rect.h"
-/*
-class Player
-{
-};
-*/
 
 //-----------------------------------------------------------------------------
 // 2024 Takeru Yui All Rights Reserved.
@@ -45,3 +41,4 @@ bool IsHitPlayerWithMapChip(const Player& player, const VECTOR& futurePos, const
 void CheckIsTopHit(Player& player, const Map& map);
 void CheckIsGround(Player& player, const Map& map);
 void DrawPlayer(const Player& player, const Camera& camera);
+*/

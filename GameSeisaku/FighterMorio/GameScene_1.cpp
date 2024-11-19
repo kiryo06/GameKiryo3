@@ -5,6 +5,7 @@
 #include "DxLib.h"
 #include "Pad.h"
 
+
 GameScene_1::GameScene_1(SceneManager& manager) : BaseScene(manager)
 {
 }

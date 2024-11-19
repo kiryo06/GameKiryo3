@@ -1,6 +1,6 @@
 #pragma once
 
-struct Player;
+//struct Player;
 struct Camera
 {
 	VECTOR pos;				// 実際のカメラのポジション
@@ -8,4 +8,4 @@ struct Camera
 };
 
 void InitCamera(Camera& camera);
-void UpdateCamera(Camera& camera, const Player& player);
+void UpdateCamera(Camera& camera/*, const Player& player*/);

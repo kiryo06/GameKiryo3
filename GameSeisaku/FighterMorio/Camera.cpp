@@ -1,8 +1,9 @@
 #include <cmath>
 #include "DxLib.h"
 #include "Camera.h"
-#include "Player.h"
+//#include "Player.h"
 #include "Screen.h"
+#define PLAYER 100
 
 // カメラ範囲
 const float CameraScopeRangeW = 400.0f;
@@ -19,32 +20,31 @@ VECTOR VLerp(VECTOR start, VECTOR end, float t)
 	ret.z = std::lerp(start.z, end.z, t);
 	return ret;
 }
-
 void InitCamera(Camera& camera)
 {
 	camera.pos = VGet(0, 0, 0);
 }
 
-void UpdateCamera(Camera& camera, const Player& player)
+void UpdateCamera(Camera& camera/*, const Player& player*/)
 {
 	// プレイヤーの位置が、カメラの中央から一定以上離れたら
 	// カメラの「目標」ポジションをその範囲内に留める
 	VECTOR aimCameraPos = camera.pos;
-	if (player.pos.x > camera.pos.x + (CameraScopeRangeW * 0.5f))
+	if (/*player.pos.x*/PLAYER > camera.pos.x + (CameraScopeRangeW * 0.5f))
 	{
-		aimCameraPos.x = player.pos.x - (CameraScopeRangeW * 0.5f);
+		aimCameraPos.x = /*player.pos.x*/PLAYER - (CameraScopeRangeW * 0.5f);
 	}
-	else if (player.pos.x < camera.pos.x - (CameraScopeRangeW * 0.5f))
+	else if (/*player.pos.x*/PLAYER < camera.pos.x - (CameraScopeRangeW * 0.5f))
 	{
-		aimCameraPos.x = player.pos.x + (CameraScopeRangeW * 0.5f);
+		aimCameraPos.x = /*player.pos.x*/PLAYER + (CameraScopeRangeW * 0.5f);
 	}
-	if (player.pos.y > camera.pos.y + (CameraScopeRangeH * 0.5f))
+	if (/*player.pos.y*/PLAYER > camera.pos.y + (CameraScopeRangeH * 0.5f))
 	{
-		aimCameraPos.y = player.pos.y - (CameraScopeRangeH * 0.5f);
+		aimCameraPos.y = /*player.pos.y*/PLAYER - (CameraScopeRangeH * 0.5f);
 	}
-	else if (player.pos.y < camera.pos.y - (CameraScopeRangeH * 0.5f))
+	else if (/*player.pos.y*/PLAYER < camera.pos.y - (CameraScopeRangeH * 0.5f))
 	{
-		aimCameraPos.y = player.pos.y + (CameraScopeRangeH * 0.5f);
+		aimCameraPos.y = /*player.pos.y*/PLAYER + (CameraScopeRangeH * 0.5f);
 	}
 
 	// 目標ポジションに、Lerpを使ってカメラポジションを近づける

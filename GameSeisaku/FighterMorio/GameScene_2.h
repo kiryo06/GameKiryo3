@@ -2,7 +2,6 @@
 #include "BaseScene.h"
 
 #include "game.h"
-#include "MapDate.h"
 class SceneManager;
 class GameScene_2 : public BaseScene
 {
