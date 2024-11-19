@@ -6,15 +6,14 @@
 #include "Pad.h"
 
 #include "Screen.h"
+#include "Camera.h"
 //#include "Player.h"
-//#include "Camera.h"
-
-
-//Camera camera;
+#include "Map.h"
+#include "MapData.h"
+Camera camera;
 //Player player;
-//Map map;
-//MapDate& mapdate;
-
+Map* pMap = new Map();
+Map map;
 
 GameScene::GameScene(SceneManager& manager) : BaseScene(manager)
 {
@@ -26,9 +25,9 @@ GameScene::~GameScene()
 
 void GameScene::Init()
 {
-	//InitCamera(camera);
+	InitCamera(camera);
 	//InitPlayer(player);
-	//InitMap(mapdate);
+	pMap->Init();
 
 }
 void GameScene::Update()
@@ -46,7 +45,7 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	//DrawPlayer(player, camera);
-	//DrawMap(mapdate, camera);
+	pMap->Draw(camera);
 	DrawFormatString(0, 0, 0xffffff, "GameScene",true);
-	DrawBox(100, 100, 640, 640, 0xaaaa00, true);
+	//DrawBox(100, 100, 640, 640, 0xaaaa00, true);
 }
