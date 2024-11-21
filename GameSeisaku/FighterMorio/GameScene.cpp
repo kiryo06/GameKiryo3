@@ -7,13 +7,11 @@
 
 #include "Screen.h"
 #include "Camera.h"
-//#include "Player.h"
 #include "Map.h"
 #include "MapData.h"
+
 Camera camera;
-//Player player;
 Map* pMap = new Map();
-Map map;
 
 GameScene::GameScene(SceneManager& manager) : BaseScene(manager)
 {
@@ -26,7 +24,6 @@ GameScene::~GameScene()
 void GameScene::Init()
 {
 	InitCamera(camera);
-	//InitPlayer(player);
 	pMap->Init();
 
 }

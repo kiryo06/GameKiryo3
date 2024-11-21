@@ -7,9 +7,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	/*コンソールDebug用*/
 #ifdef _DEBUG
-	AllocConsole();                                        // コンソール
-	FILE* out = 0; freopen_s(&out, "CON", "w", stdout); // stdout
-	FILE* in = 0; freopen_s(&in, "CON", "r", stdin);   // stdin
+	AllocConsole();        // コンソール
+	FILE* out = 0; 
+	freopen_s(&out, "CON", "w", stdout); // stdout
+	FILE* in = 0; 
+	freopen_s(&in, "CON", "r", stdin);   // stdin
 #endif
 	// フルスクリーンでなく、ウィンドウモードで開くようにする
 	ChangeWindowMode(Game::kDefaultWindowMode);
