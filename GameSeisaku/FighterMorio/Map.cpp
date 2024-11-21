@@ -13,6 +13,8 @@ void Map::Init()
 			PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData[hChip][wChip];
 			PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;
 			PrototypeChipData[hChip][wChip].h = MapDataFile::kChipHeight;
+			PrototypeChipData[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;
+			PrototypeChipData[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;
 		}
 	}
 }
@@ -34,6 +36,7 @@ void Map::Draw(Camera& camera)
 				auto leftBottom = static_cast<int>(PrototypeChipData[hChip][wChip].pos.y - PrototypeChipData[hChip][wChip].h * 0.5f);
 				auto rightTop = static_cast<int>(PrototypeChipData[hChip][wChip].pos.x + PrototypeChipData[hChip][wChip].w * 0.5f);
 				auto rightBottom = static_cast<int>(PrototypeChipData[hChip][wChip].pos.y + PrototypeChipData[hChip][wChip].h * 0.5f);
+
 				DrawBox(
 					leftTop + static_cast<int>(camera.drawOffset.x),
 					leftBottom + static_cast<int>(camera.drawOffset.y),

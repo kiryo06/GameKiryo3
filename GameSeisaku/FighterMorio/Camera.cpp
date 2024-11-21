@@ -3,7 +3,7 @@
 #include "Camera.h"
 //#include "Player.h"
 #include "Screen.h"
-#define PLAYER 100
+#define PLAYER 300
 
 // ƒJƒƒ‰”ÍˆÍ
 const float CameraScopeRangeW = 400.0f;
