@@ -3,6 +3,8 @@
 
 #include "game.h"
 class SceneManager;
+class Map;
+class Camera;
 class GameScene : public BaseScene
 {
 public:
@@ -11,5 +13,8 @@ public:
 	void Init();
 	void Update();
 	void Draw();
+private:
+	Map* m_pMap;
+	Camera* m_pCamera;
 };
 

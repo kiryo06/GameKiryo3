@@ -10,10 +10,11 @@
 #include "Map.h"
 #include "MapData.h"
 
-Camera camera;
-Map* pMap = new Map();
 
-GameScene::GameScene(SceneManager& manager) : BaseScene(manager)
+
+GameScene::GameScene(SceneManager& manager) : BaseScene(manager),
+m_pMap(new Map()),
+m_pCamera(new Camera())
 {
 }
 
@@ -23,14 +24,13 @@ GameScene::~GameScene()
 
 void GameScene::Init()
 {
-	InitCamera(camera);
-	pMap->Init();
-
+	m_pCamera->Init();
+	m_pMap->Init(0);
 }
 void GameScene::Update()
 {
 	//UpdatePlayer(player, map);
-	//UpdateCamera(camera, player);
+	m_pCamera->Update();
 	Pad::Update();
 	if (Pad::IsTrigger(PAD_INPUT_1))
 	{
@@ -42,7 +42,7 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	//DrawPlayer(player, camera);
-	pMap->Draw(camera);
+	m_pMap->Draw(0, m_pCamera);
 	DrawFormatString(0, 0, 0xffffff, "GameScene",true);
 	//DrawBox(100, 100, 640, 640, 0xaaaa00, true);
 }

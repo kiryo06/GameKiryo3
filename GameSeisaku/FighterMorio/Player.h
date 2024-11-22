@@ -1,12 +1,35 @@
-/*
 #pragma once
 #include <memory>
 #include "Rect.h"
+class Map;
+class Camera;
+class Player
+{
+public:
+	Player();
+	~Player();
+	void Init();
+	void Update();
+	VECTOR CheckPlayerHitWithMap();
+	bool IsHitPlayerWithMapChip();
+	void CheckIsTopHit();
+	void CheckIsGround();
+	void Draw();
+private:
+	const float Gravity = 0.3f;		// キャラに掛かる重力加速度
+	const float JumpPower = 9.0f;	// キャラのジャンプ力
+	const float Speed = 5.0f;		// キャラの移動スピード
+	VECTOR pos;					// 座標 横：中心　縦：中心
+	VECTOR dir;					// 座標 ()
+	float w, h;					// 幅、高さ
+	float fallSpeed;				// プレイヤーの落下速度。ジャンプ時は反転する
+	bool isGround;				// プレイヤーが接地中か
+	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
+};
 
 //-----------------------------------------------------------------------------
 // 2024 Takeru Yui All Rights Reserved.
 //-----------------------------------------------------------------------------
-#pragma once
 
 //-----------------------------------------//
 // 定数
@@ -41,4 +64,3 @@ bool IsHitPlayerWithMapChip(const Player& player, const VECTOR& futurePos, const
 void CheckIsTopHit(Player& player, const Map& map);
 void CheckIsGround(Player& player, const Map& map);
 void DrawPlayer(const Player& player, const Camera& camera);
-*/
