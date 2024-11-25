@@ -1,18 +1,17 @@
-/*
-//-----------------------------------------------------------------------------
-// 2024 Takeru Yui All Rights Reserved.
-//-----------------------------------------------------------------------------
-#include <math.h>
-#include "DxLib.h"
-#include "Screen.h"
-#include "Camera.h"
 #include "Player.h"
+#include "DxLib.h"
 #include "Map.h"
+#include "Camera.h"
 
-/// <summary>
-/// プレイヤーの初期化
-/// </summary>
-void InitPlayer(Player& player)
+Player::Player()
+{
+}
+
+Player::~Player()
+{
+}
+
+void Player::Init()
 {
 	// MEMO: float誤差をfloorで切り捨ててる関係上、偶数じゃないとズレるので注意
 	player.w = 30;
@@ -25,13 +24,10 @@ void InitPlayer(Player& player)
 	player.isHitTop = false;
 }
 
-/// <summary>
-/// プレイヤーの更新
-/// </summary>
-void UpdatePlayer(Player& player, const Map& map)
+void Player::Update()
 {
 	// 入力状態を更新
-	// パッド１とキーボードから入力を得る
+// パッド１とキーボードから入力を得る
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 
 	// プレイヤーの移動処理
@@ -80,11 +76,11 @@ void UpdatePlayer(Player& player, const Map& map)
 	player.pos = VAdd(player.pos, velocity);
 }
 
-/// <summary>
-/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
-/// </summary>
-VECTOR CheckPlayerHitWithMap(Player& player, const Map& map, const VECTOR& velocity)
+VECTOR Player::CheckPlayerHitWithMap()
 {
+	//return VECTOR();
+
+
 	// サイズが最初から0なら動かさず早期return
 	if (VSize(velocity) == 0)
 	{
@@ -191,10 +187,7 @@ VECTOR CheckPlayerHitWithMap(Player& player, const Map& map, const VECTOR& veloc
 	return ret;
 }
 
-/// <summary>
-/// マップチップと未来のプレイヤーポジションの当たり判定
-/// </summary>
-bool IsHitPlayerWithMapChip(const Player& player, const VECTOR& futurePos, const MapChip& mapChip)
+bool Player::IsHitPlayerWithMapChip()
 {
 	// マップチップが当たらない種類なら早期return
 	if (mapChip.chipKind == 0)
@@ -222,10 +215,7 @@ bool IsHitPlayerWithMapChip(const Player& player, const VECTOR& futurePos, const
 	return false;
 }
 
-/// <summary>
-/// 頭上がぶつかっているか見る
-/// </summary>
-void CheckIsTopHit(Player& player, const Map& map)
+void Player::CheckIsTopHit()
 {
 	// 1ドット上にずらして当たれば頭上がぶつかっている （小数点無視）
 	auto checkPos = VGet(player.pos.x, floorf(player.pos.y) - 1.0f, player.pos.z);
@@ -264,10 +254,7 @@ void CheckIsTopHit(Player& player, const Map& map)
 	}
 }
 
-/// <summary>
-/// 地面に接地しているか見る
-/// </summary>
-void CheckIsGround(Player& player, const Map& map)
+void Player::CheckIsGround()
 {
 	// 1ドット下にずらして当たれば地面に足がぶつかっている （小数点無視）
 	auto checkPos = VGet(player.pos.x, floorf(player.pos.y) + 1.0f, player.pos.z);
@@ -302,10 +289,22 @@ void CheckIsGround(Player& player, const Map& map)
 		player.isGround = false;
 	}
 }
+void Player::Draw(Camera*camera)
+{
+	// キャラクタの描画
+	auto leftTop = static_cast<int>(player.pos.x - player.w * 0.5f);
+	auto leftBottom = static_cast<int>(player.pos.y - player.h * 0.5f);
+	auto rightTop = static_cast<int>(player.pos.x + player.w * 0.5f);
+	auto rightBottom = static_cast<int>(player.pos.y + player.h * 0.5f);
+	DrawBox(
+		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		GetColor(255, 0, 0), TRUE);
+}
 
-/// <summary>
-/// プレイヤー描画
-/// </summary>
+
 void DrawPlayer(const Player& player, const Camera& camera)
 {
 	// キャラクタの描画
@@ -320,4 +319,3 @@ void DrawPlayer(const Player& player, const Camera& camera)
 		rightBottom + static_cast<int>(camera.drawOffset.y),
 		GetColor(255, 0, 0), TRUE);
 }
-*/

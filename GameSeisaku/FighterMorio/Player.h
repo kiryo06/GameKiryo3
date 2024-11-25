@@ -6,15 +6,37 @@ class Camera;
 class Player
 {
 public:
+
 	Player();
 	~Player();
+	/// <summary>
+	/// プレイヤーの初期化
+	/// </summary>
 	void Init();
+	/// <summary>
+	/// プレイヤーの更新
+	/// </summary>
 	void Update();
+	/// <summary>
+	/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
+	/// </summary>
 	VECTOR CheckPlayerHitWithMap();
+	/// <summary>
+	/// マップチップと未来のプレイヤーポジションの当たり判定
+	/// </summary>
 	bool IsHitPlayerWithMapChip();
+	/// <summary>
+	/// 頭上がぶつかっているか見る
+	/// </summary>
 	void CheckIsTopHit();
+	/// <summary>
+	/// 地面に接地しているか見る
+	/// </summary>
 	void CheckIsGround();
-	void Draw();
+	/// <summary>
+	/// プレイヤー描画
+	/// </summary>
+	void Draw(Camera* camera);
 private:
 	const float Gravity = 0.3f;		// キャラに掛かる重力加速度
 	const float JumpPower = 9.0f;	// キャラのジャンプ力
@@ -25,22 +47,14 @@ private:
 	float fallSpeed;				// プレイヤーの落下速度。ジャンプ時は反転する
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
+	Map* m_map;
+	Camera* m_camera;
 };
 
-//-----------------------------------------------------------------------------
-// 2024 Takeru Yui All Rights Reserved.
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------//
-// 定数
-//-----------------------------------------//
 const float Gravity = 0.3f;                         // キャラに掛かる重力加速度
 const float JumpPower = 9.0f;                         // キャラのジャンプ力
 const float Speed = 5.0f;                         // キャラの移動スピード
 
-/// <summary>
-/// プレイヤー構造体
-/// </summary>
 struct Player
 {
 	VECTOR	pos;		// 座標 HACK: プレイヤーの座標の中心は、横：中心　縦：中心。描画や計算を変えたら全部変わるので注意
@@ -50,10 +64,6 @@ struct Player
 	bool	isGround;	// プレイヤーが接地中か
 	bool	isHitTop;	// プレイヤーの頭が天井に当たっているか
 };
-
-//-----------------------------------------//
-// プロトタイプ宣言
-//-----------------------------------------//
 struct Map;
 struct MapChip;
 struct Camera;
