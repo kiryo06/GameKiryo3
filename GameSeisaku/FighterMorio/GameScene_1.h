@@ -5,6 +5,7 @@
 class SceneManager;
 class Map;
 class Camera;
+class Player;
 class GameScene_1 : public BaseScene
 {
 public:
@@ -16,4 +17,5 @@ public:
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
+	Player* m_pPlayer;
 };

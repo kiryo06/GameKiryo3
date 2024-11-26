@@ -1,12 +1,10 @@
 #pragma once
-#include <memory>
-#include "Rect.h"
+#include "MapData.h"
 class Map;
 class Camera;
 class Player
 {
 public:
-
 	Player();
 	~Player();
 	/// <summary>
@@ -16,61 +14,41 @@ public:
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
-	void Update();
+	void Update(int mapNumber);
 	/// <summary>
 	/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
 	/// </summary>
-	VECTOR CheckPlayerHitWithMap();
-	/// <summary>
-	/// マップチップと未来のプレイヤーポジションの当たり判定
-	/// </summary>
-	bool IsHitPlayerWithMapChip();
+	VECTOR CheckPlayerHitWithMap(int mapNumber);
+	bool IsHitPlayerWithMapChip(int mapNumber);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
-	void CheckIsTopHit();
+	void CheckIsTopHit(int mapNumber);
 	/// <summary>
 	/// 地面に接地しているか見る
 	/// </summary>
-	void CheckIsGround();
+	void CheckIsGround(int mapNumber);
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>
 	void Draw(Camera* camera);
+	VECTOR GetPlayerPos() { return pos; }
+	VECTOR GetPlayerDir() { return dir; }
 private:
-	const float Gravity = 0.3f;		// キャラに掛かる重力加速度
-	const float JumpPower = 9.0f;	// キャラのジャンプ力
-	const float Speed = 5.0f;		// キャラの移動スピード
-	VECTOR pos;					// 座標 横：中心　縦：中心
-	VECTOR dir;					// 座標 ()
 	float w, h;					// 幅、高さ
 	float fallSpeed;				// プレイヤーの落下速度。ジャンプ時は反転する
+	VECTOR pos;					// 座標 横：中心　縦：中心
+	VECTOR dir;					// 座標の移動方向
+	VECTOR velocity;
+	VECTOR ret;
+	VECTOR futurePos;
+	VECTOR checkPos;
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
+	bool isHit;
 	Map* m_map;
 	Camera* m_camera;
-};
 
-const float Gravity = 0.3f;                         // キャラに掛かる重力加速度
-const float JumpPower = 9.0f;                         // キャラのジャンプ力
-const float Speed = 5.0f;                         // キャラの移動スピード
-
-struct Player
-{
-	VECTOR	pos;		// 座標 HACK: プレイヤーの座標の中心は、横：中心　縦：中心。描画や計算を変えたら全部変わるので注意
-	VECTOR	dir;		// 座標
-	float	w, h;		// 幅、高さ
-	float	fallSpeed;	// プレイヤーの落下速度。ジャンプ時は反転する
-	bool	isGround;	// プレイヤーが接地中か
-	bool	isHitTop;	// プレイヤーの頭が天井に当たっているか
+	// 原型チップデータ
+	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
 };
-struct Map;
-struct MapChip;
-struct Camera;
-void InitPlayer(Player& player);
-void UpdatePlayer(Player& player, const Map& map);
-VECTOR CheckPlayerHitWithMap(Player& player, const Map& map, const VECTOR& velocity);
-bool IsHitPlayerWithMapChip(const Player& player, const VECTOR& futurePos, const MapChip& mapChip);
-void CheckIsTopHit(Player& player, const Map& map);
-void CheckIsGround(Player& player, const Map& map);
-void DrawPlayer(const Player& player, const Camera& camera);

@@ -1,16 +1,18 @@
+#include "Camera.h"
 #include <cmath>
 #include "DxLib.h"
-#include "Camera.h"
-//#include "Player.h"
+#include "Player.h"
 #include "Screen.h"
 #define PLAYER 100
-
-// カメラ範囲
-const float CameraScopeRangeW = 400.0f;
-const float CameraScopeRangeH = 300.0f;
-const float CameraScopeRangeTop = 200.0f;
-const float CameraScopeRangeBottom = 320.0f;
-const float CameraLerpRate = 0.1f;
+namespace
+{
+	// カメラ範囲
+	const float CameraScopeRangeW = 400.0f;
+	const float CameraScopeRangeH = 300.0f;
+	const float CameraScopeRangeTop = 200.0f;
+	const float CameraScopeRangeBottom = 560.0f;
+	const float CameraLerpRate = 0.5f;
+}
 
 VECTOR VLerp(VECTOR start, VECTOR end, float t)
 {
@@ -21,7 +23,9 @@ VECTOR VLerp(VECTOR start, VECTOR end, float t)
 	return ret;
 }
 
-Camera::Camera()
+Camera::Camera():
+	pos(VGet(0, 0, 0)),
+	drawOffset(VGet(0, 0, 0))
 {
 }
 
@@ -31,29 +35,29 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-	pos = VGet(0, 0, 0);
 }
 
-void Camera::Update()
+void Camera::Update(Player* player)
 {
 	// プレイヤーの位置が、カメラの中央から一定以上離れたら
 	// カメラの「目標」ポジションをその範囲内に留める
 	VECTOR aimCameraPos = pos;
-	if (/*player.pos.x*/PLAYER > pos.x + (CameraScopeRangeW * 0.5f))
+	VECTOR playerPos = player->GetPlayerPos();
+	if (playerPos.x > pos.x + (CameraScopeRangeW * 0.5f))
 	{
-		aimCameraPos.x = /*player.pos.x*/PLAYER - (CameraScopeRangeW * 0.5f);
+		aimCameraPos.x = playerPos.x - (CameraScopeRangeW * 0.5f);
 	}
-	else if (/*player.pos.x*/PLAYER < pos.x - (CameraScopeRangeW * 0.5f))
+	else if (playerPos.x < pos.x - (CameraScopeRangeW * 0.5f))
 	{
-		aimCameraPos.x = /*player.pos.x*/PLAYER + (CameraScopeRangeW * 0.5f);
+		aimCameraPos.x = playerPos.x + (CameraScopeRangeW * 0.5f);
 	}
-	if (/*player.pos.y*/PLAYER > pos.y + (CameraScopeRangeH * 0.5f))
+	if (playerPos.y > pos.y + (CameraScopeRangeH * 0.5f))
 	{
-		aimCameraPos.y = /*player.pos.y*/PLAYER - (CameraScopeRangeH * 0.5f);
+		aimCameraPos.y = playerPos.y - (CameraScopeRangeH * 0.5f);
 	}
-	else if (/*player.pos.y*/PLAYER < pos.y - (CameraScopeRangeH * 0.5f))
+	else if (playerPos.y < pos.y - (CameraScopeRangeH * 0.5f))
 	{
-		aimCameraPos.y = /*player.pos.y*/PLAYER + (CameraScopeRangeH * 0.5f);
+		aimCameraPos.y = playerPos.y + (CameraScopeRangeH * 0.5f);
 	}
 
 	// 目標ポジションに、Lerpを使ってカメラポジションを近づける
@@ -75,7 +79,6 @@ void Camera::Update()
 	drawOffset.y = pos.y * -1;
 
 	// その時、画面の中央にプレイヤーが来るようにする
-	// (camera.posが画面の中央になるようにする)
 	drawOffset.x = drawOffset.x + (ScreenWidth * 0.5f);
 	drawOffset.y = drawOffset.y + (ScreenHeight * 0.5f);
 }

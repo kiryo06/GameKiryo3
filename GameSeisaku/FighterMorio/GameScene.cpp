@@ -9,10 +9,12 @@
 #include "Camera.h"
 #include "Map.h"
 #include "MapData.h"
+#include "Player.h"
 
 
 
 GameScene::GameScene(SceneManager& manager) : BaseScene(manager),
+m_pPlayer(new Player()),
 m_pMap(new Map()),
 m_pCamera(new Camera())
 {
@@ -24,13 +26,14 @@ GameScene::~GameScene()
 
 void GameScene::Init()
 {
-	m_pCamera->Init();
+	m_pPlayer->Init();
 	m_pMap->Init(0);
+	m_pCamera->Init();
 }
 void GameScene::Update()
 {
-	//UpdatePlayer(player, map);
-	m_pCamera->Update();
+	m_pPlayer->Update(0);
+	m_pCamera->Update(m_pPlayer);
 	Pad::Update();
 	if (Pad::IsTrigger(PAD_INPUT_1))
 	{
@@ -41,7 +44,7 @@ void GameScene::Update()
 
 void GameScene::Draw()
 {
-	//DrawPlayer(player, camera);
+	m_pPlayer->Draw(m_pCamera);
 	m_pMap->Draw(0, m_pCamera);
 	DrawFormatString(0, 0, 0xffffff, "GameScene",true);
 	//DrawBox(100, 100, 640, 640, 0xaaaa00, true);

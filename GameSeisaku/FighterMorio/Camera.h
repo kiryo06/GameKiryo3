@@ -1,13 +1,13 @@
 #pragma once
-
-//struct Player;
+#include "DxLib.h"
+class Player;
 class Camera
 {
 public:
 	Camera();
 	~Camera();
 	void Init();
-	void Update();
+	void Update(Player* player);
 	VECTOR GetCameraPos() { return pos; }
 	VECTOR GetCameraDrawOffset() { return drawOffset; }
 private:

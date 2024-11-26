@@ -15,6 +15,4 @@ public:
 private:
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
-	// 1-1原型チップデータ
-	MapDataFile::ChipData PrototypeChipDataOne[MapDataFile::kOneChipNumY][MapDataFile::kOneChipNumX] = {};
 };

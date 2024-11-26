@@ -23,15 +23,15 @@ void Map::Init(int mapNumber)
 		break;
 	case 1:
 		// マップデータ読み込み
-		for (int hChip = 0; hChip < MapDataFile::kOneChipNumY; hChip++)
+		for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
 		{
-			for (int wChip = 0; wChip < MapDataFile::kOneChipNumX; wChip++)
+			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
 			{
-				PrototypeChipDataOne[hChip][wChip].chipKind = MapDataFile::mapChipDataOne[hChip][wChip];
-				PrototypeChipDataOne[hChip][wChip].w = MapDataFile::kOneChipWidth;
-				PrototypeChipDataOne[hChip][wChip].h = MapDataFile::kOneChipHeight;
-				PrototypeChipDataOne[hChip][wChip].pos.x = wChip * MapDataFile::kOneChipWidth;
-				PrototypeChipDataOne[hChip][wChip].pos.y = hChip * MapDataFile::kOneChipHeight;
+				PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData[hChip][wChip];
+				PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;
+				PrototypeChipData[hChip][wChip].h = MapDataFile::kChipHeight;
+				PrototypeChipData[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;
+				PrototypeChipData[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;
 			}
 		}
 		break;
@@ -75,12 +75,12 @@ void Map::Draw(int mapNumber, Camera* camera)
 			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
 			{
 				// １は当たり判定チップを表しているので１のところだけ描画
-				if (PrototypeChipDataOne[hChip][wChip].chipKind == 99)
+				if (PrototypeChipData[hChip][wChip].chipKind == 99)
 				{
-					auto leftTop = static_cast<int>(PrototypeChipDataOne[hChip][wChip].pos.x - PrototypeChipDataOne[hChip][wChip].w * 0.5f);
-					auto leftBottom = static_cast<int>(PrototypeChipDataOne[hChip][wChip].pos.y - PrototypeChipDataOne[hChip][wChip].h * 0.5f);
-					auto rightTop = static_cast<int>(PrototypeChipDataOne[hChip][wChip].pos.x + PrototypeChipDataOne[hChip][wChip].w * 0.5f);
-					auto rightBottom = static_cast<int>(PrototypeChipDataOne[hChip][wChip].pos.y + PrototypeChipDataOne[hChip][wChip].h * 0.5f);
+					auto leftTop = static_cast<int>(PrototypeChipData[hChip][wChip].pos.x - PrototypeChipData[hChip][wChip].w * 0.5f);
+					auto leftBottom = static_cast<int>(PrototypeChipData[hChip][wChip].pos.y - PrototypeChipData[hChip][wChip].h * 0.5f);
+					auto rightTop = static_cast<int>(PrototypeChipData[hChip][wChip].pos.x + PrototypeChipData[hChip][wChip].w * 0.5f);
+					auto rightBottom = static_cast<int>(PrototypeChipData[hChip][wChip].pos.y + PrototypeChipData[hChip][wChip].h * 0.5f);
 
 					DrawBox(
 						leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
