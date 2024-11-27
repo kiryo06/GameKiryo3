@@ -26,7 +26,9 @@ Player::Player():
 	checkPos(VGet(0, 0, 0)),
 	isGround(false),
 	isHitTop(false),
-	isHit(false)
+	isHit(false),
+	isHitWithMapY(0),
+	isHitWithMapX(0)
 {
 }
 
@@ -36,9 +38,22 @@ Player::~Player()
 
 void Player::Init()
 {
+	for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+	{
+		for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
+		{
+			isHitWithMapY = hChip;
+			isHitWithMapX = wChip;
+			PrototypeChipData[isHitWithMapY][isHitWithMapX].chipKind = MapDataFile::mapChipData[hChip][wChip];
+			PrototypeChipData[isHitWithMapY][isHitWithMapX].w = MapDataFile::kChipWidth;
+			PrototypeChipData[isHitWithMapY][isHitWithMapX].h = MapDataFile::kChipHeight;
+			PrototypeChipData[isHitWithMapY][isHitWithMapX].pos.x = wChip * MapDataFile::kChipWidth;
+			PrototypeChipData[isHitWithMapY][isHitWithMapX].pos.y = hChip * MapDataFile::kChipHeight;
+		}
+	}
 }
 
-void Player::Update(int mapNumber)
+void Player::Update()
 {
 	// 入力状態を更新
 	Pad::Update();
@@ -68,8 +83,8 @@ void Player::Update(int mapNumber)
 	fallSpeed += Gravity;
 
 	// HACK: 先に設定判定をすることでfallSpeed修正＋接地フラグ更新
-	CheckIsTopHit(mapNumber);
-	CheckIsGround(mapNumber);
+	CheckIsTopHit();
+	CheckIsGround();
 
 	// 地に足が着いている場合のみジャンプボタン(ボタン１ or Ｚキー)を見る
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
@@ -82,17 +97,13 @@ void Player::Update(int mapNumber)
 	velocity = VAdd(velocity, fallVelocity);
 
 	// 当たり判定をして、壁にめり込まないようにvelocityを操作する
-	velocity = CheckPlayerHitWithMap(mapNumber);
+	velocity = CheckPlayerHitWithMap();
 
 	// 移動
 	pos = VAdd(pos, velocity);
-
-	velocity.y += fallSpeed;
-	pos.x += velocity.x;
-	pos.y += velocity.y;
 }
 
-VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
+VECTOR Player::CheckPlayerHitWithMap()
 {
 	// サイズが最初から0なら動かさず早期return
 	if (VSize(velocity) == 0)
@@ -112,85 +123,113 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 		// 未来のプレイヤーのポジションをまず出す
 		futurePos = VAdd(pos, ret);
 
-		switch (mapNumber)
+		for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
 		{
-		case 0:
-			for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
 			{
-				for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
+				isHitWithMapY = hChip;
+				isHitWithMapX = wChip;
+				isHit = IsHitPlayerWithMapChip(isHitWithMapY, isHitWithMapX);
+				// 初回に当たったとき
+				if (isHit && isFirstHit)
 				{
-					isHit = IsHitPlayerWithMapChip(mapNumber);
-					// 初回に当たったとき
-					if (isHit && isFirstHit)
-					{
-						pos.x = floorf(pos.x);
-						pos.y = floorf(pos.y);
-						ret.x = floorf(ret.x);
-						ret.y = floorf(ret.y);
-						isFirstHit = false;
-						loop = true;	// ループ継続
-					}
-
-					// 当たらなくなるまで繰り返す(ループは継続)
-					if (isHit && !isFirstHit)
-					{
-						float absX = fabsf(ret.x);	// velocityのx成分の絶対値
-						float absY = fabsf(ret.y);	// velocityのy成分の絶対値
-
-						// x成分を縮め切っていなければx成分を縮める
-						bool shrinkX = (absX != 0.0f);	// x成分を縮めるかどうか
-
-						if (shrinkX)
-						{
-							if (ret.x > 0.0f)
-							{
-								ret.x -= 1.0f;
-							}
-							else
-							{
-								ret.x += 1.0f;
-							}
-
-							// 縮め切ったら消す
-							if (fabs(ret.x) < 1.0f)
-							{
-								ret.x = 0.0f;
-							}
-							loop = true;
-						}
-						else
-						{
-							if (ret.y > 0.0f)
-							{
-								ret.y -= 1.0f;
-							}
-							else
-							{
-								ret.y += 1.0f;
-							}
-
-							// 縮め切ったら消す
-							if (fabs(ret.y) < 1.0f)
-							{
-								ret.y = 0.0f;
-							}
-							loop = true;
-						}
-						break;
-					}
-					if (isHit)
-					{
-						break;
-					}
+					pos.x = floorf(pos.x);
+					pos.y = floorf(pos.y);
+					ret.x = floorf(ret.x);
+					ret.y = floorf(ret.y);
+					isFirstHit = false;
+					loop = true;	// ループ継続
 				}
+				// 当たらなくなるまで繰り返す(ループは継続)
+				if (isHit && !isFirstHit)
+				{
+					float absX = fabsf(ret.x);	// velocityのx成分の絶対値
+					float absY = fabsf(ret.y);	// velocityのy成分の絶対値
+
+					// x成分を縮め切っていなければx成分を縮める
+					bool shrinkX = (absX != 0.0f);	// x成分を縮めるかどうか
+
+					if (ret.y > 0.0f)
+					{
+						ret.y -= 1.0f;
+					}
+					else
+					{
+						ret.y += 1.0f;
+					}
+					// 縮め切ったら消す
+					if (fabs(ret.y) < 1.0f)
+					{
+						ret.y = 0.0f;
+						loop = false;
+						break;
+					}
+					loop = true;
+					break;
+				}
+				if (isHit)
+				{
+					break;
+				}
+				//// 当たらなくなるまで繰り返す(ループは継続)
+				//if (isHit && !isFirstHit)
+				//{
+				//	float absX = fabsf(ret.x);	// velocityのx成分の絶対値
+				//	float absY = fabsf(ret.y);	// velocityのy成分の絶対値
+				//
+				//	// x成分を縮め切っていなければx成分を縮める
+				//	bool shrinkX = (absX != 0.0f);	// x成分を縮めるかどうか
+				//
+				//	if (shrinkX)
+				//	{
+				//		if (ret.x > 0.0f)
+				//		{
+				//			ret.x -= 1.0f;
+				//		}
+				//		else
+				//		{
+				//			ret.x += 1.0f;
+				//		}
+				//
+				//		// 縮め切ったら消す
+				//		if (fabs(ret.x) < 1.0f)
+				//		{
+				//			ret.x = 0.0f;
+				//		}
+				//		loop = true;
+				//	}
+				//	else
+				//	{
+				//		if (ret.y > 0.0f)
+				//		{
+				//			ret.y -= 1.0f;
+				//		}
+				//		else
+				//		{
+				//			ret.y += 1.0f;
+				//		}
+				//
+				//		// 縮め切ったら消す
+				//		if (fabs(ret.y) < 1.0f)
+				//		{
+				//			ret.y = 0.0f;
+				//		}
+				//		loop = true;
+				//	}
+				//	// どちらも締め切ったときにloop解除
+				//	if (ret.x == 0.0f && ret.y == 0.0f)
+				//	{
+				//		loop = false;
+				//		break;
+				//	}
+				//
+				//	break;
+				//}
+				//if (isHit)
+				//{
+				//	break;
+				//}
 			}
-			break;
-		case 1:
-			
-			break;
-		case 2:
-			
-			break;
 		}
 	}
 
@@ -200,125 +239,64 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 	return ret;
 }
 
-bool Player::IsHitPlayerWithMapChip(int mapNumber)
-{// マップチップが当たらない種類なら早期return
-	switch (mapNumber)
+bool Player::IsHitPlayerWithMapChip(int isHitWithMapY, int isHitWithMapX)
+{
+	const auto& chip = PrototypeChipData[isHitWithMapY][isHitWithMapX];
+	// マップチップが当たらない種類なら早期return
+	if (chip.chipKind == 0)
 	{
-	case 0:
-	for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+		DrawString(40, 40, "当たっていない", 0xffffff, true);
+		return false;
+	}
+
+	auto width = std::abs(futurePos.x - chip.pos.x);
+	auto height = std::abs(futurePos.y - chip.pos.y);
+
+	auto checkWidth = w * 0.5f + chip.w * 0.5f;
+	auto checkHeight = h * 0.5f + chip.h * 0.5f;
+
+
+	if (width < checkWidth && height < checkHeight)
 	{
-		for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
-		{
-			if (PrototypeChipData[hChip][wChip].chipKind == 0)
-			{
-				DrawString(40, 40, "当たっていない", 0xffffff, true);
-				return false;
-			}
-			if (PrototypeChipData[hChip][wChip].chipKind == 0)
-			{
-				DrawString(40, 40, "当たっていない", 0xffffff, true);
-				return false;
-			}
-			// 当たっているかどうか調べる
-			float futurePosLeft = futurePos.x - w * 0.5f;
-			float futurePosRight = futurePos.x + w * 0.5f;
-			float futurePosTop = futurePos.y - h * 0.5f;
-			float futurePosBottom = futurePos.y + h * 0.5f;
-			float targetLeft = PrototypeChipData[hChip][wChip].pos.x - PrototypeChipData[hChip][wChip].w * 0.5f;
-			float targetRight = PrototypeChipData[hChip][wChip].pos.x + PrototypeChipData[hChip][wChip].w * 0.5f;
-			float targetTop = PrototypeChipData[hChip][wChip].pos.y - PrototypeChipData[hChip][wChip].h * 0.5f;
-			float targetBottom = PrototypeChipData[hChip][wChip].pos.y + PrototypeChipData[hChip][wChip].h * 0.5f;
-			// 矩形同士の当たり判定
-			if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
-				(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
-				((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
-					(targetTop > futurePosTop && targetTop < futurePosBottom)))
-			{
-				DrawString(40, 40, "当たっている", 0xffffff, true);
-				return true;
-			}
-			return false;
-		}
+		DrawString(40, 40, "当たっている", 0xffffff, true);
+		return true;
 	}
-		break;
-	case 1:
+	DrawString(40, 40, "当たっていない", 0xffffff, true);
+	return false;
 
-		break;
-	case 2:
 
-		break;
-	}
+	//// 当たっているかどうか調べる
+	//float futurePosLeft = futurePos.x - w * 0.5f;
+	//float futurePosRight = futurePos.x + w * 0.5f;
+	//float futurePosTop = futurePos.y - h * 0.5f;
+	//float futurePosBottom = futurePos.y + h * 0.5f;
+	//float targetLeft = PrototypeChipData[isHitWithMapY][isHitWithMapX].pos.x - PrototypeChipData[isHitWithMapY][isHitWithMapX].w * 0.5f;
+	//float targetRight = PrototypeChipData[isHitWithMapY][isHitWithMapX].pos.x + PrototypeChipData[isHitWithMapY][isHitWithMapX].w * 0.5f;
+	//float targetTop = PrototypeChipData[isHitWithMapY][isHitWithMapX].pos.y - PrototypeChipData[isHitWithMapY][isHitWithMapX].h * 0.5f;
+	//float targetBottom = PrototypeChipData[isHitWithMapY][isHitWithMapX].pos.y + PrototypeChipData[isHitWithMapY][isHitWithMapX].h * 0.5f;
+	//// 矩形同士の当たり判定
+	//if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
+	//	(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
+	//	((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
+	//		(targetTop > futurePosTop && targetTop < futurePosBottom)))
+	//{
+	//	DrawString(40, 40, "当たっている", 0xffffff, true);
+	//	return true;
+	//}
+	//return false;
 }
 
-void Player::CheckIsTopHit(int mapNumber)
+void Player::CheckIsTopHit()
 {
 	// 1ドット上にずらして当たれば頭上がぶつかっている （小数点無視）
 	checkPos = VGet(pos.x, floorf(pos.y) - 1.0f, pos.z);
 	// 全マップチップ分繰り返す
 	bool isHit = false;
-	switch (mapNumber)
+	for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
 	{
-	case 0:
-		for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+		for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
 		{
-			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
-			{
-				isHit = IsHitPlayerWithMapChip(mapNumber);
-				if (isHit)
-				{
-					break;
-				}
-			}
-			if (isHit)
-			{
-				break;
-			}
-			if (isHit)
-			{
-				// 以前ぶつかっていないのにぶつかるならfallSpeedをゼロにし、即落下するように
-				if (!isHitTop)
-				{
-					isHitTop = true;
-					fallSpeed = 0.0f;
-
-					// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
-					pos.y = floorf(pos.y);
-				}
-			}
-			else
-			{
-				isHitTop = false;
-			}
-		}
-		break;
-	case 1:
-
-		break;
-	case 2:
-
-		break;
-	}
-}
-
-void Player::CheckIsGround(int mapNumber)
-{
-	// 1ドット下にずらして当たれば地面に足がぶつかっている （小数点無視）
-	checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
-	// 全マップチップ分繰り返す
-	bool isHit = false;
-	switch (mapNumber)
-	{
-	case 0:
-		for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
-		{
-			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
-			{
-				isHit = IsHitPlayerWithMapChip(mapNumber);
-				if (isHit)
-				{
-					break;
-				}
-			}
+			isHit = IsHitPlayerWithMapChip(isHitWithMapY, isHitWithMapX);
 			if (isHit)
 			{
 				break;
@@ -326,24 +304,60 @@ void Player::CheckIsGround(int mapNumber)
 		}
 		if (isHit)
 		{
-			isGround = true;
-			// fallSpeedをゼロにし、急激な落下を防ぐ
-			fallSpeed = 0.0f;
+			break;
+		}
+		if (isHit)
+		{
+			// 以前ぶつかっていないのにぶつかるならfallSpeedをゼロにし、即落下するように
+			if (!isHitTop)
+			{
+				isHitTop = true;
+				fallSpeed = 0.0f;
 
-			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
-			pos.y = floorf(pos.y);	// ちょうど地面に付く位置に
+				// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+				pos.y = floorf(pos.y);
+			}
 		}
 		else
 		{
-			isGround = false;
+			isHitTop = false;
 		}
-		break;
-	case 1:
+	}
+}
 
-		break;
-	case 2:
+void Player::CheckIsGround()
+{
+	// 1ドット下にずらして当たれば地面に足がぶつかっている （小数点無視）
+	checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
+	// 全マップチップ分繰り返す
+	bool isHit = false;
+	for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+	{
+		for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
+		{
+			isHit = IsHitPlayerWithMapChip(isHitWithMapY, isHitWithMapX);
+			if (isHit)
+			{
+				break;
+			}
+		}
+		if (isHit)
+		{
+			break;
+		}
+	}
+	if (isHit)
+	{
+		isGround = true;
+		// fallSpeedをゼロにし、急激な落下を防ぐ
+		fallSpeed = 0.0f;
 
-		break;
+		// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+		pos.y = floorf(pos.y);	// ちょうど地面に付く位置に
+	}
+	else
+	{
+		isGround = false;
 	}
 }
 

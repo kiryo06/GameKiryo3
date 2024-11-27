@@ -14,20 +14,26 @@ public:
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
-	void Update(int mapNamber);
+	void Update();
 	/// <summary>
 	/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
 	/// </summary>
-	VECTOR CheckPlayerHitWithMap(int mapNamber);
-	bool IsHitPlayerWithMapChip(int mapNamber);
+	VECTOR CheckPlayerHitWithMap();
+	/// <summary>
+	/// プレイヤーとマップの当たり判定
+	/// </summary>
+	/// <param name="isHitWithMapY">横軸の変数</param>
+	/// <param name="isHitWithMapX">縦軸の変数</param>
+	/// <returns></returns>
+	bool IsHitPlayerWithMapChip(int isHitWithMapY, int isHitWithMapX);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
-	void CheckIsTopHit(int mapNamber);
+	void CheckIsTopHit();
 	/// <summary>
 	/// 地面に接地しているか見る
 	/// </summary>
-	void CheckIsGround(int mapNamber);
+	void CheckIsGround();
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>
@@ -37,6 +43,7 @@ public:
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;				// プレイヤーの落下速度。ジャンプ時は反転する
+	int isHitWithMapY, isHitWithMapX;
 	VECTOR pos;					// 座標 横：中心　縦：中心
 	VECTOR dir;					// 座標の移動方向
 	VECTOR velocity;
