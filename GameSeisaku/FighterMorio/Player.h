@@ -14,20 +14,20 @@ public:
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
-	void Update(int mapNumber);
+	void Update(int mapNamber);
 	/// <summary>
 	/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
 	/// </summary>
-	VECTOR CheckPlayerHitWithMap(int mapNumber);
-	bool IsHitPlayerWithMapChip(int mapNumber);
+	VECTOR CheckPlayerHitWithMap(int mapNamber);
+	bool IsHitPlayerWithMapChip(int mapNamber);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
-	void CheckIsTopHit(int mapNumber);
+	void CheckIsTopHit(int mapNamber);
 	/// <summary>
 	/// 地面に接地しているか見る
 	/// </summary>
-	void CheckIsGround(int mapNumber);
+	void CheckIsGround(int mapNamber);
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>

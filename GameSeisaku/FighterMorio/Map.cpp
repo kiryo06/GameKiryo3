@@ -74,7 +74,7 @@ void Map::Draw(int mapNumber, Camera* camera)
 		{
 			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
 			{
-				// ‚P‚Í“–‚½‚è”»’èƒ`ƒbƒv‚ð•\‚µ‚Ä‚¢‚é‚Ì‚Å‚P‚Ì‚Æ‚±‚ë‚¾‚¯•`‰æ
+				// ‚P‚Í“–‚½‚è”»’èƒ`ƒbƒv‚ð•\‚µ‚Ä‚¢‚é‚Ì‚Å99‚Ì‚Æ‚±‚ë‚¾‚¯•`‰æ
 				if (PrototypeChipData[hChip][wChip].chipKind == 99)
 				{
 					auto leftTop = static_cast<int>(PrototypeChipData[hChip][wChip].pos.x - PrototypeChipData[hChip][wChip].w * 0.5f);

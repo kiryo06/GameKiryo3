@@ -27,7 +27,6 @@ Player::Player():
 	isGround(false),
 	isHitTop(false),
 	isHit(false)
-
 {
 }
 
@@ -88,9 +87,9 @@ void Player::Update(int mapNumber)
 	// ˆÚ“®
 	pos = VAdd(pos, velocity);
 
-	/*velocity.y += fallSpeed;
+	velocity.y += fallSpeed;
 	pos.x += velocity.x;
-	pos.y += velocity.y;*/
+	pos.y += velocity.y;
 }
 
 VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
@@ -206,34 +205,41 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber)
 	switch (mapNumber)
 	{
 	case 0:
-		for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+	for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+	{
+		for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
 		{
-			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
+			if (PrototypeChipData[hChip][wChip].chipKind == 0)
 			{
-				if (PrototypeChipData[hChip][wChip].chipKind == 0)
-				{
-					return false;
-				}
-				// “–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©’²‚×‚é
-				float futurePosLeft = futurePos.x - w * 0.5f;
-				float futurePosRight = futurePos.x + w * 0.5f;
-				float futurePosTop = futurePos.y - h * 0.5f;
-				float futurePosBottom = futurePos.y + h * 0.5f;
-				float targetLeft = PrototypeChipData[hChip][wChip].pos.x - PrototypeChipData[hChip][wChip].w * 0.5f;
-				float targetRight = PrototypeChipData[hChip][wChip].pos.x + PrototypeChipData[hChip][wChip].w * 0.5f;
-				float targetTop = PrototypeChipData[hChip][wChip].pos.y - PrototypeChipData[hChip][wChip].h * 0.5f;
-				float targetBottom = PrototypeChipData[hChip][wChip].pos.y + PrototypeChipData[hChip][wChip].h * 0.5f;
-				// ‹éŒ`“¯Žm‚Ì“–‚½‚è”»’è
-				if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
-					(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
-					((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
-						(targetTop > futurePosTop && targetTop < futurePosBottom)))
-				{
-					return true;
-				}
+				DrawString(40, 40, "“–‚½‚Á‚Ä‚¢‚È‚¢", 0xffffff, true);
 				return false;
 			}
+			if (PrototypeChipData[hChip][wChip].chipKind == 0)
+			{
+				DrawString(40, 40, "“–‚½‚Á‚Ä‚¢‚È‚¢", 0xffffff, true);
+				return false;
+			}
+			// “–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©’²‚×‚é
+			float futurePosLeft = futurePos.x - w * 0.5f;
+			float futurePosRight = futurePos.x + w * 0.5f;
+			float futurePosTop = futurePos.y - h * 0.5f;
+			float futurePosBottom = futurePos.y + h * 0.5f;
+			float targetLeft = PrototypeChipData[hChip][wChip].pos.x - PrototypeChipData[hChip][wChip].w * 0.5f;
+			float targetRight = PrototypeChipData[hChip][wChip].pos.x + PrototypeChipData[hChip][wChip].w * 0.5f;
+			float targetTop = PrototypeChipData[hChip][wChip].pos.y - PrototypeChipData[hChip][wChip].h * 0.5f;
+			float targetBottom = PrototypeChipData[hChip][wChip].pos.y + PrototypeChipData[hChip][wChip].h * 0.5f;
+			// ‹éŒ`“¯Žm‚Ì“–‚½‚è”»’è
+			if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
+				(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
+				((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
+					(targetTop > futurePosTop && targetTop < futurePosBottom)))
+			{
+				DrawString(40, 40, "“–‚½‚Á‚Ä‚¢‚é", 0xffffff, true);
+				return true;
+			}
+			return false;
 		}
+	}
 		break;
 	case 1:
 
