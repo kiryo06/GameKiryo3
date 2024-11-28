@@ -48,6 +48,9 @@ private:
 	VECTOR velocity;
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
+	bool mapChipY;				// マップの縦軸
+	bool mapChipX;				// マップの横軸
+	int _isHit=0;
 	Map* m_map;
 	Camera* m_camera;
 

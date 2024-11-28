@@ -17,13 +17,15 @@ Player::Player():
 	m_camera(),
 	m_map(),
 	w(30),
-	h(60),
+	h(30),
 	fallSpeed(0.0f),
-	pos(VGet(32.0f + h * 0.5f, 0, 0)),
+	pos(VGet(32.0f + h * 0.5f, 70, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
-	isHitTop(false)
+	isHitTop(false),
+	mapChipY(),
+	mapChipX()
 {
 }
 
@@ -33,12 +35,26 @@ Player::~Player()
 
 void Player::Init(int mapNumber)
 {
-	switch (mapNumber)
+	//マップデータの読み込み
+	for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+	{
+		for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
+		{
+			PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData[hChip][wChip];
+			PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;
+			PrototypeChipData[hChip][wChip].h = MapDataFile::kChipHeight;
+			PrototypeChipData[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;
+			PrototypeChipData[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;
+		}
+	}
+	/*switch (mapNumber)
 	{
 	case 0:
-		for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+		mapChipY = MapDataFile::kChipNumY;
+		mapChipX = MapDataFile::kChipNumX;
+		for (int hChip = 0; hChip < mapChipY; hChip++)
 		{
-			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
+			for (int wChip = 0; wChip < mapChipX; wChip++)
 			{
 				PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData[hChip][wChip];
 				PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;
@@ -49,9 +65,11 @@ void Player::Init(int mapNumber)
 		}
 		break;
 	case 1:
-		for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
+		mapChipY = MapDataFile::k1ChipNumY;
+		mapChipX = MapDataFile::k1ChipNumX;
+		for (int hChip = 0; hChip < mapChipY; hChip++)
 		{
-			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
+			for (int wChip = 0; wChip < mapChipX; wChip++)
 			{
 				PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData1[hChip][wChip];
 				PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;
@@ -64,7 +82,7 @@ void Player::Init(int mapNumber)
 	case 2:
 
 		break;
-	}
+	}*/
 }
 
 void Player::Update()
@@ -96,8 +114,8 @@ void Player::Update()
 	fallSpeed += Gravity;
 
 	// HACK: 先に設定判定をすることでfallSpeed修正＋接地フラグ更新
-	CheckIsTopHit();
 	CheckIsGround();
+	CheckIsTopHit();
 
 	// 地に足が着いている場合のみジャンプボタン(ボタン１ or Ｚキー)を見る
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
@@ -118,7 +136,7 @@ void Player::Update()
 
 VECTOR Player::CheckPlayerHitWithMap()
 {
-	// サイズが最初から0なら動かさず早期return
+	// 速度が最初から0なら動かさず早期return
 	if (VSize(velocity) == 0)
 	{
 		return velocity;
@@ -129,6 +147,7 @@ VECTOR Player::CheckPlayerHitWithMap()
 	// 当たらなくなるまで繰り返す
 	bool loop = true;
 	bool isFirstHit = true;	// 初回で当たったか
+
 	while (loop)
 	{
 		loop = false;
@@ -136,11 +155,30 @@ VECTOR Player::CheckPlayerHitWithMap()
 		// 未来のプレイヤーのポジションをまず出す
 		VECTOR futurePos = VAdd(pos, ret);
 
+		_isHit = 0;
+
+		//全マップチップ分繰り返す
 		for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
 		{
+			bool isHit = false;
 			for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
 			{
 				bool isHit = IsHitPlayerWithMapChip(futurePos, hChip, wChip);
+
+				// 初回に当たったとき
+				if (isHit && isFirstHit)
+				{
+					// 今後当たり判定でポジションやvelocityの補正をするとき、小数点以下の誤差が産まれる
+					// 雑に1ドットずつ減らす、数学計算をしないマッシブ当たり判定には邪魔なので初回に丸めてしまい、
+					// 以降改めて当たり判定
+					// posもVelocityも丸める
+					pos.x = floorf(pos.x);
+					pos.y = floorf(pos.y);
+					ret.x = floorf(ret.x);
+					ret.y = floorf(ret.y);
+					isFirstHit = false;
+					loop = true;	// ループ継続
+				}
 
 				// 当たらなくなるまで繰り返す(ループは継続)
 				if (isHit && !isFirstHit)
@@ -198,6 +236,7 @@ VECTOR Player::CheckPlayerHitWithMap()
 				}
 				if (isHit)
 				{
+					_isHit = 1;//Debug用
 					break;
 				}
 			}
@@ -329,4 +368,13 @@ void Player::Draw(Camera*camera)
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		GetColor(255, 0, 0), TRUE);
+
+#ifdef _DEBUG
+	DrawFormatString(16, 16, 0xffffff, " PlayerPosX : %f", pos.x, true);
+	DrawFormatString(16, 32, 0xffffff, " PlayerPosY : %f", pos.y, true);
+	DrawFormatString(16, 48, 0xffffff, " CameraPosX : %f", camera->GetCameraDrawOffset().x, true);
+	DrawFormatString(16, 64, 0xffffff, " CameraPosY : %f", camera->GetCameraDrawOffset().y, true);
+	DrawFormatString(16, 80, 0xffffff, " PlayerIsHit : %d", _isHit, true);
+#endif // _DEBUG
+
 }

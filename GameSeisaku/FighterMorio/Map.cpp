@@ -84,16 +84,3 @@ void Map::Draw(int mapNumber, Camera* camera)
 		}
 	}
 }
-/*for (int hChip = 0; hChip < MapDataFile::kChipNumY; hChip++)
-	{
-		for (int wChip = 0; wChip < MapDataFile::kChipNumX; wChip++)
-		{
-			chipDataNUM[hChip][wChip] = MapDataFile::mapChipData[hChip][wChip];
-
-
-		}
-	}
-	if (PrototypeChipData[wChip][hChip] == 1)
-	{
-		PrototypeChipData[wChip][hChip] =
-	}*/
