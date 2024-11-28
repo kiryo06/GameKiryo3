@@ -10,7 +10,7 @@ public:
 	/// <summary>
 	/// プレイヤーの初期化
 	/// </summary>
-	void Init();
+	void Init(int mapNumber);
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
@@ -25,7 +25,7 @@ public:
 	/// <param name="isHitWithMapY">横軸の変数</param>
 	/// <param name="isHitWithMapX">縦軸の変数</param>
 	/// <returns></returns>
-	bool IsHitPlayerWithMapChip(int isHitWithMapY, int isHitWithMapX);
+	bool IsHitPlayerWithMapChip(const VECTOR& checkPos, int hChip, int wChip);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
@@ -43,16 +43,11 @@ public:
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;				// プレイヤーの落下速度。ジャンプ時は反転する
-	int isHitWithMapY, isHitWithMapX;
 	VECTOR pos;					// 座標 横：中心　縦：中心
 	VECTOR dir;					// 座標の移動方向
 	VECTOR velocity;
-	VECTOR ret;
-	VECTOR futurePos;
-	VECTOR checkPos;
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
-	bool isHit;
 	Map* m_map;
 	Camera* m_camera;
 

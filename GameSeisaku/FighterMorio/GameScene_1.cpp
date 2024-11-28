@@ -26,9 +26,9 @@ GameScene_1::~GameScene_1()
 
 void GameScene_1::Init()
 {
-	m_pPlayer->Init();
-	m_pCamera->Init();
+	m_pPlayer->Init(1);
 	m_pMap->Init(1);
+	m_pCamera->Init();
 }
 void GameScene_1::Update()
 {

@@ -19,4 +19,3 @@ private:
 	Camera* m_pCamera;
 	Player* m_pPlayer;
 };
-
