@@ -14,26 +14,26 @@ public:
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
-	void Update();
+	void Update(int mapNumber);
 	/// <summary>
 	/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
 	/// </summary>
-	VECTOR CheckPlayerHitWithMap();
+	VECTOR CheckPlayerHitWithMap(int mapNumber);
 	/// <summary>
 	/// プレイヤーとマップの当たり判定
 	/// </summary>
 	/// <param name="isHitWithMapY">横軸の変数</param>
 	/// <param name="isHitWithMapX">縦軸の変数</param>
 	/// <returns></returns>
-	bool IsHitPlayerWithMapChip(const VECTOR& checkPos, int hChip, int wChip);
+	bool IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
-	void CheckIsTopHit();
+	void CheckIsTopHit(int mapNumber);
 	/// <summary>
 	/// 地面に接地しているか見る
 	/// </summary>
-	void CheckIsGround();
+	void CheckIsGround(int mapNumber);
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>
@@ -56,4 +56,6 @@ private:
 
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
+	// 原型チップデータ
+	MapDataFile::ChipData PrototypeChipData1[MapDataFile::k1ChipNumY][MapDataFile::k1ChipNumX] = {};
 };

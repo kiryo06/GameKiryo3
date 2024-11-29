@@ -4,6 +4,8 @@ class Camera;
 class Map
 {
 public:
+	Map();
+	~Map();
 	/// <summary>
 	/// 1-1_マップ情報初期化
 	/// </summary>
@@ -15,4 +17,6 @@ public:
 private:
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
+	// 原型チップデータ
+	MapDataFile::ChipData PrototypeChipData1[MapDataFile::k1ChipNumY][MapDataFile::k1ChipNumX] = {};
 };

@@ -32,7 +32,7 @@ void GameScene::Init()
 }
 void GameScene::Update()
 {
-	m_pPlayer->Update();
+	m_pPlayer->Update(0);
 	m_pCamera->Update(m_pPlayer);
 	Pad::Update();
 	if (Pad::IsTrigger(PAD_INPUT_1))
