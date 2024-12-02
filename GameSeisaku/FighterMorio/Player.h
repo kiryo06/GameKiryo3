@@ -53,6 +53,10 @@ private:
 	int _isHit=0;
 	Map* m_map;
 	Camera* m_camera;
+	int m_mapkChipNumY_0;
+	int m_mapkChipNumX_0;
+	int m_mapkChipNumY_1;
+	int m_mapkChipNumX_1;
 
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
