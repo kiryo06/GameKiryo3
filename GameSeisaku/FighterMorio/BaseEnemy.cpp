@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "BaseEnemy.h"
 #include <cmath>
 #include "DxLib.h"
 #include "Map.h"
@@ -6,18 +6,18 @@
 
 namespace
 {
-	const float Gravity = 0.3f;		// キャラに掛かる重力加速度
-	const float JumpPower = 9.0f;	// キャラのジャンプ力
-	const float Speed = 5.0f;		// キャラの移動スピード
+	const float Gravity = 0.3f;		// 敵に掛かる重力加速度
+	const float JumpPower = 9.0f;	// 敵のジャンプ力
+	const float Speed = 5.0f;		// 敵の移動スピード
 }
 
-Player::Player() :
+BaseEnemy::BaseEnemy() :
 	m_camera(),
 	m_map(),
 	w(30),
 	h(30),
 	fallSpeed(0.0f),
-	pos(VGet(32.0f + h * 0.5f, 300, 0)),
+	pos(VGet(100.0f + h * 0.5f, 300, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
@@ -29,11 +29,11 @@ Player::Player() :
 {
 }
 
-Player::~Player()
+BaseEnemy::~BaseEnemy()
 {
 }
 
-void Player::Init(int mapNumber)
+void BaseEnemy::Init(int mapNumber)
 {
 	switch (mapNumber)
 	{
@@ -68,7 +68,7 @@ void Player::Init(int mapNumber)
 	}
 }
 
-void Player::Update(int mapNumber)
+void BaseEnemy::Update(int mapNumber)
 {
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
@@ -111,13 +111,13 @@ void Player::Update(int mapNumber)
 	velocity = VAdd(velocity, fallVelocity);
 
 	// 当たり判定をして、壁にめり込まないようにvelocityを操作する
-	velocity = CheckPlayerHitWithMap(mapNumber);
+	velocity = CheckBaseEnemyHitWithMap(mapNumber);
 
 	// 移動
 	pos = VAdd(pos, velocity);
 }
 
-VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
+VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 {
 	// 速度が最初から0なら動かさず早期return
 	if (VSize(velocity) == 0)
@@ -149,7 +149,7 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 				bool isHit = false;
 				for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 				{
-					bool isHit = IsHitPlayerWithMapChip(mapNumber, futurePos, hChip, wChip);
+					bool isHit = IsHitBaseEnemyWithMapChip(mapNumber, futurePos, hChip, wChip);
 
 					// 初回に当たったとき
 					if (isHit && isFirstHit)
@@ -246,7 +246,7 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 				bool isHit = false;
 				for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 				{
-					bool isHit = IsHitPlayerWithMapChip(mapNumber, futurePos, hChip, wChip);
+					bool isHit = IsHitBaseEnemyWithMapChip(mapNumber, futurePos, hChip, wChip);
 
 					// 初回に当たったとき
 					if (isHit && isFirstHit)
@@ -330,7 +330,7 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 	}
 }
 
-bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip)
+bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip)
 {
 	int mapChip = 0;
 	switch (mapNumber)
@@ -373,9 +373,9 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 	else if (mapChip == 2)
 	{
 		// ↓デバック用
-		const auto& chip1 = PrototypeChipData1[hChip][wChip];
+		const auto& chip = PrototypeChipData1[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if (chip1.chipKind == 0)
+		if (chip.chipKind == 0)
 		{
 			return false;
 		}
@@ -384,10 +384,10 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		float futurePosRight = checkPos.x + w * 0.5f;
 		float futurePosTop = checkPos.y - h * 0.5f;
 		float futurePosBottom = checkPos.y + h * 0.5f;
-		float targetLeft = chip1.pos.x - chip1.w * 0.5f;
-		float targetRight = chip1.pos.x + chip1.w * 0.5f;
-		float targetTop = chip1.pos.y - chip1.h * 0.5f;
-		float targetBottom = chip1.pos.y + chip1.h * 0.5f;
+		float targetLeft = chip.pos.x - chip.w * 0.5f;
+		float targetRight = chip.pos.x + chip.w * 0.5f;
+		float targetTop = chip.pos.y - chip.h * 0.5f;
+		float targetBottom = chip.pos.y + chip.h * 0.5f;
 		// 矩形同士の当たり判定
 		if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
 			(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
@@ -400,7 +400,7 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 	}
 }
 
-void Player::CheckIsTopHit(int mapNumber)
+void BaseEnemy::CheckIsTopHit(int mapNumber)
 {
 	// 1ドット上にずらして当たれば頭上がぶつかっている （小数点無視）
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) - 1.0f, pos.z);
@@ -413,7 +413,7 @@ void Player::CheckIsTopHit(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				isHit = IsHitPlayerWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -446,7 +446,7 @@ void Player::CheckIsTopHit(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 			{
-				isHit = IsHitPlayerWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -477,7 +477,7 @@ void Player::CheckIsTopHit(int mapNumber)
 	}
 }
 
-void Player::CheckIsGround(int mapNumber)
+void BaseEnemy::CheckIsGround(int mapNumber)
 {
 	// 1ドット下にずらして当たれば地面に足がぶつかっている （小数点無視）
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
@@ -490,7 +490,7 @@ void Player::CheckIsGround(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				isHit = IsHitPlayerWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -520,7 +520,7 @@ void Player::CheckIsGround(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 			{
-				isHit = IsHitPlayerWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -548,10 +548,17 @@ void Player::CheckIsGround(int mapNumber)
 	}
 }
 
-
-void Player::Draw(Camera* camera)
+void BaseEnemy::CheckIsLeft(int mapNumber)
 {
-	// キャラクタの描画
+}
+
+void BaseEnemy::CheckIsRight(int mapNumber)
+{
+}
+
+void BaseEnemy::Draw(Camera* camera)
+{
+	// 敵の描画
 	auto leftTop = static_cast<int>(pos.x - w * 0.5f);
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);
 	auto rightTop = static_cast<int>(pos.x + w * 0.5f);
@@ -561,10 +568,5 @@ void Player::Draw(Camera* camera)
 		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		0xff0000, TRUE);
-
-#ifdef _DEBUG
-	DrawFormatString(0, 624, 0xffffff, " PlayerIsHit : %d", _isHit, true);
-#endif // _DEBUG
-
+		0x00ff00, TRUE);
 }
