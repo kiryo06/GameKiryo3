@@ -100,6 +100,63 @@ void Map::Draw(int mapNumber, Camera* camera)
 					// SrcX/Y  元画像のどこから
 					//DrawRectGraph()
 				}
+				// １は当たり判定チップを表しているので１のところだけ描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 2)
+				{
+					auto leftTop = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.x - PrototypeChipData1[hChip][wChip].w * 0.5f);
+					auto leftBottom = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.y - PrototypeChipData1[hChip][wChip].h * 0.5f);
+					auto rightTop = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.x + PrototypeChipData1[hChip][wChip].w * 0.5f);
+					auto rightBottom = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.y + PrototypeChipData1[hChip][wChip].h * 0.5f);
+
+					DrawBox(
+						leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+						leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+						rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+						rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+						0x00aaaa, TRUE);
+
+					// DestX/Y 画面のどこから表示するか(左上基準)
+					// SrcX/Y  元画像のどこから
+					//DrawRectGraph()
+				}
+				// １は当たり判定チップを表しているので１のところだけ描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 3)
+				{
+					auto leftTop = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.x - PrototypeChipData1[hChip][wChip].w * 0.5f);
+					auto leftBottom = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.y - PrototypeChipData1[hChip][wChip].h * 0.5f);
+					auto rightTop = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.x + PrototypeChipData1[hChip][wChip].w * 0.5f);
+					auto rightBottom = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.y + PrototypeChipData1[hChip][wChip].h * 0.5f);
+
+					DrawBox(
+						leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+						leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+						rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+						rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+						0xaa00aa, TRUE);
+
+					// DestX/Y 画面のどこから表示するか(左上基準)
+					// SrcX/Y  元画像のどこから
+					//DrawRectGraph()
+				}
+				// １は当たり判定チップを表しているので１のところだけ描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 4)
+				{
+					auto leftTop = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.x - PrototypeChipData1[hChip][wChip].w * 0.5f);
+					auto leftBottom = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.y - PrototypeChipData1[hChip][wChip].h * 0.5f);
+					auto rightTop = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.x + PrototypeChipData1[hChip][wChip].w * 0.5f);
+					auto rightBottom = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.y + PrototypeChipData1[hChip][wChip].h * 0.5f);
+
+					DrawBox(
+						leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+						leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+						rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+						rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+						0xaaaa00, TRUE);
+
+					// DestX/Y 画面のどこから表示するか(左上基準)
+					// SrcX/Y  元画像のどこから
+					//DrawRectGraph()
+				}
 			}
 		}
 		break;

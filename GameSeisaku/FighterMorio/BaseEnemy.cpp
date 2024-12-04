@@ -24,6 +24,7 @@ BaseEnemy::BaseEnemy() :
 	isHitTop(false),
 	isLeft(false),
 	isRight(false),
+	HitEnemy(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
 	m_k1ChipNumY(MapDataFile::k1ChipNumY),
@@ -77,29 +78,32 @@ void BaseEnemy::Update(int mapNumber, Player* player)
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	// ìGÇÃà⁄ìÆèàóù
 	dir = VGet(0, 0, 0);
-	if (player->GetPlayerPos().x < pos.x)
-	{
-		dir = VAdd(dir, VGet(-1, 0, 0));
-	}
+	//if (player->GetPlayerPos().x < pos.x)
+	//{
+	//	dir = VAdd(dir, VGet(-1, 0, 0));
+	//}
 
-	if (player->GetPlayerPos().x > pos.x)
-	{
-		dir = VAdd(dir, VGet(1, 0, 0));
-	}
-
+	//if (player->GetPlayerPos().x > pos.x)
+	//{
+	//	dir = VAdd(dir, VGet(1, 0, 0));
+	//}
+	dir = VAdd(dir, VGet(-1, 0, 0));
 	// ê≥ãKâª
 	if (VSquareSize(dir) > 0)
 	{
 		dir = VNorm(dir);
 	}
-	if (player->GetPlayerPos().x == pos.x && player->GetPlayerPos().y == pos.y)
+
+
+	if ((player->GetPlayerPos().x == pos.x)||(player->GetPlayerPos().y == pos.y))
 	{
-		_playerHit = 1;
+		HitEnemy = 1;
 	}
 	else
 	{
-		_playerHit = 0;
+		HitEnemy = 0;
 	}
+
 	// à⁄ìÆó ÇèoÇ∑
 	velocity = VScale(dir, Speed);
 
@@ -351,7 +355,6 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 					}
 					if (isHit)
 					{
-						_isHit = 1;//Debugóp
 						break;
 					}
 				}
@@ -671,6 +674,6 @@ void BaseEnemy::Draw(Camera* camera)
 		0x00ff00, TRUE);
 
 #ifdef _DEBUG
-	DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", _playerHit, true);
+	DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", HitEnemy, true);
 #endif // _DEBUG
 }

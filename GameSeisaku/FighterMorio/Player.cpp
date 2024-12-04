@@ -17,7 +17,7 @@ Player::Player() :
 	w(16),
 	h(16),
 	fallSpeed(0.0f),
-	pos(VGet(32.0f + h * 0.5f, 300, 0)),
+	pos(VGet(32.0f + h * 0.5f, 992, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
@@ -621,7 +621,7 @@ void Player::Draw(int mapNumber,Camera* camera)
 		}
 	}
 #ifdef _DEBUG
-	DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", _isHit, true);
+	//DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", _isHit, true);
 #endif // _DEBUG
 
 }
