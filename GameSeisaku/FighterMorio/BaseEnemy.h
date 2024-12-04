@@ -1,7 +1,7 @@
 #pragma once
 #include "MapData.h"
-class Map;
 class Camera;
+class Player;
 class BaseEnemy
 {
 public:
@@ -14,7 +14,7 @@ public:
 	/// <summary>
 	/// 敵の更新
 	/// </summary>
-	void Update(int mapNumber);
+	void Update(int mapNumber, Player* player);
 	/// <summary>
 	/// 未来の敵位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
 	/// </summary>
@@ -50,23 +50,27 @@ public:
 	VECTOR GetBaseEnemyDir() { return dir; }
 private:
 	float w, h;					// 幅、高さ
-	float fallSpeed;				// プレイヤーの落下速度。ジャンプ時は反転する
+	float fallSpeed;			// 敵の落下速度。ジャンプ時は反転する
+	float leftSpeed;
+	float rightSpeed;
 	VECTOR pos;					// 座標 横：中心　縦：中心
 	VECTOR dir;					// 座標の移動方向
-	VECTOR velocity;
-	bool isGround;				// プレイヤーが接地中か
-	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
-	int _isHit = 0;
-	int m_kChipNumY;
-	int m_kChipNumX;
-	int m_k1ChipNumY;
-	int m_k1ChipNumX;
-	Map* m_map;
+	VECTOR velocity;			// 速度の計算等
+	bool isGround;				// 敵が接地中か
+	bool isHitTop;				// 敵の頭が天井に当たっているか
+	bool isLeft;				// 敵が左に当たったか
+	bool isRight;				// 敵が右に当たったか
+	int _isHit = 0;				// 当たっているかどうか
+	int _playerHit = 0;			// 当たっているかどうか
+	int m_kChipNumY;			// マップの大きさ横軸1-1
+	int m_kChipNumX;			// マップの大きさ縦軸1-1
+	int m_k1ChipNumY;			// マップの大きさ横軸1-2
+	int m_k1ChipNumX;			// マップの大きさ縦軸1-2
 	Camera* m_camera;
-	// 原型チップデータ
+	// 原型チップデータ1-1用
 	MapDataFile::ChipData PrototypeChipData1[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
 
 
-	// 原型チップデータ
+	// 原型チップデータ1-2用
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::k1ChipNumY][MapDataFile::k1ChipNumX] = {};
 };

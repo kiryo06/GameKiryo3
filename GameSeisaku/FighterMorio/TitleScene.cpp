@@ -24,7 +24,9 @@ void TitleScene::Init()
 void TitleScene::Update()
 {
 	Pad::Update();
-	if (Pad::IsTrigger(PAD_INPUT_1))
+	// 入力状態を更新
+	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	if (Pad::IsTrigger(input & PAD_INPUT_X))
 	{
 		auto next = std::make_shared<StageSelectionScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
@@ -35,6 +37,7 @@ void TitleScene::Draw()
 {
 	DrawBox(0, 0, 1280, 640, 0x00baa0, true);
 	DrawFormatString(0, 0, 0xffffff, "TitleScene", true);
-	DrawFormatString(550, 500, 0xffffff, "Zキーを押してください", true);
+	DrawFormatString(550, 500, 0xffffff, "Aキーを押してください", true);
+	DrawFormatString(550, 516, 0xffffff, "Yボタンを押してください", true);
 	DrawRotaGraph(640, 225, 0.5 , 0 , m_Graph,TRUE);
 }

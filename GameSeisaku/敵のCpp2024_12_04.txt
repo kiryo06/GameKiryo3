@@ -6,10 +6,10 @@
 
 namespace
 {
-	const float Gravity = 0.3f;		// “G‚ÉŠ|‚©‚éd—Í‰Á‘¬“x
-	const float JumpPower = 9.0f;	// ƒLƒƒƒ‰‚ÌƒWƒƒƒ“ƒv—Í
-	const float EnemySpeed = 3.0f;	// ‰¼‘¬“x
-	const float Speed = 3.0f;		// “G‚ÌˆÚ“®ƒXƒs[ƒh
+	const float Gravity = 0.3f;		// æ•µã«æ›ã‹ã‚‹é‡åŠ›åŠ é€Ÿåº¦
+	const float JumpPower = 9.0f;	// ã‚­ãƒ£ãƒ©ã®ã‚¸ãƒ£ãƒ³ãƒ—åŠ›
+	const float EnemySpeed = 3.0f;	// ä»®é€Ÿåº¦
+	const float Speed = 3.0f;		// æ•µã®ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰
 }
 
 BaseEnemy::BaseEnemy() :
@@ -40,30 +40,30 @@ void BaseEnemy::Init(int mapNumber)
 	switch (mapNumber)
 	{
 	case 0:
-		// «ƒfƒoƒbƒN—p		ƒ}ƒbƒvƒf[ƒ^‚Ì“Ç‚İ‚İ
+		// â†“ãƒ‡ãƒãƒƒã‚¯ç”¨		ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData[hChip][wChip];	// ƒ}ƒbƒvƒ`ƒbƒv‚Ì”z—ñ
-				PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;						// ƒ}ƒbƒvƒ`ƒbƒv‚ÌƒTƒCƒYW
-				PrototypeChipData[hChip][wChip].h = MapDataFile::kChipHeight;						// ƒ}ƒbƒvƒ`ƒbƒv‚ÌƒTƒCƒYH
-				PrototypeChipData[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;			// ƒ}ƒbƒvƒ`ƒbƒv‚ÌˆÊ’uX
-				PrototypeChipData[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;			// ƒ}ƒbƒvƒ`ƒbƒv‚ÌˆÊ’uY
+				PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData[hChip][wChip];
+				PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;
+				PrototypeChipData[hChip][wChip].h = MapDataFile::kChipHeight;
+				PrototypeChipData[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;
+				PrototypeChipData[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;
 			}
 		}
 		break;
 	case 1:
-		// ƒ}ƒbƒvƒf[ƒ^‚Ì“Ç‚İ‚İ
+		// ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 			{
-				PrototypeChipData1[hChip][wChip].chipKind = MapDataFile::mapChipData1[hChip][wChip];	// ƒ}ƒbƒvƒ`ƒbƒv‚Ì”z—ñ
-				PrototypeChipData1[hChip][wChip].w = MapDataFile::kChipWidth;							// ƒ}ƒbƒvƒ`ƒbƒv‚ÌƒTƒCƒYW
-				PrototypeChipData1[hChip][wChip].h = MapDataFile::kChipHeight;							// ƒ}ƒbƒvƒ`ƒbƒv‚ÌƒTƒCƒYH
-				PrototypeChipData1[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;				// ƒ}ƒbƒvƒ`ƒbƒv‚ÌˆÊ’uX
-				PrototypeChipData1[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;				// ƒ}ƒbƒvƒ`ƒbƒv‚ÌˆÊ’uY
+				PrototypeChipData1[hChip][wChip].chipKind = MapDataFile::mapChipData1[hChip][wChip];
+				PrototypeChipData1[hChip][wChip].w = MapDataFile::kChipWidth;
+				PrototypeChipData1[hChip][wChip].h = MapDataFile::kChipHeight;
+				PrototypeChipData1[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;
+				PrototypeChipData1[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;
 			}
 		}
 		break;
@@ -73,9 +73,9 @@ void BaseEnemy::Init(int mapNumber)
 void BaseEnemy::Update(int mapNumber, Player* player)
 {
 
-	// “ü—Íó‘Ô‚ğXV
+	// å…¥åŠ›çŠ¶æ…‹ã‚’æ›´æ–°
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	// “G‚ÌˆÚ“®ˆ—
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç§»å‹•å‡¦ç†
 	dir = VGet(0, 0, 0);
 	if (player->GetPlayerPos().x < pos.x)
 	{
@@ -87,71 +87,64 @@ void BaseEnemy::Update(int mapNumber, Player* player)
 		dir = VAdd(dir, VGet(1, 0, 0));
 	}
 
-	// ³‹K‰»
+	// æ­£è¦åŒ–
 	if (VSquareSize(dir) > 0)
 	{
 		dir = VNorm(dir);
 	}
-	if (player->GetPlayerPos().x == pos.x && player->GetPlayerPos().y == pos.y)
-	{
-		_playerHit = 1;
-	}
-	else
-	{
-		_playerHit = 0;
-	}
-	// ˆÚ“®—Ê‚ğo‚·
+
+	// ç§»å‹•é‡ã‚’å‡ºã™
 	velocity = VScale(dir, Speed);
 
-	// —‰º‘¬“x‚ğXV
+	// è½ä¸‹é€Ÿåº¦ã‚’æ›´æ–°
 	fallSpeed += Gravity;
 
-	// ¶‰EˆÚ“®
+	// å·¦å³ç§»å‹•
 	leftSpeed -= Speed;
 	rightSpeed += Speed;
 
-	// HACK: æ‚Éİ’è”»’è‚ğ‚·‚é‚±‚Æ‚ÅfallSpeedC³{Ú’nƒtƒ‰ƒOXV
+	// HACK: å…ˆã«è¨­å®šåˆ¤å®šã‚’ã™ã‚‹ã“ã¨ã§fallSpeedä¿®æ­£ï¼‹æ¥åœ°ãƒ•ãƒ©ã‚°æ›´æ–°
 	CheckIsGround(mapNumber);
 	CheckIsTopHit(mapNumber);
 	CheckIsLeft(mapNumber);
 	CheckIsRight(mapNumber);
 	/*
-	// ’n‚É‘«‚ª’…‚¢‚Ä‚¢‚éê‡‚Ì‚İƒWƒƒƒ“ƒvƒ{ƒ^ƒ“(ƒ{ƒ^ƒ“‚P or ‚yƒL[)‚ğŒ©‚é
+	// åœ°ã«è¶³ãŒç€ã„ã¦ã„ã‚‹å ´åˆã®ã¿ã‚¸ãƒ£ãƒ³ãƒ—ãƒœã‚¿ãƒ³(ãƒœã‚¿ãƒ³ï¼‘ or ï¼ºã‚­ãƒ¼)ã‚’è¦‹ã‚‹
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
 	{
-		fallSpeed = -JumpPower;	// ƒWƒƒƒ“ƒvƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚ç‘¦À‚Éã•ûŒü‚Ì—Í‚É‘ã‚í‚é
+		fallSpeed = -JumpPower;	// ã‚¸ãƒ£ãƒ³ãƒ—ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‚‰å³åº§ã«ä¸Šæ–¹å‘ã®åŠ›ã«ä»£ã‚ã‚‹
 		isGround = false;
 	}
 	*/
 
-	// ¶‚É“–‚½‚Á‚½‚ç
+	// å·¦ã«å½“ãŸã£ãŸã‚‰
 	if (isLeft)
 	{
 		rightSpeed = +EnemySpeed;
 		isRight = false;
 	}
 
-	// ‰E‚É“–‚½‚Á‚½‚ç
+	// å³ã«å½“ãŸã£ãŸã‚‰
 	if (isRight)
 	{
 		rightSpeed = -EnemySpeed;
 		isLeft = false;
 	}
 
-	// —‰º‘¬“x‚ğˆÚ“®—Ê‚É‰Á‚¦‚é
-	auto fallVelocity = VGet(0, fallSpeed, 0);	// —‰º‚ğƒxƒNƒgƒ‹‚ÉByÀ•W‚µ‚©•Ï‰»‚µ‚È‚¢‚Ì‚ÅÅŒã‚ÉƒxƒNƒgƒ‹‚É‚·‚é
+	// è½ä¸‹é€Ÿåº¦ã‚’ç§»å‹•é‡ã«åŠ ãˆã‚‹
+	auto fallVelocity = VGet(0, fallSpeed, 0);	// è½ä¸‹ã‚’ãƒ™ã‚¯ãƒˆãƒ«ã«ã€‚yåº§æ¨™ã—ã‹å¤‰åŒ–ã—ãªã„ã®ã§æœ€å¾Œã«ãƒ™ã‚¯ãƒˆãƒ«ã«ã™ã‚‹
 	velocity = VAdd(velocity, fallVelocity);
 
-	// “–‚½‚è”»’è‚ğ‚µ‚ÄA•Ç‚É‚ß‚è‚Ü‚È‚¢‚æ‚¤‚Évelocity‚ğ‘€ì‚·‚é
+	// å½“ãŸã‚Šåˆ¤å®šã‚’ã—ã¦ã€å£ã«ã‚ã‚Šè¾¼ã¾ãªã„ã‚ˆã†ã«velocityã‚’æ“ä½œã™ã‚‹
 	velocity = CheckBaseEnemyHitWithMap(mapNumber);
 
-	// ˆÚ“®
+	// ç§»å‹•
 	pos = VAdd(pos, velocity);
 }
 
 VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 {
-	// ‘¬“x‚ªÅ‰‚©‚ç0‚È‚ç“®‚©‚³‚¸‘Šúreturn
+	// é€Ÿåº¦ãŒæœ€åˆã‹ã‚‰0ãªã‚‰å‹•ã‹ã•ãšæ—©æœŸreturn
 	if (VSize(velocity) == 0)
 	{
 		return velocity;
@@ -159,9 +152,9 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 
 	VECTOR ret = velocity;
 
-	// “–‚½‚ç‚È‚­‚È‚é‚Ü‚ÅŒJ‚è•Ô‚·
+	// å½“ãŸã‚‰ãªããªã‚‹ã¾ã§ç¹°ã‚Šè¿”ã™
 	bool loop = true;
-	bool isFirstHit = true;	// ‰‰ñ‚Å“–‚½‚Á‚½‚©
+	bool isFirstHit = true;	// åˆå›ã§å½“ãŸã£ãŸã‹
 
 	switch (mapNumber)
 	{
@@ -170,12 +163,12 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 		{
 			loop = false;
 
-			// –¢—ˆ‚Ì“G‚Ìƒ|ƒWƒVƒ‡ƒ“‚ğ‚Ü‚¸o‚·
+			// æœªæ¥ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ã¾ãšå‡ºã™
 			VECTOR futurePos = VAdd(pos, ret);
 
 			_isHit = 0;
 
-			//‘Sƒ}ƒbƒvƒ`ƒbƒv•ªŒJ‚è•Ô‚·
+			//å…¨ãƒãƒƒãƒ—ãƒãƒƒãƒ—åˆ†ç¹°ã‚Šè¿”ã™
 			for (int hChip = 0; hChip < m_kChipNumY; hChip++)
 			{
 				bool isHit = false;
@@ -183,29 +176,29 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 				{
 					bool isHit = IsHitBaseEnemyWithMapChip(mapNumber, futurePos, hChip, wChip);
 
-					// ‰‰ñ‚É“–‚½‚Á‚½‚Æ‚«
+					// åˆå›ã«å½“ãŸã£ãŸã¨ã
 					if (isHit && isFirstHit)
 					{
-						// ¡Œã“–‚½‚è”»’è‚Åƒ|ƒWƒVƒ‡ƒ“‚âvelocity‚Ì•â³‚ğ‚·‚é‚Æ‚«A¬”“_ˆÈ‰º‚ÌŒë·‚ªY‚Ü‚ê‚é
-						// G‚É1ƒhƒbƒg‚¸‚ÂŒ¸‚ç‚·A”ŠwŒvZ‚ğ‚µ‚È‚¢ƒ}ƒbƒVƒu“–‚½‚è”»’è‚É‚Í×–‚‚È‚Ì‚Å‰‰ñ‚ÉŠÛ‚ß‚Ä‚µ‚Ü‚¢A
-						// ˆÈ~‰ü‚ß‚Ä“–‚½‚è”»’è
-						// pos‚àVelocity‚àŠÛ‚ß‚é
+						// ä»Šå¾Œå½“ãŸã‚Šåˆ¤å®šã§ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚„velocityã®è£œæ­£ã‚’ã™ã‚‹ã¨ãã€å°æ•°ç‚¹ä»¥ä¸‹ã®èª¤å·®ãŒç”£ã¾ã‚Œã‚‹
+						// é›‘ã«1ãƒ‰ãƒƒãƒˆãšã¤æ¸›ã‚‰ã™ã€æ•°å­¦è¨ˆç®—ã‚’ã—ãªã„ãƒãƒƒã‚·ãƒ–å½“ãŸã‚Šåˆ¤å®šã«ã¯é‚ªé­”ãªã®ã§åˆå›ã«ä¸¸ã‚ã¦ã—ã¾ã„ã€
+						// ä»¥é™æ”¹ã‚ã¦å½“ãŸã‚Šåˆ¤å®š
+						// posã‚‚Velocityã‚‚ä¸¸ã‚ã‚‹
 						pos.x = floorf(pos.x);
 						pos.y = floorf(pos.y);
 						ret.x = floorf(ret.x);
 						ret.y = floorf(ret.y);
 						isFirstHit = false;
-						loop = true;	// ƒ‹[ƒvŒp‘±
+						loop = true;	// ãƒ«ãƒ¼ãƒ—ç¶™ç¶š
 					}
 
-					// “–‚½‚ç‚È‚­‚È‚é‚Ü‚ÅŒJ‚è•Ô‚·(ƒ‹[ƒv‚ÍŒp‘±)
+					// å½“ãŸã‚‰ãªããªã‚‹ã¾ã§ç¹°ã‚Šè¿”ã™(ãƒ«ãƒ¼ãƒ—ã¯ç¶™ç¶š)
 					if (isHit && !isFirstHit)
 					{
-						float absX = fabsf(ret.x);	// velocity‚Ìx¬•ª‚Ìâ‘Î’l
-						float absY = fabsf(ret.y);	// velocity‚Ìy¬•ª‚Ìâ‘Î’l
+						float absX = fabsf(ret.x);	// velocityã®xæˆåˆ†ã®çµ¶å¯¾å€¤
+						float absY = fabsf(ret.y);	// velocityã®yæˆåˆ†ã®çµ¶å¯¾å€¤
 
-						// x¬•ª‚ğk‚ßØ‚Á‚Ä‚¢‚È‚¯‚ê‚Îx¬•ª‚ğk‚ß‚é
-						bool shrinkX = (absX != 0.0f);	// x¬•ª‚ğk‚ß‚é‚©‚Ç‚¤‚©
+						// xæˆåˆ†ã‚’ç¸®ã‚åˆ‡ã£ã¦ã„ãªã‘ã‚Œã°xæˆåˆ†ã‚’ç¸®ã‚ã‚‹
+						bool shrinkX = (absX != 0.0f);	// xæˆåˆ†ã‚’ç¸®ã‚ã‚‹ã‹ã©ã†ã‹
 
 						if (shrinkX)
 						{
@@ -218,7 +211,7 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 								ret.x += 1.0f;
 							}
 
-							// k‚ßØ‚Á‚½‚çÁ‚·
+							// ç¸®ã‚åˆ‡ã£ãŸã‚‰æ¶ˆã™
 							if (fabs(ret.x) < 1.0f)
 							{
 								ret.x = 0.0f;
@@ -236,14 +229,14 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 								ret.y += 1.0f;
 							}
 
-							// k‚ßØ‚Á‚½‚çÁ‚·
+							// ç¸®ã‚åˆ‡ã£ãŸã‚‰æ¶ˆã™
 							if (fabs(ret.y) < 1.0f)
 							{
 								ret.y = 0.0f;
 							}
 							loop = true;
 						}
-						// ‚Ç‚¿‚ç‚à’÷‚ßØ‚Á‚½‚Æ‚«‚Éloop‰ğœ
+						// ã©ã¡ã‚‰ã‚‚ç· ã‚åˆ‡ã£ãŸã¨ãã«loopè§£é™¤
 						if (ret.x == 0.0f && ret.y == 0.0f)
 						{
 							loop = false;
@@ -254,7 +247,7 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 					}
 					if (isHit)
 					{
-						_isHit = 1;//Debug—p
+						_isHit = 1;//Debugç”¨
 						break;
 					}
 				}
@@ -267,12 +260,12 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 		{
 			loop = false;
 
-			// –¢—ˆ‚Ì“G‚Ìƒ|ƒWƒVƒ‡ƒ“‚ğ‚Ü‚¸o‚·
+			// æœªæ¥ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚’ã¾ãšå‡ºã™
 			VECTOR futurePos = VAdd(pos, ret);
 
 			_isHit = 0;
 
-			//‘Sƒ}ƒbƒvƒ`ƒbƒv•ªŒJ‚è•Ô‚·
+			//å…¨ãƒãƒƒãƒ—ãƒãƒƒãƒ—åˆ†ç¹°ã‚Šè¿”ã™
 			for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 			{
 				bool isHit = false;
@@ -280,29 +273,29 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 				{
 					bool isHit = IsHitBaseEnemyWithMapChip(mapNumber, futurePos, hChip, wChip);
 
-					// ‰‰ñ‚É“–‚½‚Á‚½‚Æ‚«
+					// åˆå›ã«å½“ãŸã£ãŸã¨ã
 					if (isHit && isFirstHit)
 					{
-						// ¡Œã“–‚½‚è”»’è‚Åƒ|ƒWƒVƒ‡ƒ“‚âvelocity‚Ì•â³‚ğ‚·‚é‚Æ‚«A¬”“_ˆÈ‰º‚ÌŒë·‚ªY‚Ü‚ê‚é
-						// G‚É1ƒhƒbƒg‚¸‚ÂŒ¸‚ç‚·A”ŠwŒvZ‚ğ‚µ‚È‚¢ƒ}ƒbƒVƒu“–‚½‚è”»’è‚É‚Í×–‚‚È‚Ì‚Å‰‰ñ‚ÉŠÛ‚ß‚Ä‚µ‚Ü‚¢A
-						// ˆÈ~‰ü‚ß‚Ä“–‚½‚è”»’è
-						// pos‚àVelocity‚àŠÛ‚ß‚é
+						// ä»Šå¾Œå½“ãŸã‚Šåˆ¤å®šã§ãƒã‚¸ã‚·ãƒ§ãƒ³ã‚„velocityã®è£œæ­£ã‚’ã™ã‚‹ã¨ãã€å°æ•°ç‚¹ä»¥ä¸‹ã®èª¤å·®ãŒç”£ã¾ã‚Œã‚‹
+						// é›‘ã«1ãƒ‰ãƒƒãƒˆãšã¤æ¸›ã‚‰ã™ã€æ•°å­¦è¨ˆç®—ã‚’ã—ãªã„ãƒãƒƒã‚·ãƒ–å½“ãŸã‚Šåˆ¤å®šã«ã¯é‚ªé­”ãªã®ã§åˆå›ã«ä¸¸ã‚ã¦ã—ã¾ã„ã€
+						// ä»¥é™æ”¹ã‚ã¦å½“ãŸã‚Šåˆ¤å®š
+						// posã‚‚Velocityã‚‚ä¸¸ã‚ã‚‹
 						pos.x = floorf(pos.x);
 						pos.y = floorf(pos.y);
 						ret.x = floorf(ret.x);
 						ret.y = floorf(ret.y);
 						isFirstHit = false;
-						loop = true;	// ƒ‹[ƒvŒp‘±
+						loop = true;	// ãƒ«ãƒ¼ãƒ—ç¶™ç¶š
 					}
 
-					// “–‚½‚ç‚È‚­‚È‚é‚Ü‚ÅŒJ‚è•Ô‚·(ƒ‹[ƒv‚ÍŒp‘±)
+					// å½“ãŸã‚‰ãªããªã‚‹ã¾ã§ç¹°ã‚Šè¿”ã™(ãƒ«ãƒ¼ãƒ—ã¯ç¶™ç¶š)
 					if (isHit && !isFirstHit)
 					{
-						float absX = fabsf(ret.x);	// velocity‚Ìx¬•ª‚Ìâ‘Î’l
-						float absY = fabsf(ret.y);	// velocity‚Ìy¬•ª‚Ìâ‘Î’l
+						float absX = fabsf(ret.x);	// velocityã®xæˆåˆ†ã®çµ¶å¯¾å€¤
+						float absY = fabsf(ret.y);	// velocityã®yæˆåˆ†ã®çµ¶å¯¾å€¤
 
-						// x¬•ª‚ğk‚ßØ‚Á‚Ä‚¢‚È‚¯‚ê‚Îx¬•ª‚ğk‚ß‚é
-						bool shrinkX = (absX != 0.0f);	// x¬•ª‚ğk‚ß‚é‚©‚Ç‚¤‚©
+						// xæˆåˆ†ã‚’ç¸®ã‚åˆ‡ã£ã¦ã„ãªã‘ã‚Œã°xæˆåˆ†ã‚’ç¸®ã‚ã‚‹
+						bool shrinkX = (absX != 0.0f);	// xæˆåˆ†ã‚’ç¸®ã‚ã‚‹ã‹ã©ã†ã‹
 
 						if (shrinkX)
 						{
@@ -315,7 +308,7 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 								ret.x += 1.0f;
 							}
 
-							// k‚ßØ‚Á‚½‚çÁ‚·
+							// ç¸®ã‚åˆ‡ã£ãŸã‚‰æ¶ˆã™
 							if (fabs(ret.x) < 1.0f)
 							{
 								ret.x = 0.0f;
@@ -333,14 +326,14 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 								ret.y += 1.0f;
 							}
 
-							// k‚ßØ‚Á‚½‚çÁ‚·
+							// ç¸®ã‚åˆ‡ã£ãŸã‚‰æ¶ˆã™
 							if (fabs(ret.y) < 1.0f)
 							{
 								ret.y = 0.0f;
 							}
 							loop = true;
 						}
-						// ‚Ç‚¿‚ç‚à’÷‚ßØ‚Á‚½‚Æ‚«‚Éloop‰ğœ
+						// ã©ã¡ã‚‰ã‚‚ç· ã‚åˆ‡ã£ãŸã¨ãã«loopè§£é™¤
 						if (ret.x == 0.0f && ret.y == 0.0f)
 						{
 							loop = false;
@@ -351,7 +344,7 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 					}
 					if (isHit)
 					{
-						_isHit = 1;//Debug—p
+						_isHit = 1;//Debugç”¨
 						break;
 					}
 				}
@@ -376,14 +369,14 @@ bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos,
 	}
 	if (mapChip == 1)
 	{
-		// «ƒfƒoƒbƒN—p
+		// â†“ãƒ‡ãƒãƒƒã‚¯ç”¨
 		const auto& chip = PrototypeChipData[hChip][wChip];
-		// ƒ}ƒbƒvƒ`ƒbƒv‚ª“–‚½‚ç‚È‚¢í—Ş‚È‚ç‘Šúreturn
+		// ãƒãƒƒãƒ—ãƒãƒƒãƒ—ãŒå½“ãŸã‚‰ãªã„ç¨®é¡ãªã‚‰æ—©æœŸreturn
 		if (chip.chipKind == 0)
 		{
 			return false;
 		}
-		// “–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©’²‚×‚é
+		// å½“ãŸã£ã¦ã„ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹
 		float futurePosLeft = checkPos.x - w * 0.5f;
 		float futurePosRight = checkPos.x + w * 0.5f;
 		float futurePosTop = checkPos.y - h * 0.5f;
@@ -392,7 +385,7 @@ bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos,
 		float targetRight = chip.pos.x + chip.w * 0.5f;
 		float targetTop = chip.pos.y - chip.h * 0.5f;
 		float targetBottom = chip.pos.y + chip.h * 0.5f;
-		// ‹éŒ`“¯m‚Ì“–‚½‚è”»’è
+		// çŸ©å½¢åŒå£«ã®å½“ãŸã‚Šåˆ¤å®š
 		if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
 			(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
 			((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
@@ -404,14 +397,14 @@ bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos,
 	}
 	else if (mapChip == 2)
 	{
-		// «ƒfƒoƒbƒN—p
+		// â†“ãƒ‡ãƒãƒƒã‚¯ç”¨
 		const auto& chip = PrototypeChipData1[hChip][wChip];
-		// ƒ}ƒbƒvƒ`ƒbƒv‚ª“–‚½‚ç‚È‚¢í—Ş‚È‚ç‘Šúreturn
+		// ãƒãƒƒãƒ—ãƒãƒƒãƒ—ãŒå½“ãŸã‚‰ãªã„ç¨®é¡ãªã‚‰æ—©æœŸreturn
 		if (chip.chipKind == 0)
 		{
 			return false;
 		}
-		// “–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©’²‚×‚é
+		// å½“ãŸã£ã¦ã„ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹
 		float futurePosLeft = checkPos.x - w * 0.5f;
 		float futurePosRight = checkPos.x + w * 0.5f;
 		float futurePosTop = checkPos.y - h * 0.5f;
@@ -420,7 +413,7 @@ bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos,
 		float targetRight = chip.pos.x + chip.w * 0.5f;
 		float targetTop = chip.pos.y - chip.h * 0.5f;
 		float targetBottom = chip.pos.y + chip.h * 0.5f;
-		// ‹éŒ`“¯m‚Ì“–‚½‚è”»’è
+		// çŸ©å½¢åŒå£«ã®å½“ãŸã‚Šåˆ¤å®š
 		if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
 			(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
 			((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
@@ -434,9 +427,9 @@ bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos,
 
 void BaseEnemy::CheckIsTopHit(int mapNumber)
 {
-	// 1ƒhƒbƒgã‚É‚¸‚ç‚µ‚Ä“–‚½‚ê‚Î“ªã‚ª‚Ô‚Â‚©‚Á‚Ä‚¢‚é i¬”“_–³‹j
+	// 1ãƒ‰ãƒƒãƒˆä¸Šã«ãšã‚‰ã—ã¦å½“ãŸã‚Œã°é ­ä¸ŠãŒã¶ã¤ã‹ã£ã¦ã„ã‚‹ ï¼ˆå°æ•°ç‚¹ç„¡è¦–ï¼‰
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) - 1.0f, pos.z);
-	// ‘Sƒ}ƒbƒvƒ`ƒbƒv•ªŒJ‚è•Ô‚·
+	// å…¨ãƒãƒƒãƒ—ãƒãƒƒãƒ—åˆ†ç¹°ã‚Šè¿”ã™
 	bool isHit = false;
 	switch (mapNumber)
 	{
@@ -457,13 +450,13 @@ void BaseEnemy::CheckIsTopHit(int mapNumber)
 			}
 			if (isHit)
 			{
-				// ˆÈ‘O‚Ô‚Â‚©‚Á‚Ä‚¢‚È‚¢‚Ì‚É‚Ô‚Â‚©‚é‚È‚çfallSpeed‚ğƒ[ƒ‚É‚µA‘¦—‰º‚·‚é‚æ‚¤‚É
+				// ä»¥å‰ã¶ã¤ã‹ã£ã¦ã„ãªã„ã®ã«ã¶ã¤ã‹ã‚‹ãªã‚‰fallSpeedã‚’ã‚¼ãƒ­ã«ã—ã€å³è½ä¸‹ã™ã‚‹ã‚ˆã†ã«
 				if (!isHitTop)
 				{
 					isHitTop = true;
 					fallSpeed = 0.0f;
 
-					// ŒãX‚ÌGŒvZ‚É‹¿‚­‚Ì‚ÅAyÀ•W‚Ì¬”“_‚ğÁ‚µ”ò‚Î‚·
+					// å¾Œã€…ã®é›‘è¨ˆç®—ã«éŸ¿ãã®ã§ã€yåº§æ¨™ã®å°æ•°ç‚¹ã‚’æ¶ˆã—é£›ã°ã™
 					pos.y = floorf(pos.y);
 				}
 			}
@@ -490,13 +483,13 @@ void BaseEnemy::CheckIsTopHit(int mapNumber)
 			}
 			if (isHit)
 			{
-				// ˆÈ‘O‚Ô‚Â‚©‚Á‚Ä‚¢‚È‚¢‚Ì‚É‚Ô‚Â‚©‚é‚È‚çfallSpeed‚ğƒ[ƒ‚É‚µA‘¦—‰º‚·‚é‚æ‚¤‚É
+				// ä»¥å‰ã¶ã¤ã‹ã£ã¦ã„ãªã„ã®ã«ã¶ã¤ã‹ã‚‹ãªã‚‰fallSpeedã‚’ã‚¼ãƒ­ã«ã—ã€å³è½ä¸‹ã™ã‚‹ã‚ˆã†ã«
 				if (!isHitTop)
 				{
 					isHitTop = true;
 					fallSpeed = 0.0f;
 
-					// ŒãX‚ÌGŒvZ‚É‹¿‚­‚Ì‚ÅAyÀ•W‚Ì¬”“_‚ğÁ‚µ”ò‚Î‚·
+					// å¾Œã€…ã®é›‘è¨ˆç®—ã«éŸ¿ãã®ã§ã€yåº§æ¨™ã®å°æ•°ç‚¹ã‚’æ¶ˆã—é£›ã°ã™
 					pos.y = floorf(pos.y);
 				}
 			}
@@ -511,9 +504,9 @@ void BaseEnemy::CheckIsTopHit(int mapNumber)
 
 void BaseEnemy::CheckIsGround(int mapNumber)
 {
-	// 1ƒhƒbƒg‰º‚É‚¸‚ç‚µ‚Ä“–‚½‚ê‚Î’n–Ê‚É‘«‚ª‚Ô‚Â‚©‚Á‚Ä‚¢‚é i¬”“_–³‹j
+	// 1ãƒ‰ãƒƒãƒˆä¸‹ã«ãšã‚‰ã—ã¦å½“ãŸã‚Œã°åœ°é¢ã«è¶³ãŒã¶ã¤ã‹ã£ã¦ã„ã‚‹ ï¼ˆå°æ•°ç‚¹ç„¡è¦–ï¼‰
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
-	// ‘Sƒ}ƒbƒvƒ`ƒbƒv•ªŒJ‚è•Ô‚·
+	// å…¨ãƒãƒƒãƒ—ãƒãƒƒãƒ—åˆ†ç¹°ã‚Šè¿”ã™
 	bool isHit = false;
 	switch (mapNumber)
 	{
@@ -536,11 +529,11 @@ void BaseEnemy::CheckIsGround(int mapNumber)
 		if (isHit)
 		{
 			isGround = true;
-			// fallSpeed‚ğƒ[ƒ‚É‚µA‹}Œƒ‚È—‰º‚ğ–h‚®
+			// fallSpeedã‚’ã‚¼ãƒ­ã«ã—ã€æ€¥æ¿€ãªè½ä¸‹ã‚’é˜²ã
 			fallSpeed = 0.0f;
 
-			// ŒãX‚ÌGŒvZ‚É‹¿‚­‚Ì‚ÅAyÀ•W‚Ì¬”“_‚ğÁ‚µ”ò‚Î‚·
-			pos.y = floorf(pos.y);	// ‚¿‚å‚¤‚Ç’n–Ê‚É•t‚­ˆÊ’u‚É
+			// å¾Œã€…ã®é›‘è¨ˆç®—ã«éŸ¿ãã®ã§ã€yåº§æ¨™ã®å°æ•°ç‚¹ã‚’æ¶ˆã—é£›ã°ã™
+			pos.y = floorf(pos.y);	// ã¡ã‚‡ã†ã©åœ°é¢ã«ä»˜ãä½ç½®ã«
 		}
 		else
 		{
@@ -566,11 +559,11 @@ void BaseEnemy::CheckIsGround(int mapNumber)
 		if (isHit)
 		{
 			isGround = true;
-			// fallSpeed‚ğƒ[ƒ‚É‚µA‹}Œƒ‚È—‰º‚ğ–h‚®
+			// fallSpeedã‚’ã‚¼ãƒ­ã«ã—ã€æ€¥æ¿€ãªè½ä¸‹ã‚’é˜²ã
 			fallSpeed = 0.0f;
 
-			// ŒãX‚ÌGŒvZ‚É‹¿‚­‚Ì‚ÅAyÀ•W‚Ì¬”“_‚ğÁ‚µ”ò‚Î‚·
-			pos.y = floorf(pos.y);	// ‚¿‚å‚¤‚Ç’n–Ê‚É•t‚­ˆÊ’u‚É
+			// å¾Œã€…ã®é›‘è¨ˆç®—ã«éŸ¿ãã®ã§ã€yåº§æ¨™ã®å°æ•°ç‚¹ã‚’æ¶ˆã—é£›ã°ã™
+			pos.y = floorf(pos.y);	// ã¡ã‚‡ã†ã©åœ°é¢ã«ä»˜ãä½ç½®ã«
 		}
 		else
 		{
@@ -582,9 +575,9 @@ void BaseEnemy::CheckIsGround(int mapNumber)
 
 void BaseEnemy::CheckIsLeft(int mapNumber)
 {
-	// ¶‚É“®‚¢‚Ä“–‚½‚ê‚Î•Ç‚É‘Ì‚ª‚Ô‚Â‚©‚Á‚Ä‚¢‚é
+	// å·¦ã«å‹•ã„ã¦å½“ãŸã‚Œã°å£ã«ä½“ãŒã¶ã¤ã‹ã£ã¦ã„ã‚‹
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
-	// ‘Sƒ}ƒbƒvƒ`ƒbƒv•ªŒJ‚è•Ô‚·
+	// å…¨ãƒãƒƒãƒ—ãƒãƒƒãƒ—åˆ†ç¹°ã‚Šè¿”ã™
 	bool isHit = false;
 	switch (mapNumber)
 	{
@@ -607,11 +600,11 @@ void BaseEnemy::CheckIsLeft(int mapNumber)
 		if (isHit)
 		{
 			isLeft = true;
-			// leftSpeed‚ğƒ[ƒ‚É‚µA‹}Œƒ‚È—‰º‚ğ–h‚®
+			// leftSpeedã‚’ã‚¼ãƒ­ã«ã—ã€æ€¥æ¿€ãªè½ä¸‹ã‚’é˜²ã
 			leftSpeed = 0.0f;
 
-			// ŒãX‚ÌGŒvZ‚É‹¿‚­‚Ì‚ÅAyÀ•W‚Ì¬”“_‚ğÁ‚µ”ò‚Î‚·
-			pos.x = floorf(pos.x);	// ‚¿‚å‚¤‚Ç’n–Ê‚É•t‚­ˆÊ’u‚É
+			// å¾Œã€…ã®é›‘è¨ˆç®—ã«éŸ¿ãã®ã§ã€yåº§æ¨™ã®å°æ•°ç‚¹ã‚’æ¶ˆã—é£›ã°ã™
+			pos.x = floorf(pos.x);	// ã¡ã‚‡ã†ã©åœ°é¢ã«ä»˜ãä½ç½®ã«
 		}
 		else
 		{
@@ -637,11 +630,11 @@ void BaseEnemy::CheckIsLeft(int mapNumber)
 		if (isHit)
 		{
 			isLeft = true;
-			// leftSpeed‚ğƒ[ƒ‚É‚µA‹}Œƒ‚È—‰º‚ğ–h‚®
+			// leftSpeedã‚’ã‚¼ãƒ­ã«ã—ã€æ€¥æ¿€ãªè½ä¸‹ã‚’é˜²ã
 			leftSpeed = 0.0f;
 
-			// ŒãX‚ÌGŒvZ‚É‹¿‚­‚Ì‚ÅAyÀ•W‚Ì¬”“_‚ğÁ‚µ”ò‚Î‚·
-			pos.x = floorf(pos.x);	// ‚¿‚å‚¤‚Ç’n–Ê‚É•t‚­ˆÊ’u‚É
+			// å¾Œã€…ã®é›‘è¨ˆç®—ã«éŸ¿ãã®ã§ã€yåº§æ¨™ã®å°æ•°ç‚¹ã‚’æ¶ˆã—é£›ã°ã™
+			pos.x = floorf(pos.x);	// ã¡ã‚‡ã†ã©åœ°é¢ã«ä»˜ãä½ç½®ã«
 		}
 		else
 		{
@@ -658,7 +651,7 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 
 void BaseEnemy::Draw(Camera* camera)
 {
-	// “G‚Ì•`‰æ
+	// æ•µã®æç”»
 	auto leftTop = static_cast<int>(pos.x - w * 0.5f);
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);
 	auto rightTop = static_cast<int>(pos.x + w * 0.5f);
@@ -669,8 +662,4 @@ void BaseEnemy::Draw(Camera* camera)
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0x00ff00, TRUE);
-
-#ifdef _DEBUG
-	DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", _playerHit, true);
-#endif // _DEBUG
 }

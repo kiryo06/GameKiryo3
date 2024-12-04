@@ -20,7 +20,9 @@ void StageSelectionScene::Init()
 void StageSelectionScene::Update()
 {
 	Pad::Update();
-	if (Pad::IsTrigger(PAD_INPUT_1))
+	// “ü—Íó‘Ô‚ğXV
+	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	if (Pad::IsTrigger(input & PAD_INPUT_X))
 	{
 		auto next = std::make_shared<GameScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);

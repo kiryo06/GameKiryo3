@@ -95,6 +95,10 @@ void Map::Draw(int mapNumber, Camera* camera)
 						rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 						rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 						0xaaaaaa, TRUE);
+					
+					// DestX/Y ‰æ–Ê‚Ì‚Ç‚±‚©‚ç•\¦‚·‚é‚©(¶ãŠî€)
+					// SrcX/Y  Œ³‰æ‘œ‚Ì‚Ç‚±‚©‚ç
+					//DrawRectGraph()
 				}
 			}
 		}

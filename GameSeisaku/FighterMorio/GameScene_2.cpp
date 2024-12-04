@@ -19,7 +19,9 @@ void GameScene_2::Init()
 void GameScene_2::Update()
 {
 	Pad::Update();
-	if (Pad::IsTrigger(PAD_INPUT_1))
+	// “ü—Íó‘Ô‚ğXV
+	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	if (Pad::IsTrigger(input & PAD_INPUT_X))
 	{
 		auto next = std::make_shared<TitleScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);

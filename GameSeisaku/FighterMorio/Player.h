@@ -37,7 +37,7 @@ public:
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>
-	void Draw(Camera* camera);
+	void Draw(int mapNumber, Camera* camera);
 	VECTOR GetPlayerPos() { return pos; }
 	VECTOR GetPlayerDir() { return dir; }
 private:
@@ -48,7 +48,8 @@ private:
 	VECTOR velocity;
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
-	int _isHit=0;
+	int mapChip;
+	int _isHit;
 	int m_kChipNumY;
 	int m_kChipNumX;
 	int m_k1ChipNumY;
@@ -56,9 +57,9 @@ private:
 	Map* m_map;
 	Camera* m_camera;
 	// 原型チップデータ
-	MapDataFile::ChipData PrototypeChipData1[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
+	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
 
 
 	// 原型チップデータ
-	MapDataFile::ChipData PrototypeChipData[MapDataFile::k1ChipNumY][MapDataFile::k1ChipNumX] = {};
+	MapDataFile::ChipData PrototypeChipData1[MapDataFile::k1ChipNumY][MapDataFile::k1ChipNumX] = {};
 };
