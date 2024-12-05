@@ -7,10 +7,11 @@
 namespace
 {
 	// カメラ範囲
-	const float CameraScopeRangeW = 400.0f;
+	const float CameraScopeRangeRight = 500.0f;
+	const float CameraScopeRangeLeft = -10.0f;
 	const float CameraScopeRangeH = 300.0f;
 	const float CameraScopeRangeTop = 320.0f;
-	const float CameraScopeRangeBottom = 928.0f;
+	const float CameraScopeRangeBottom = 900.0f;
 	const float CameraLerpRate = 0.5f;
 }
 
@@ -43,13 +44,13 @@ void Camera::Update(Player* player)
 	// カメラの「目標」ポジションをその範囲内に留める
 	VECTOR aimCameraPos = pos;
 	VECTOR playerPos = player->GetPlayerPos();
-	if (playerPos.x > pos.x + (CameraScopeRangeW * 0.5f))
+	if (playerPos.x > pos.x + (CameraScopeRangeRight * 0.5f))
 	{
-		aimCameraPos.x = playerPos.x - (CameraScopeRangeW * 0.5f);
+		aimCameraPos.x = playerPos.x - (CameraScopeRangeRight * 0.5f);
 	}
-	else if (playerPos.x < pos.x - (CameraScopeRangeW * 0.5f))
+	else if (playerPos.x < pos.x - (CameraScopeRangeLeft * 0.5f))
 	{
-		aimCameraPos.x = playerPos.x + (CameraScopeRangeW * 0.5f);
+		aimCameraPos.x = playerPos.x + (CameraScopeRangeLeft * 0.5f);
 	}
 	if (playerPos.y > pos.y + (CameraScopeRangeH * 0.5f))
 	{
@@ -79,6 +80,6 @@ void Camera::Update(Player* player)
 	drawOffset.y = pos.y * -1;
 
 	// その時、画面の中央にプレイヤーが来るようにする
-	drawOffset.x = drawOffset.x + (ScreenWidth * 0.5f);
-	drawOffset.y = drawOffset.y + (ScreenHeight * 0.5f);
+	drawOffset.x = drawOffset.x + (ScreenWidth * 0.01f);
+	drawOffset.y = drawOffset.y + (ScreenHeight * 0.55f);
 }

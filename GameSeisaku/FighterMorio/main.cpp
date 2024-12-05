@@ -42,7 +42,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// ここにゲームの処理を書く
 		pSceneManager->Update();
 		pSceneManager->Draw();
-
 		// 画面の切り替わりを待つ
 		ScreenFlip();
 
@@ -51,7 +50,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		//Debug.
 #ifdef _DEBUG
-		printf("sa\n"); 
+
+		printf("ssa\n"); 
 
 #endif // DEBUG
 		//ループ終了処理

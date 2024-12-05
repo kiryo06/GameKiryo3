@@ -7,17 +7,17 @@
 namespace
 {
 	const float Gravity = 0.3f;		// キャラに掛かる重力加速度
-	const float JumpPower = 9.0f;	// キャラのジャンプ力
+	const float JumpPower = 8.75f;	// キャラのジャンプ力
 	const float Speed = 5.0f;		// キャラの移動スピード
 }
 
 Player::Player() :
 	m_camera(),
 	m_map(),
-	w(16),
-	h(16),
+	w(25),
+	h(32),
 	fallSpeed(0.0f),
-	pos(VGet(32.0f + h * 0.5f, 992, 0)),
+	pos(VGet(256.0f + h * 0.5f, 992, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
@@ -27,7 +27,9 @@ Player::Player() :
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
 	m_k1ChipNumY(MapDataFile::k1ChipNumY),
-	m_k1ChipNumX(MapDataFile::k1ChipNumX)
+	m_k1ChipNumX(MapDataFile::k1ChipNumX),
+	m_k2ChipNumY(MapDataFile::k2ChipNumY),
+	m_k2ChipNumX(MapDataFile::k2ChipNumX)
 {
 }
 
@@ -40,14 +42,17 @@ void Player::Init(int mapNumber)
 	switch (mapNumber)
 	{
 	case 0:
-		mapChip = 1;
+		mapChip = 0;
 		break;
 	case 1:
+		mapChip = 1;
+		break;
+	case 2:
 		mapChip = 2;
 		break;
 	}
 
-	if (mapChip == 1)
+	if (mapChip == 0)
 	{
 		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
 		{
@@ -62,7 +67,7 @@ void Player::Init(int mapNumber)
 		}
 	}
 
-	if (mapChip == 2)
+	if (mapChip == 1)
 	{
 		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 		{
@@ -73,6 +78,21 @@ void Player::Init(int mapNumber)
 				PrototypeChipData1[hChip][wChip].h = MapDataFile::kChipHeight;
 				PrototypeChipData1[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;
 				PrototypeChipData1[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;
+			}
+		}
+	}
+
+	if (mapChip == 2)
+	{
+		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
+			{
+				PrototypeChipData2[hChip][wChip].chipKind = MapDataFile::mapChipData2[hChip][wChip];
+				PrototypeChipData2[hChip][wChip].w = MapDataFile::kChipWidth;
+				PrototypeChipData2[hChip][wChip].h = MapDataFile::kChipHeight;
+				PrototypeChipData2[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;
+				PrototypeChipData2[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;
 			}
 		}
 	}
@@ -142,7 +162,7 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 	bool isFirstHit = true;	// 初回で当たったか
 
 
-	if (mapChip == 1)
+	if (mapChip == 0)
 	{
 		while (loop)
 		{
@@ -243,7 +263,7 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 		return ret;
 	}
 
-	if (mapChip == 2)
+	if (mapChip == 1)
 	{
 		while (loop)
 		{
@@ -343,11 +363,111 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 		}
 		return ret;
 	}
+	if (mapChip == 2)
+	{
+		while (loop)
+		{
+			loop = false;
+
+			// 未来のプレイヤーのポジションをまず出す
+			VECTOR futurePos = VAdd(pos, ret);
+
+			_isHit = 0;
+
+			//全マップチップ分繰り返す
+			for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+			{
+				bool isHit = false;
+				for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
+				{
+					bool isHit = IsHitPlayerWithMapChip(mapNumber, futurePos, hChip, wChip);
+
+					// 初回に当たったとき
+					if (isHit && isFirstHit)
+					{
+						// 今後当たり判定でポジションやvelocityの補正をするとき、小数点以下の誤差が産まれる
+						// 雑に1ドットずつ減らす、数学計算をしないマッシブ当たり判定には邪魔なので初回に丸めてしまい、
+						// 以降改めて当たり判定
+						// posもVelocityも丸める
+						pos.x = floorf(pos.x);
+						pos.y = floorf(pos.y);
+						ret.x = floorf(ret.x);
+						ret.y = floorf(ret.y);
+						isFirstHit = false;
+						loop = true;	// ループ継続
+					}
+
+					// 当たらなくなるまで繰り返す(ループは継続)
+					if (isHit && !isFirstHit)
+					{
+						float absX = fabsf(ret.x);	// velocityのx成分の絶対値
+						float absY = fabsf(ret.y);	// velocityのy成分の絶対値
+
+						// x成分を縮め切っていなければx成分を縮める
+						bool shrinkX = (absX != 0.0f);	// x成分を縮めるかどうか
+
+						if (shrinkX)
+						{
+							if (ret.x > 0.0f)
+							{
+								ret.x -= 1.0f;
+							}
+							else
+							{
+								ret.x += 1.0f;
+							}
+
+							// 縮め切ったら消す
+							if (fabs(ret.x) < 1.0f)
+							{
+								ret.x = 0.0f;
+							}
+							loop = true;
+						}
+						else
+						{
+							if (ret.y > 0.0f)
+							{
+								ret.y -= 1.0f;
+							}
+							else
+							{
+								ret.y += 1.0f;
+							}
+
+							// 縮め切ったら消す
+							if (fabs(ret.y) < 1.0f)
+							{
+								_isHit = 3;
+								ret.y = 0.0f;
+							}
+							loop = true;
+						}
+						// どちらも締め切ったときにloop解除
+						if (ret.x == 0.0f && ret.y == 0.0f)
+						{
+							_isHit = 2;
+							loop = false;
+							break;
+						}
+
+						break;
+					}
+					if (isHit)
+					{
+						_isHit = 1;//Debug用
+						break;
+					}
+				}
+			}
+		}
+		return ret;
+	}
 }
 
 bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip)
 {
-	if (mapChip == 1)
+	if (mapChip == 0)
 	{
 		// ↓デバック用
 		const auto& chip = PrototypeChipData[hChip][wChip];
@@ -375,29 +495,58 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		}
 		return false;
 	}
-	else if (mapChip == 2)
+
+	if (mapChip == 1)
 	{
 		// ↓デバック用
-		const auto& chip1 = PrototypeChipData1[hChip][wChip];
+		const auto& chip = PrototypeChipData1[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if (chip1.chipKind == 0)
+		if (chip.chipKind == 0)
 		{
 			return false;
 		}
 		// 当たっているかどうか調べる
-		float futurePosLeft1 = checkPos.x - w * 0.5f;
-		float futurePosRight1 = checkPos.x + w * 0.5f;
-		float futurePosTop1 = checkPos.y - h * 0.5f;
-		float futurePosBottom1 = checkPos.y + h * 0.5f;
-		float targetLeft1 = chip1.pos.x - chip1.w * 0.5f;
-		float targetRight1 = chip1.pos.x + chip1.w * 0.5f;
-		float targetTop1 = chip1.pos.y - chip1.h * 0.5f;
-		float targetBottom1 = chip1.pos.y + chip1.h * 0.5f;
+		float futurePosLeft = checkPos.x - w * 0.5f;
+		float futurePosRight = checkPos.x + w * 0.5f;
+		float futurePosTop = checkPos.y - h * 0.5f;
+		float futurePosBottom = checkPos.y + h * 0.5f;
+		float targetLeft = chip.pos.x - chip.w * 0.5f;
+		float targetRight = chip.pos.x + chip.w * 0.5f;
+		float targetTop = chip.pos.y - chip.h * 0.5f;
+		float targetBottom = chip.pos.y + chip.h * 0.5f;
 		// 矩形同士の当たり判定
-		if (((targetLeft1 <= futurePosLeft1 && futurePosLeft1 < targetRight1) ||
-			(targetLeft1 > futurePosLeft1 && targetLeft1 < futurePosRight1)) &&
-			((targetTop1 <= futurePosTop1 && futurePosTop1 < targetBottom1) ||
-				(targetTop1 > futurePosTop1 && targetTop1 < futurePosBottom1)))
+		if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
+			(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
+			((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
+				(targetTop > futurePosTop && targetTop < futurePosBottom)))
+		{
+			return true;
+		}
+		return false;
+	}
+	if (mapChip == 2)
+	{
+		// ↓デバック用
+		const auto& chip = PrototypeChipData2[hChip][wChip];
+		// マップチップが当たらない種類なら早期return
+		if (chip.chipKind == 0)
+		{
+			return false;
+		}
+		// 当たっているかどうか調べる
+		float futurePosLeft = checkPos.x - w * 0.5f;
+		float futurePosRight = checkPos.x + w * 0.5f;
+		float futurePosTop = checkPos.y - h * 0.5f;
+		float futurePosBottom = checkPos.y + h * 0.5f;
+		float targetLeft = chip.pos.x - chip.w * 0.5f;
+		float targetRight = chip.pos.x + chip.w * 0.5f;
+		float targetTop = chip.pos.y - chip.h * 0.5f;
+		float targetBottom = chip.pos.y + chip.h * 0.5f;
+		// 矩形同士の当たり判定
+		if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
+			(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
+			((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
+				(targetTop > futurePosTop && targetTop < futurePosBottom)))
 		{
 			return true;
 		}
@@ -412,7 +561,7 @@ void Player::CheckIsTopHit(int mapNumber)
 	// 全マップチップ分繰り返す
 	bool isHit = false;
 
-	if (mapChip == 1)
+	if (mapChip == 0)
 	{
 		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
 		{
@@ -447,11 +596,46 @@ void Player::CheckIsTopHit(int mapNumber)
 		}
 	}
 
-	if (mapChip == 2)
+	if (mapChip == 1)
 	{
 		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
+			{
+				isHit = IsHitPlayerWithMapChip(mapNumber, checkPos, hChip, wChip);
+				if (isHit)
+				{
+					break;
+				}
+			}
+			if (isHit)
+			{
+				break;
+			}
+		}
+		if (isHit)
+		{
+			// 以前ぶつかっていないのにぶつかるならfallSpeedをゼロにし、即落下するように
+			if (!isHitTop)
+			{
+				isHitTop = true;
+				fallSpeed = 0.0f;
+
+				// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+				pos.y = floorf(pos.y);
+			}
+		}
+		else
+		{
+			isHitTop = false;
+		}
+	}
+
+	if (mapChip == 2)
+	{
+		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 			{
 				isHit = IsHitPlayerWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
@@ -490,7 +674,7 @@ void Player::CheckIsGround(int mapNumber)
 	// 全マップチップ分繰り返す
 	bool isHit = false;
 
-	if (mapChip == 1)
+	if (mapChip == 0)
 	{
 		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
 		{
@@ -522,11 +706,43 @@ void Player::CheckIsGround(int mapNumber)
 		}
 	}
 
-	if (mapChip == 2)
+	if (mapChip == 1)
 	{
 		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
+			{
+				isHit = IsHitPlayerWithMapChip(mapNumber, checkPos, hChip, wChip);
+				if (isHit)
+				{
+					break;
+				}
+			}
+			if (isHit)
+			{
+				break;
+			}
+		}
+		if (isHit)
+		{
+			isGround = true;
+			// fallSpeedをゼロにし、急激な落下を防ぐ
+			fallSpeed = 0.0f;
+
+			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+			pos.y = floorf(pos.y);	// ちょうど地面に付く位置に
+		}
+		else
+		{
+			isGround = false;
+		}
+	}
+
+	if (mapChip == 2)
+	{
+		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 			{
 				isHit = IsHitPlayerWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
@@ -569,57 +785,6 @@ void Player::Draw(int mapNumber,Camera* camera)
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0xff0000, TRUE);
-
-	if (mapChip == 1)
-	{
-		// ↓デバック用		マップデータの読み込み
-		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
-		{
-			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
-			{
-				// １は当たり判定チップを表しているので１のところだけ描画
-				if (PrototypeChipData[hChip][wChip].chipKind == 1)
-				{
-					auto leftTop = static_cast<int>(PrototypeChipData[hChip][wChip].pos.x - PrototypeChipData[hChip][wChip].w * 0.5f);
-					auto leftBottom = static_cast<int>(PrototypeChipData[hChip][wChip].pos.y - PrototypeChipData[hChip][wChip].h * 0.5f);
-					auto rightTop = static_cast<int>(PrototypeChipData[hChip][wChip].pos.x + PrototypeChipData[hChip][wChip].w * 0.5f);
-					auto rightBottom = static_cast<int>(PrototypeChipData[hChip][wChip].pos.y + PrototypeChipData[hChip][wChip].h * 0.5f);
-
-					DrawBox(
-						leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-						leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-						rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-						rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-						0x00aaaa, FALSE);
-				}
-			}
-		}
-	}
-	else if (mapChip == 2)
-	{
-		// 1-1
-		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
-		{
-			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
-			{
-				// １は当たり判定チップを表しているので１のところだけ描画
-				if (PrototypeChipData1[hChip][wChip].chipKind == 1)
-				{
-					auto leftTop = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.x - PrototypeChipData1[hChip][wChip].w * 0.5f);
-					auto leftBottom = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.y - PrototypeChipData1[hChip][wChip].h * 0.5f);
-					auto rightTop = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.x + PrototypeChipData1[hChip][wChip].w * 0.5f);
-					auto rightBottom = static_cast<int>(PrototypeChipData1[hChip][wChip].pos.y + PrototypeChipData1[hChip][wChip].h * 0.5f);
-
-					DrawBox(
-						leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-						leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-						rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-						rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-						0xaa0000, FALSE);
-				}
-			}
-		}
-	}
 #ifdef _DEBUG
 	//DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", _isHit, true);
 #endif // _DEBUG

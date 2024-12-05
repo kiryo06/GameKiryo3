@@ -66,11 +66,13 @@ private:
 	int m_kChipNumX;			// マップの大きさ縦軸1-1
 	int m_k1ChipNumY;			// マップの大きさ横軸1-2
 	int m_k1ChipNumX;			// マップの大きさ縦軸1-2
+	int m_k2ChipNumY;
+	int m_k2ChipNumX;
 	Camera* m_camera;
 	// 原型チップデータ1-1用
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
-
-
 	// 原型チップデータ1-2用
 	MapDataFile::ChipData PrototypeChipData1[MapDataFile::k1ChipNumY][MapDataFile::k1ChipNumX] = {};
+	// 原型チップデータ
+	MapDataFile::ChipData PrototypeChipData2[MapDataFile::k2ChipNumY][MapDataFile::k2ChipNumX] = {};
 };

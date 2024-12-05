@@ -15,9 +15,9 @@ namespace
 BaseEnemy::BaseEnemy() :
 	m_camera(),
 	w(30),
-	h(30),
+	h(32),
 	fallSpeed(0.0f),
-	pos(VGet(1000.0f + h * 0.5f, 300, 0)),
+	pos(VGet(1050.0f + h * 0.5f, 992, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
@@ -28,7 +28,8 @@ BaseEnemy::BaseEnemy() :
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
 	m_k1ChipNumY(MapDataFile::k1ChipNumY),
-	m_k1ChipNumX(MapDataFile::k1ChipNumX)
+	m_k1ChipNumX(MapDataFile::k1ChipNumX),
+	m_k2ChipNumX(MapDataFile::k2ChipNumX)
 {
 }
 
@@ -671,7 +672,7 @@ void BaseEnemy::Draw(Camera* camera)
 		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		0x00ff00, TRUE);
+		0x4b0082, TRUE);
 
 #ifdef _DEBUG
 	DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", HitEnemy, true);

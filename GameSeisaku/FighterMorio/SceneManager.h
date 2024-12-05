@@ -5,10 +5,11 @@
 enum class SceneState
 {
 	Title,
+	StageSelecion,
 	Game,
 	Game_1,
 	Game_2,
-	StageSelecion
+	GameOver
 };
 
 class SceneManager

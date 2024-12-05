@@ -54,12 +54,14 @@ private:
 	int m_kChipNumX;
 	int m_k1ChipNumY;
 	int m_k1ChipNumX;
+	int m_k2ChipNumY;
+	int m_k2ChipNumX;
 	Map* m_map;
 	Camera* m_camera;
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
-
-
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData1[MapDataFile::k1ChipNumY][MapDataFile::k1ChipNumX] = {};
+	// 原型チップデータ
+	MapDataFile::ChipData PrototypeChipData2[MapDataFile::k2ChipNumY][MapDataFile::k2ChipNumX] = {};
 };
