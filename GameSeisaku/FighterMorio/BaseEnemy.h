@@ -1,5 +1,6 @@
 #pragma once
 #include "MapData.h"
+class Map;
 class Camera;
 class Player;
 class BaseEnemy
@@ -60,14 +61,15 @@ private:
 	bool isHitTop;				// 敵の頭が天井に当たっているか
 	bool isLeft;				// 敵が左に当たったか
 	bool isRight;				// 敵が右に当たったか
-	bool HitEnemy;				// 当たっているかどうか
-	int _isHit = 0;				// 当たっているかどうか
+	int mapChip;
+	int HitEnemy;				// 当たっているかどうか
 	int m_kChipNumY;			// マップの大きさ横軸1-1
 	int m_kChipNumX;			// マップの大きさ縦軸1-1
 	int m_k1ChipNumY;			// マップの大きさ横軸1-2
 	int m_k1ChipNumX;			// マップの大きさ縦軸1-2
 	int m_k2ChipNumY;
 	int m_k2ChipNumX;
+	Map* m_map;
 	Camera* m_camera;
 	// 原型チップデータ1-1用
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};

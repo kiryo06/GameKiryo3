@@ -14,9 +14,12 @@ namespace
 
 BaseEnemy::BaseEnemy() :
 	m_camera(),
+	m_map(),
 	w(30),
 	h(32),
 	fallSpeed(0.0f),
+	leftSpeed(0.0f),
+	rightSpeed(0.0f),
 	pos(VGet(1050.0f + h * 0.5f, 992, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
@@ -24,11 +27,13 @@ BaseEnemy::BaseEnemy() :
 	isHitTop(false),
 	isLeft(false),
 	isRight(false),
+	mapChip(0),
 	HitEnemy(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
 	m_k1ChipNumY(MapDataFile::k1ChipNumY),
 	m_k1ChipNumX(MapDataFile::k1ChipNumX),
+	m_k2ChipNumY(MapDataFile::k2ChipNumY),
 	m_k2ChipNumX(MapDataFile::k2ChipNumX)
 {
 }
@@ -42,7 +47,18 @@ void BaseEnemy::Init(int mapNumber)
 	switch (mapNumber)
 	{
 	case 0:
-		// ↓デバック用		マップデータの読み込み
+		mapChip = 0;
+		break;
+	case 1:
+		mapChip = 1;
+		break;
+	case 2:
+		mapChip = 2;
+		break;
+	}
+
+	if (mapChip == 0)
+	{
 		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
@@ -54,22 +70,38 @@ void BaseEnemy::Init(int mapNumber)
 				PrototypeChipData[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;			// マップチップの位置Y
 			}
 		}
-		break;
-	case 1:
-		// マップデータの読み込み
+	}
+	
+	if (mapChip == 1)
+	{
 		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 			{
-				PrototypeChipData1[hChip][wChip].chipKind = MapDataFile::mapChipData1[hChip][wChip];	// マップチップの配列
-				PrototypeChipData1[hChip][wChip].w = MapDataFile::kChipWidth;							// マップチップのサイズW
-				PrototypeChipData1[hChip][wChip].h = MapDataFile::kChipHeight;							// マップチップのサイズH
-				PrototypeChipData1[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;				// マップチップの位置X
-				PrototypeChipData1[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;				// マップチップの位置Y
+				PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData1[hChip][wChip];	// マップチップの配列
+				PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;						// マップチップのサイズW
+				PrototypeChipData[hChip][wChip].h = MapDataFile::kChipHeight;						// マップチップのサイズH
+				PrototypeChipData[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;			// マップチップの位置X
+				PrototypeChipData[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;			// マップチップの位置Y
 			}
 		}
-		break;
 	}
+
+	if (mapChip == 2)
+	{
+		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
+			{
+				PrototypeChipData[hChip][wChip].chipKind = MapDataFile::mapChipData2[hChip][wChip];	// マップチップの配列
+				PrototypeChipData[hChip][wChip].w = MapDataFile::kChipWidth;						// マップチップのサイズW
+				PrototypeChipData[hChip][wChip].h = MapDataFile::kChipHeight;						// マップチップのサイズH
+				PrototypeChipData[hChip][wChip].pos.x = wChip * MapDataFile::kChipWidth;			// マップチップの位置X
+				PrototypeChipData[hChip][wChip].pos.y = hChip * MapDataFile::kChipHeight;			// マップチップの位置Y
+			}
+		}
+	}
+
 }
 
 void BaseEnemy::Update(int mapNumber, Player* player)
@@ -168,9 +200,22 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 	bool loop = true;
 	bool isFirstHit = true;	// 初回で当たったか
 
+
 	switch (mapNumber)
 	{
 	case 0:
+		mapChip = 0;
+		break;
+	case 1:
+		mapChip = 1;
+		break;
+	case 2:
+		mapChip = 2;
+		break;
+	}
+
+	if (mapChip == 0)
+	{
 		while (loop)
 		{
 			loop = false;
@@ -178,7 +223,6 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 			// 未来の敵のポジションをまず出す
 			VECTOR futurePos = VAdd(pos, ret);
 
-			_isHit = 0;
 
 			//全マップチップ分繰り返す
 			for (int hChip = 0; hChip < m_kChipNumY; hChip++)
@@ -259,15 +303,16 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 					}
 					if (isHit)
 					{
-						_isHit = 1;//Debug用
 						break;
 					}
 				}
 			}
 		}
 		return ret;
-		break;
-	case 1:
+	}
+
+	if (mapChip == 1)
+	{
 		while (loop)
 		{
 			loop = false;
@@ -275,7 +320,6 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 			// 未来の敵のポジションをまず出す
 			VECTOR futurePos = VAdd(pos, ret);
 
-			_isHit = 0;
 
 			//全マップチップ分繰り返す
 			for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
@@ -362,7 +406,6 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 			}
 		}
 		return ret;
-		break;
 	}
 }
 
