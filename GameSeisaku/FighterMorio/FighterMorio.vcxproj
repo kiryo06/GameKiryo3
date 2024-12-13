@@ -150,6 +150,7 @@
     <ClCompile Include="GameScene_1.cpp" />
     <ClCompile Include="GameScene_2.cpp" />
     <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="GroundRectangle_HitJudgement.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="GameScene_1.h" />
     <ClInclude Include="GameScene_2.h" />
     <ClInclude Include="Geometry.h" />
+    <ClInclude Include="GroundRectangle_HitJudgement.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapChipHitPoints.h" />

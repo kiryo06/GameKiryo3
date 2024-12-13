@@ -42,7 +42,7 @@ public:
 	VECTOR GetPlayerDir() { return dir; }
 private:
 	float w, h;					// 幅、高さ
-	float fallSpeed;				// プレイヤーの落下速度。ジャンプ時は反転する
+	float fallSpeed;			// プレイヤーの落下速度。ジャンプ時は反転する
 	VECTOR pos;					// 座標 横：中心　縦：中心
 	VECTOR dir;					// 座標の移動方向
 	VECTOR velocity;

@@ -49,11 +49,14 @@ public:
 	void Draw(Camera* camera);
 	VECTOR GetBaseEnemyPos() { return pos; }
 	VECTOR GetBaseEnemyDir() { return dir; }
+	char GetBaseEnemyGround() { return isGround; }
+	bool GetBaseEnemyHitTop() { return isHitTop; }
+	bool GetBaseEnemyLeft() { return isLeft; }
+	bool GetBaseEnemyRight() { return isRight; }
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// 敵の落下速度。ジャンプ時は反転する
-	float leftSpeed;
-	float rightSpeed;
+	float workSpeed;			// 左右移動速度
 	VECTOR pos;					// 座標 横：中心　縦：中心
 	VECTOR dir;					// 座標の移動方向
 	VECTOR velocity;			// 速度の計算等
