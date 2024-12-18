@@ -60,11 +60,11 @@ void GameScene::Draw()
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
 	DrawFormatString(0,  48, 0x00cc00, " BaseEnemyPosX : %.1f", m_pBaseEnemy->GetBaseEnemyPos().x, true);
 	DrawFormatString(0,  64, 0x00cc00, " BaseEnemyPosY : %.1f", m_pBaseEnemy->GetBaseEnemyPos().y, true);
-	DrawFormatString(0,  80, 0x00cc00, " EnemyGround   : % 1d", m_pBaseEnemy->GetBaseEnemyGround(), true);
-	DrawFormatString(0,  96, 0x00cc00, " EnemyHittop   : % 1d", m_pBaseEnemy->GetBaseEnemyHitTop(), true);
-	DrawFormatString(0, 112, 0x00cc00, " EnemyLeft     : % 1d", 11, true);
-	DrawFormatString(0, 128, 0x00cc00, " EnemyRight    : %.1d", 11, true);
-	DrawFormatString(0, 144, 0xffffff, "               : %.1d", 123456789, true);
+	DrawFormatString(0,  80, 0xaaaaaa, "               : %.1d", 123456789, true);
+	DrawFormatString(0,  96, 0xaaaaaa, "               : %.1d", 123456789, true);
+	DrawFormatString(0, 112, 0xaaaaaa, "               : %.1d", 123456789, true);
+	DrawFormatString(0, 128, 0xaaaaaa, "               : %.1d", 123456789, true);
+	DrawFormatString(0, 144, 0xaaaaaa, "               : %.1d", 123456789, true);
 	DrawFormatString(0, 160, 0x00aaaa, " CameraPosX    : %.1f", m_pCamera->GetCameraDrawOffset().x, true);
 	DrawFormatString(0, 176, 0x00aaaa, " CameraPosY    : %.1f", m_pCamera->GetCameraDrawOffset().y, true);
 #endif // _DEBUG

@@ -49,10 +49,6 @@ public:
 	void Draw(Camera* camera);
 	VECTOR GetBaseEnemyPos() { return pos; }
 	VECTOR GetBaseEnemyDir() { return dir; }
-	char GetBaseEnemyGround() { return isGround; }
-	bool GetBaseEnemyHitTop() { return isHitTop; }
-	bool GetBaseEnemyLeft() { return isLeft; }
-	bool GetBaseEnemyRight() { return isRight; }
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// 敵の落下速度。ジャンプ時は反転する
@@ -72,8 +68,9 @@ private:
 	int m_k1ChipNumX;			// マップの大きさ縦軸1-2
 	int m_k2ChipNumY;
 	int m_k2ChipNumX;
-	Map* m_map;
-	Camera* m_camera;
+	Map* m_pMap;
+	Camera* m_pCamera;
+	Player* m_pPlayer;
 	// 原型チップデータ1-1用
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
 	// 原型チップデータ1-2用

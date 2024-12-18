@@ -8,7 +8,7 @@ namespace
 {
 	const float Gravity = 0.3f;		// キャラに掛かる重力加速度
 	const float JumpPower = 8.75f;	// キャラのジャンプ力
-	const float Speed = 5.0f;		// キャラの移動スピード
+	const float Speed = 3.0f;		// キャラの移動スピード
 }
 
 Player::Player() :

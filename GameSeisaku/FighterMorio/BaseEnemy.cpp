@@ -2,19 +2,21 @@
 #include <cmath>
 #include "DxLib.h"
 #include "Camera.h"
+#include "Map.h"
 #include "Player.h"
 
 namespace
 {
 	const float Gravity = 0.3f;		// 敵に掛かる重力加速度
 	const float JumpPower = 9.0f;	// キャラのジャンプ力
-	const float EnemySpeed =20.0f;	// 仮速度
-	const float Speed = 0.5f;		// 敵の移動スピード
+	const float EnemySpeed = 2.0f;	// 仮速度
+	const float Speed = 0.0f;		// 敵の移動スピード
 }
 
 BaseEnemy::BaseEnemy() :
-	m_camera(),
-	m_map(),
+	m_pCamera(),
+	m_pMap(),
+	m_pPlayer(),
 	w(30),
 	h(32),
 	fallSpeed(0.0f),
@@ -131,24 +133,33 @@ void BaseEnemy::Update(int mapNumber, Player* player)
 	fallSpeed += Gravity;
 
 	// 左右移動
-	workSpeed += Speed;
+	workSpeed = Speed;
 
 	// HACK: 先に設定判定をすることでfallSpeed修正＋接地フラグ更新
 	CheckIsGround(mapNumber);
 	CheckIsTopHit(mapNumber);
 	CheckIsLeft(mapNumber);
 	CheckIsRight(mapNumber);
+
+	if (!isLeft && !isRight)
+	{
+		workSpeed = -EnemySpeed;
+	}
 	// 左に当たったら
-	if (isLeft && !isRight && isLeft)
+	if (isLeft && !isRight)
 	{
 		workSpeed = +EnemySpeed;
-		isLeft = false;
 	}
 
 	// 右に当たったら
-	if (isRight && !isLeft && isRight)
+	if (isRight && !isLeft)
 	{
 		workSpeed = -EnemySpeed;
+	}
+
+	if (isRight && isLeft)
+	{
+		isLeft = false;
 		isRight = false;
 	}
 
@@ -370,6 +381,103 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 		return ret;
 	}
 
+	if (mapChip == 2)
+	{
+		while (loop)
+		{
+			loop = false;
+
+			// 未来の敵のポジションをまず出す
+			VECTOR futurePos = VAdd(pos, ret);
+
+
+			//全マップチップ分繰り返す
+			for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+			{
+				bool isHit = false;
+				for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
+				{
+					bool isHit = IsHitBaseEnemyWithMapChip(mapNumber, futurePos, hChip, wChip);
+
+					// 初回に当たったとき
+					if (isHit && isFirstHit)
+					{
+						// 今後当たり判定でポジションやvelocityの補正をするとき、小数点以下の誤差が産まれる
+						// 雑に1ドットずつ減らす、数学計算をしないマッシブ当たり判定には邪魔なので初回に丸めてしまい、
+						// 以降改めて当たり判定
+						// posもVelocityも丸める
+						pos.x = floorf(pos.x);
+						pos.y = floorf(pos.y);
+						ret.x = floorf(ret.x);
+						ret.y = floorf(ret.y);
+						isFirstHit = false;
+						loop = true;	// ループ継続
+					}
+
+					// 当たらなくなるまで繰り返す(ループは継続)
+					if (isHit && !isFirstHit)
+					{
+						float absX = fabsf(ret.x);	// velocityのx成分の絶対値
+						float absY = fabsf(ret.y);	// velocityのy成分の絶対値
+
+						// x成分を縮め切っていなければx成分を縮める
+						bool shrinkX = (absX != 0.0f);	// x成分を縮めるかどうか
+
+						if (shrinkX)
+						{
+							if (ret.x > 0.0f)
+							{
+								ret.x -= 1.0f;
+							}
+							else
+							{
+								ret.x += 1.0f;
+							}
+
+							// 縮め切ったら消す
+							if (fabs(ret.x) < 1.0f)
+							{
+								ret.x = 0.0f;
+							}
+							loop = true;
+						}
+						else
+						{
+							if (ret.y > 0.0f)
+							{
+								ret.y -= 1.0f;
+							}
+							else
+							{
+								ret.y += 1.0f;
+							}
+
+							// 縮め切ったら消す
+							if (fabs(ret.y) < 1.0f)
+							{
+								ret.y = 0.0f;
+							}
+							loop = true;
+						}
+						// どちらも締め切ったときにloop解除
+						if (ret.x == 0.0f && ret.y == 0.0f)
+						{
+							loop = false;
+							break;
+						}
+
+						break;
+					}
+					if (isHit)
+					{
+						break;
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
 }
 
 bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip)
@@ -406,6 +514,34 @@ bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos,
 	{
 		// ↓デバック用
 		const auto& chip = PrototypeChipData1[hChip][wChip];
+		// マップチップが当たらない種類なら早期return
+		if (chip.chipKind == 0)
+		{
+			return false;
+		}
+		// 当たっているかどうか調べる
+		float futurePosLeft = checkPos.x - w * 0.5f;
+		float futurePosRight = checkPos.x + w * 0.5f;
+		float futurePosTop = checkPos.y - h * 0.5f;
+		float futurePosBottom = checkPos.y + h * 0.5f;
+		float targetLeft = chip.pos.x - chip.w * 0.5f;
+		float targetRight = chip.pos.x + chip.w * 0.5f;
+		float targetTop = chip.pos.y - chip.h * 0.5f;
+		float targetBottom = chip.pos.y + chip.h * 0.5f;
+		// 矩形同士の当たり判定
+		if (((targetLeft <= futurePosLeft && futurePosLeft < targetRight) ||
+			(targetLeft > futurePosLeft && targetLeft < futurePosRight)) &&
+			((targetTop <= futurePosTop && futurePosTop < targetBottom) ||
+				(targetTop > futurePosTop && targetTop < futurePosBottom)))
+		{
+			return true;
+		}
+		return false;
+	}
+	if (mapChip == 2)
+	{
+		// ↓デバック用
+		const auto& chip = PrototypeChipData2[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
 		if (chip.chipKind == 0)
 		{
@@ -506,6 +642,40 @@ void BaseEnemy::CheckIsTopHit(int mapNumber)
 			}
 		}
 	}
+	if (mapChip == 2)
+	{
+		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
+			{
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				if (isHit)
+				{
+					break;
+				}
+			}
+			if (isHit)
+			{
+				break;
+			}
+			if (isHit)
+			{
+				// 以前ぶつかっていないのにぶつかるならfallSpeedをゼロにし、即落下するように
+				if (!isHitTop)
+				{
+					isHitTop = true;
+					fallSpeed = 0.0f;
+
+					// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+					pos.y = floorf(pos.y);
+				}
+			}
+			else
+			{
+				isHitTop = false;
+			}
+		}
+	}
 }
 
 void BaseEnemy::CheckIsGround(int mapNumber)
@@ -576,19 +746,11 @@ void BaseEnemy::CheckIsGround(int mapNumber)
 			isGround = false;
 		}
 	}
-}
-
-void BaseEnemy::CheckIsLeft(int mapNumber)
-{
-	// 左に動いて当たれば壁に体がぶつかっている
-	VECTOR checkPos = VGet(floorf(pos.x) + 1.0f, pos.y, pos.z);
-	// 全マップチップ分繰り返す
-	bool isHit = false;
-	if (mapChip == 0)
+	if (mapChip == 2)
 	{
-		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
+		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
 		{
-			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
+			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 			{
 				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
@@ -601,23 +763,23 @@ void BaseEnemy::CheckIsLeft(int mapNumber)
 				break;
 			}
 		}
-		if (!isLeft)
+		if (isHit)
 		{
-			isLeft = true;
-			// leftSpeedをゼロにし、急激な移動を防ぐ
-			workSpeed = 0.0f;
+			isGround = true;
+			// fallSpeedをゼロにし、急激な落下を防ぐ
+			fallSpeed = 0.0f;
 
 			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
-			pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
+			pos.y = floorf(pos.y);	// ちょうど地面に付く位置に
 		}
 		else
 		{
-			isLeft = false;
+			isGround = false;
 		}
 	}
 }
 
-void BaseEnemy::CheckIsRight(int mapNumber)
+void BaseEnemy::CheckIsLeft(int mapNumber)
 {
 	// 左に動いて当たれば壁に体がぶつかっている
 	VECTOR checkPos = VGet(floorf(pos.x) - 1.0f, pos.y, pos.z);
@@ -640,7 +802,96 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 				break;
 			}
 		}
-		if (!isRight)
+		if (isHit)
+		{
+			isLeft = true;
+			// leftSpeedをゼロにし、急激な移動を防ぐ
+			workSpeed = 0.0f;
+
+			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+			pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
+		}
+	}
+	if (mapChip == 1)
+	{
+		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
+			{
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				if (isHit)
+				{
+					break;
+				}
+			}
+			if (isHit)
+			{
+				break;
+			}
+		}
+		if (isHit)
+		{
+			isLeft = true;
+			// leftSpeedをゼロにし、急激な移動を防ぐ
+			workSpeed = 0.0f;
+
+			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+			pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
+		}
+	}
+	if (mapChip == 2)
+	{
+		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
+			{
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				if (isHit)
+				{
+					break;
+				}
+			}
+			if (isHit)
+			{
+				break;
+			}
+		}
+		if (isHit)
+		{
+			isLeft = true;
+			// leftSpeedをゼロにし、急激な移動を防ぐ
+			workSpeed = 0.0f;
+
+			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+			pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
+		}
+	}
+}
+
+void BaseEnemy::CheckIsRight(int mapNumber)
+{
+	// 左に動いて当たれば壁に体がぶつかっている
+	VECTOR checkPos = VGet(floorf(pos.x) + 1.0f, pos.y, pos.z);
+	// 全マップチップ分繰り返す
+	bool isHit = false;
+	if (mapChip == 0)
+	{
+		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
+			{
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				if (isHit)
+				{
+					break;
+				}
+			}
+			if (isHit)
+			{
+				break;
+			}
+		}
+		if (isHit)
 		{
 			isRight = true;
 			// leftSpeedをゼロにし、急激な落下を防ぐ
@@ -649,9 +900,59 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
 			pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
 		}
-		else
+	}
+	if (mapChip == 1)
+	{
+		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
 		{
-			isRight = false;
+			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
+			{
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				if (isHit)
+				{
+					break;
+				}
+			}
+			if (isHit)
+			{
+				break;
+			}
+		}
+		if (isHit)
+		{
+			isRight = true;
+			// leftSpeedをゼロにし、急激な落下を防ぐ
+			workSpeed = 0.0f;
+
+			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+			pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
+		}
+	}
+	if (mapChip == 2)
+	{
+		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
+		{
+			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
+			{
+				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				if (isHit)
+				{
+					break;
+				}
+			}
+			if (isHit)
+			{
+				break;
+			}
+		}
+		if (isHit)
+		{
+			isRight = true;
+			// leftSpeedをゼロにし、急激な落下を防ぐ
+			workSpeed = 0.0f;
+
+			// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+			pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
 		}
 	}
 }

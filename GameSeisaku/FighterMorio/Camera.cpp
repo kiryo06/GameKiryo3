@@ -44,13 +44,13 @@ void Camera::Update(Player* player)
 	// カメラの「目標」ポジションをその範囲内に留める
 	VECTOR aimCameraPos = pos;
 	VECTOR playerPos = player->GetPlayerPos();
-	if (playerPos.x > pos.x + (CameraScopeRangeRight * 0.5f))
+	if (playerPos.x > pos.x + (CameraScopeRangeRight * 1.0f))
 	{
-		aimCameraPos.x = playerPos.x - (CameraScopeRangeRight * 0.5f);
+		aimCameraPos.x = playerPos.x - (CameraScopeRangeRight * 1.0f);
 	}
-	else if (playerPos.x < pos.x - (CameraScopeRangeLeft * 0.5f))
+	else if (playerPos.x < pos.x - (CameraScopeRangeLeft * 5.0f))
 	{
-		aimCameraPos.x = playerPos.x + (CameraScopeRangeLeft * 0.5f);
+		aimCameraPos.x = playerPos.x + (CameraScopeRangeLeft * 5.0f);
 	}
 	if (playerPos.y > pos.y + (CameraScopeRangeH * 0.5f))
 	{
