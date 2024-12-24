@@ -21,7 +21,7 @@ BaseEnemy::BaseEnemy() :
 	h(32),
 	fallSpeed(0.0f),
 	workSpeed(0.0f),
-	pos(VGet(1050.0f + h * 0.5f, 992, 0)),
+	pos(VGet(1070.0f + h * 0.5f, 992, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
