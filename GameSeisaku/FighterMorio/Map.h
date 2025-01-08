@@ -26,6 +26,7 @@ private:
 	int m_WallGraph;			// 構成マップチップ
 	int m_HardBlockGraph;		// 壊れないマップチップの画像
 	int m_SkyBackGroundGraph;	// 空の背景画像
+	int m_dokanGraph;				// 土管のグラフィック
 	// 原型チップデバック用データ
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
 	// 原型チップ1-1データ

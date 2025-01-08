@@ -14,7 +14,8 @@ Map::Map():
 	m_k2ChipNumX(MapDataFile::k2ChipNumX),
 	m_WallGraph(0),
 	m_HardBlockGraph(0),
-	m_SkyBackGroundGraph(0)
+	m_SkyBackGroundGraph(0),
+	m_dokanGraph(0)
 {
 }
 
@@ -23,6 +24,7 @@ Map::~Map()
 	DeleteGraph(m_WallGraph);
 	DeleteGraph(m_HardBlockGraph);
 	DeleteGraph(m_SkyBackGroundGraph);
+	DeleteGraph(m_dokanGraph);
 }
 
 void Map::Init(int mapNumber)
@@ -34,6 +36,7 @@ void Map::Init(int mapNumber)
 		m_WallGraph = LoadGraph("data/image/WorldMap.png");				// 16 * 16
 		m_HardBlockGraph = LoadGraph("data/image/HardBlock.png");		// 32 * 32
 		m_SkyBackGroundGraph = LoadGraph("data/image/BackGround.png");	// 960 * 1920
+		m_dokanGraph = LoadGraph("data/image/dokan.png");
 		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
@@ -51,6 +54,7 @@ void Map::Init(int mapNumber)
 		m_WallGraph = LoadGraph("data/image/WorldMap.png");				// 16 * 16
 		m_HardBlockGraph = LoadGraph("data/image/HardBlock.png");		// 32 * 32
 		m_SkyBackGroundGraph = LoadGraph("data/image/BackGround.png");	// 960 * 1920
+		m_dokanGraph = LoadGraph("data/image/dokan.png");
 		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
@@ -68,6 +72,7 @@ void Map::Init(int mapNumber)
 		m_WallGraph = LoadGraph("data/image/WorldMap.png");				// 16 * 16
 		m_HardBlockGraph = LoadGraph("data/image/HardBlock.png");		// 32 * 32
 		m_SkyBackGroundGraph = LoadGraph("data/image/BackGround.png");	// 960 * 1920
+		m_dokanGraph = LoadGraph("data/image/dokan.png");
 		for (int hChip = 0; hChip < m_k2ChipNumY; hChip++)
 		{
 			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
@@ -166,8 +171,24 @@ void Map::Draw(int mapNumber, Camera* camera)
 				// 5は当たり判定チップ、5を描画
 				if (PrototypeChipData1[hChip][wChip].chipKind == 5)
 				{
-					DrawBox(leftTop, leftBottom, rightTop, rightBottom, 0x00aa00, TRUE);
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 0 + 30 , 0, 160 - 30, 160, m_dokanGraph, FALSE);	// +○,-○ は切り取り位置を変えている
 				}
+				// 6は当たり判定チップ、6を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 6)
+				{
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 160, 0, 160 - 30, 160, m_dokanGraph, FALSE);	// +○,-○ は切り取り位置を変えている
+				}
+				// 7は当たり判定チップ、7を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 7)
+				{
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 0 + 30 , 160 - 20, 160 - 30, 160, m_dokanGraph, FALSE);	// +○,-○ は切り取り位置を変えている
+				}
+				// 8は当たり判定チップ、8を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 8)
+				{
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 160, 160 - 20, 160 - 30, 160, m_dokanGraph, FALSE);	// +○,-○ は切り取り位置を変えている
+				}
+
 			}
 		}
 		break;

@@ -50,6 +50,7 @@ private:
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
 	int mapChip;
 	int _isHit;
+	int m_PlayerGraph;
 	int m_kChipNumY;
 	int m_kChipNumX;
 	int m_k1ChipNumY;

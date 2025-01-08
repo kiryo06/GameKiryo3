@@ -12,7 +12,7 @@ namespace
 	const float CameraScopeRangeH = 300.0f;
 	const float CameraScopeRangeTop = 320.0f;
 	const float CameraScopeRangeBottom = 900.0f;
-	const float CameraLerpRate = 0.5f;
+	const float CameraLerpRate = 0.9f;
 }
 
 VECTOR VLerp(VECTOR start, VECTOR end, float t)

@@ -24,6 +24,7 @@ Player::Player() :
 	isHitTop(false),
 	mapChip(0),
 	_isHit(0),
+	m_PlayerGraph(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
 	m_k1ChipNumY(MapDataFile::k1ChipNumY),
@@ -35,10 +36,12 @@ Player::Player() :
 
 Player::~Player()
 {
+	DeleteGraph(m_PlayerGraph);
 }
 
 void Player::Init(int mapNumber)
 {
+	m_PlayerGraph = LoadGraph("data/image/player(kari).png");
 	switch (mapNumber)
 	{
 	case 0:
@@ -779,14 +782,20 @@ void Player::Draw(int mapNumber,Camera* camera)
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);
 	auto rightTop = static_cast<int>(pos.x + w * 0.5f);
 	auto rightBottom = static_cast<int>(pos.y + h * 0.5f);
-	DrawBox(
+	DrawRectExtendGraph(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		0xff0000, TRUE);
+		0, 0, 540, 641,
+		m_PlayerGraph, TRUE);
 #ifdef _DEBUG
-	//DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", _isHit, true);
+	/*DrawBox(
+		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		0xff0000, FALSE);*/
 #endif // _DEBUG
 
 }

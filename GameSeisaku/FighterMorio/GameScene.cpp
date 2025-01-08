@@ -56,7 +56,7 @@ void GameScene::Draw()
 	m_pBaseEnemy->Draw(m_pCamera);
 #ifdef _DEBUG
 	DrawBox(0, 0, 300, 200, 0x444444, true);
-	DrawFormatString(0,   0, 0xffffff, " GameScene_1         ", true);
+	DrawFormatString(0,   0, 0xffffff, " GameScene           ", true);
 	DrawFormatString(0,  16, 0xcc0000, " PlayerPosX    : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
 	DrawFormatString(0,  48, 0x00cc00, " BaseEnemyPosX : %.1f", m_pBaseEnemy->GetBaseEnemyPos().x, true);
