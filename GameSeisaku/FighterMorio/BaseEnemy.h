@@ -62,6 +62,7 @@ private:
 	bool isRight;				// 敵が右に当たったか
 	int mapChip;
 	int HitEnemy;				// 当たっているかどうか
+	int m_EnemyGraph;			// クリボウ仮実装
 	int m_kChipNumY;			// マップの大きさ横軸1-1
 	int m_kChipNumX;			// マップの大きさ縦軸1-1
 	int m_k1ChipNumY;			// マップの大きさ横軸1-2

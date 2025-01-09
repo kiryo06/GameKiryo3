@@ -3,15 +3,14 @@
 #include "DxLib.h"
 #include "Player.h"
 #include "Screen.h"
-#define PLAYER 100
 namespace
 {
 	// ÉJÉÅÉâîÕàÕ
-	const float CameraScopeRangeRight = 500.0f;
+	const float CameraScopeRangeRight = 250.0f;
 	const float CameraScopeRangeLeft = -10.0f;
 	const float CameraScopeRangeH = 300.0f;
 	const float CameraScopeRangeTop = 320.0f;
-	const float CameraScopeRangeBottom = 900.0f;
+	const float CameraScopeRangeBottom = 1000.0f;
 	const float CameraLerpRate = 0.9f;
 }
 
@@ -22,6 +21,20 @@ VECTOR VLerp(VECTOR start, VECTOR end, float t)
 	ret.y = std::lerp(start.y, end.y, t);
 	ret.z = std::lerp(start.z, end.z, t);
 	return ret;
+
+	/*if (t < 0.0f) return a;
+
+	if (t > 1.0f) return b;
+
+
+	VECTOR temp;
+
+	temp = VSub(b, a);
+
+	temp.x *= t;
+	temp.y *= t;
+
+	return temp;*/
 }
 
 Camera::Camera():

@@ -6,9 +6,13 @@
 
 namespace
 {
-	const float Gravity = 0.3f;		// キャラに掛かる重力加速度
-	const float JumpPower = 8.75f;	// キャラのジャンプ力
-	const float Speed = 3.0f;		// キャラの移動スピード
+	//const float Gravity = 0.3f;		// キャラに掛かる重力加速度
+	//const float JumpPower = 8.75f;	// キャラのジャンプ力
+	//const float Speed = 7.5f;		// キャラの移動スピード
+
+	const float Gravity = 0.5f;		// キャラに掛かる重力加速度
+	const float JumpPower = 11.75f;	// キャラのジャンプ力
+	const float Speed = 6.5f;		// キャラの移動スピード
 }
 
 Player::Player() :
@@ -17,7 +21,7 @@ Player::Player() :
 	w(25),
 	h(32),
 	fallSpeed(0.0f),
-	pos(VGet(256.0f + h * 0.5f, 992, 0)),
+	pos(VGet(20.0f + h * 0.5f, 992, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
@@ -504,7 +508,44 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		// ↓デバック用
 		const auto& chip = PrototypeChipData1[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if (chip.chipKind == 0)
+		if ((chip.chipKind ==  0) ||
+			(chip.chipKind ==  9) ||
+			(chip.chipKind == 10) ||
+			(chip.chipKind == 11) ||
+			(chip.chipKind == 12) ||
+			(chip.chipKind == 13) ||
+			(chip.chipKind == 14) ||
+			(chip.chipKind == 15) ||
+			(chip.chipKind == 16) ||
+			(chip.chipKind == 17) ||
+			(chip.chipKind == 18) ||
+			(chip.chipKind == 19) ||
+			(chip.chipKind == 20) ||
+			(chip.chipKind == 21) ||
+			(chip.chipKind == 22) ||
+			(chip.chipKind == 23) ||
+			(chip.chipKind == 24) ||
+			(chip.chipKind == 25) ||
+			(chip.chipKind == 26) ||
+			(chip.chipKind == 27) ||
+			(chip.chipKind == 28) ||
+			(chip.chipKind == 29) ||
+			(chip.chipKind == 30) ||
+			(chip.chipKind == 31) ||
+			(chip.chipKind == 32) ||
+			(chip.chipKind == 33) ||
+			(chip.chipKind == 34) ||
+			(chip.chipKind == 35) ||
+			(chip.chipKind == 36) ||
+			(chip.chipKind == 37) ||
+			(chip.chipKind == 38) ||
+			(chip.chipKind == 39) ||
+			(chip.chipKind == 40) ||
+			(chip.chipKind == 41) ||
+			(chip.chipKind == 42) ||
+			(chip.chipKind == 43) ||
+			(chip.chipKind == 44) ||
+			(chip.chipKind == 45))
 		{
 			return false;
 		}
@@ -790,12 +831,12 @@ void Player::Draw(int mapNumber,Camera* camera)
 		0, 0, 540, 641,
 		m_PlayerGraph, TRUE);
 #ifdef _DEBUG
-	/*DrawBox(
+	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		0xff0000, FALSE);*/
+		0xff0000, FALSE);
 #endif // _DEBUG
 
 }

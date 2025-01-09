@@ -30,6 +30,7 @@ BaseEnemy::BaseEnemy() :
 	isRight(false),
 	mapChip(0),
 	HitEnemy(0),
+	m_EnemyGraph(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
 	m_k1ChipNumY(MapDataFile::k1ChipNumY),
@@ -41,10 +42,12 @@ BaseEnemy::BaseEnemy() :
 
 BaseEnemy::~BaseEnemy()
 {
+	DeleteGraph(m_EnemyGraph);
 }
 
 void BaseEnemy::Init(int mapNumber)
 {
+	m_EnemyGraph = LoadGraph("data/image/Enemy.png");
 	switch (mapNumber)
 	{
 	case 0:
@@ -964,14 +967,20 @@ void BaseEnemy::Draw(Camera* camera)
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);
 	auto rightTop = static_cast<int>(pos.x + w * 0.5f);
 	auto rightBottom = static_cast<int>(pos.y + h * 0.5f);
+	DrawRectExtendGraph(
+		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		7, 15, 18, 18,
+		m_EnemyGraph, TRUE);
+#ifdef _DEBUG
 	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		0x4b0082, TRUE);
-
-#ifdef _DEBUG
-	DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", HitEnemy, true);
+		0xff00ff, FALSE);
+	//DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", HitEnemy, true);
 #endif // _DEBUG
 }
