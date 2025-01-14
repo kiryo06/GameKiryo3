@@ -42,8 +42,6 @@ public:
 	void Draw(int mapNumber, Camera* camera);
 	VECTOR GetPlayerPos() { return pos; }
 	VECTOR GetPlayerDir() { return dir; }
-	VECTOR GetEnemyHit() { return m_EnemyHit; }
-	bool GetEnemyHit() { return m_EnemyHit; }
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
@@ -55,8 +53,8 @@ private:
 	VECTOR velocity;
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
+	bool IsDese;
 	int mapChip;
-	VECTER m_EnemyHit;
 	int _isHit;
 	int m_PlayerGraph;
 	int m_kChipNumY;

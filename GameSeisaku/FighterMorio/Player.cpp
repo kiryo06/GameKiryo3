@@ -30,7 +30,6 @@ Player::Player() :
 	isGround(false),
 	isHitTop(false),
 	mapChip(0),
-	m_EnemyHit(222),
 	_isHit(0),
 	m_PlayerGraph(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
@@ -843,12 +842,9 @@ void Player::EnemyHit(const VECTOR& checkPos)
 		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
 			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
 	{
-		m_EnemyHit = 22;
+	
 	}
-	else
-	{
-		m_EnemyHit = 0;
-	}
+
 }
 
 void Player::Draw(int mapNumber,Camera* camera)

@@ -60,7 +60,7 @@ void GameScene::Draw()
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
 	DrawFormatString(0,  48, 0x00cc00, " BaseEnemyPosX : %.1f", m_pBaseEnemy->GetBaseEnemyPos().x, true);
 	DrawFormatString(0,  64, 0x00cc00, " BaseEnemyPosY : %.1f", m_pBaseEnemy->GetBaseEnemyPos().y, true);
-	DrawFormatString(0,  80, 0xaaaaaa, " EnemyDamage   : %.1d", m_pPlayer->EnemyHit(), true);
+	DrawFormatString(0,  80, 0xaaaaaa, " EnemyDamage   : %.1d", 123456789, true);
 	DrawFormatString(0,  96, 0xaaaaaa, "               : %.1d", 123456789, true);
 	DrawFormatString(0, 112, 0xaaaaaa, "               : %.1d", 123456789, true);
 	DrawFormatString(0, 128, 0xaaaaaa, "               : %.1d", 123456789, true);
