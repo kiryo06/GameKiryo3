@@ -3,6 +3,7 @@
 #include "DxLib.h"
 #include "Map.h"
 #include "Camera.h"
+#include "BaseEnemy.h"
 
 namespace
 {
@@ -10,14 +11,16 @@ namespace
 	//const float JumpPower = 8.75f;	// キャラのジャンプ力
 	//const float Speed = 7.5f;		// キャラの移動スピード
 
+	// ダッシュ時の数値
 	const float Gravity = 0.5f;		// キャラに掛かる重力加速度
 	const float JumpPower = 11.75f;	// キャラのジャンプ力
 	const float Speed = 6.5f;		// キャラの移動スピード
 }
 
 Player::Player() :
-	m_camera(),
-	m_map(),
+	m_pMap(),
+	m_pCamera(),
+	m_pBaseEnemy(),
 	w(25),
 	h(32),
 	fallSpeed(0.0f),
@@ -27,6 +30,7 @@ Player::Player() :
 	isGround(false),
 	isHitTop(false),
 	mapChip(0),
+	m_EnemyHit(222),
 	_isHit(0),
 	m_PlayerGraph(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
@@ -127,6 +131,13 @@ void Player::Update(int mapNumber)
 		dir = VNorm(dir);
 	}
 
+
+	//if (PAD_INPUT_A)
+	//{
+	//	EnemyHit();
+	//}
+
+
 	// 移動量を出す
 	velocity = VScale(dir, Speed);
 
@@ -153,6 +164,7 @@ void Player::Update(int mapNumber)
 	// 移動
 	pos = VAdd(pos, velocity);
 }
+
 
 VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 {
@@ -815,6 +827,29 @@ void Player::CheckIsGround(int mapNumber)
 	}
 }
 
+void Player::EnemyHit(const VECTOR& checkPos)
+{
+	// 当たっているかどうか調べる
+	float PosLeft = checkPos.x - w * 0.5f;
+	float PosRight = checkPos.x + w * 0.5f;
+	float PosTop = checkPos.y - h * 0.5f;
+	float PosBottom = checkPos.y + h * 0.5f;
+	float BaseEnemyLeft = m_pBaseEnemy->GetBaseEnemyPos().x - m_pBaseEnemy->GetW() * 0.5f;
+	float BaseEnemyRight = m_pBaseEnemy->GetBaseEnemyPos().x + m_pBaseEnemy->GetW() * 0.5f;
+	float BaseEnemyTop = m_pBaseEnemy->GetBaseEnemyPos().x - m_pBaseEnemy->GetH() * 0.5f;
+	float BaseEnemyBottom = m_pBaseEnemy->GetBaseEnemyPos().y + m_pBaseEnemy->GetH() * 0.5f;
+	// 矩形同士の当たり判定
+	if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
+		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
+			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
+	{
+		m_EnemyHit = 22;
+	}
+	else
+	{
+		m_EnemyHit = 0;
+	}
+}
 
 void Player::Draw(int mapNumber,Camera* camera)
 {

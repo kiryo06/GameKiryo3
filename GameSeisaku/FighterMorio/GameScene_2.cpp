@@ -62,5 +62,4 @@ void GameScene_2::Draw()
 	DrawFormatString(0, 80, 0x00aaaa, " CameraPosX    : %.1f", m_pCamera->GetCameraDrawOffset().x, true);
 	DrawFormatString(0, 96, 0x00aaaa, " CameraPosY    : %.1f", m_pCamera->GetCameraDrawOffset().y, true);
 #endif // _DEBUG
-	//DrawBox(100, 100, 640, 640, 0xaaaaaa, true);
 }

@@ -13,4 +13,5 @@ public:
 private:
 	VECTOR pos;				// 実際のカメラのポジション
 	VECTOR drawOffset;		// 全てのDrawObjectに足す値
+	VECTER
 };

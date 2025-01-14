@@ -54,7 +54,7 @@ void GameScene_1::Draw()
 	m_pPlayer->Draw(1,m_pCamera);
 	m_pBaseEnemy->Draw(m_pCamera);
 #ifdef _DEBUG
-	//DrawBox(0, 0, 300, 200, 0x444444, true);
+	DrawBox(0, 0, 300, 200, 0x444444, true);
 	DrawFormatString(0, 0 , 0xffffff, " GameScene_1         ", true);
 	DrawFormatString(0, 16, 0xcc0000, " PlayerPosX    : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0, 32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
@@ -63,5 +63,4 @@ void GameScene_1::Draw()
 	DrawFormatString(0, 80, 0x00aaaa, " CameraPosX    : %.1f", m_pCamera->GetCameraDrawOffset().x, true);
 	DrawFormatString(0, 96, 0x00aaaa, " CameraPosY    : %.1f", m_pCamera->GetCameraDrawOffset().y, true);
 #endif // _DEBUG
-	//DrawBox(100, 100, 640, 640, 0x555555, true);
 }

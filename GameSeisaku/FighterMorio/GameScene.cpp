@@ -40,7 +40,6 @@ void GameScene::Update()
 	m_pCamera->Update(m_pPlayer);
 	Pad::Update();
 	// 入力状態を更新
-	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	if (Pad::IsTrigger(input & PAD_INPUT_X))
 	{
@@ -61,7 +60,7 @@ void GameScene::Draw()
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
 	DrawFormatString(0,  48, 0x00cc00, " BaseEnemyPosX : %.1f", m_pBaseEnemy->GetBaseEnemyPos().x, true);
 	DrawFormatString(0,  64, 0x00cc00, " BaseEnemyPosY : %.1f", m_pBaseEnemy->GetBaseEnemyPos().y, true);
-	DrawFormatString(0,  80, 0xaaaaaa, "               : %.1d", 123456789, true);
+	DrawFormatString(0,  80, 0xaaaaaa, " EnemyDamage   : %.1d", m_pPlayer->EnemyHit(), true);
 	DrawFormatString(0,  96, 0xaaaaaa, "               : %.1d", 123456789, true);
 	DrawFormatString(0, 112, 0xaaaaaa, "               : %.1d", 123456789, true);
 	DrawFormatString(0, 128, 0xaaaaaa, "               : %.1d", 123456789, true);
@@ -69,5 +68,4 @@ void GameScene::Draw()
 	DrawFormatString(0, 160, 0x00aaaa, " CameraPosX    : %.1f", m_pCamera->GetCameraDrawOffset().x, true);
 	DrawFormatString(0, 176, 0x00aaaa, " CameraPosY    : %.1f", m_pCamera->GetCameraDrawOffset().y, true);
 #endif // _DEBUG
-	//DrawBox(100, 100, 640, 640, 0xaaaa00, true);
 }

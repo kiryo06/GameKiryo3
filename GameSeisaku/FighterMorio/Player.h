@@ -2,6 +2,7 @@
 #include "MapData.h"
 class Map;
 class Camera;
+class BaseEnemy;
 class Player
 {
 public:
@@ -34,13 +35,19 @@ public:
 	/// 地面に接地しているか見る
 	/// </summary>
 	void CheckIsGround(int mapNumber);
+	void EnemyHit(const VECTOR& checkPos);
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>
 	void Draw(int mapNumber, Camera* camera);
 	VECTOR GetPlayerPos() { return pos; }
 	VECTOR GetPlayerDir() { return dir; }
+	VECTOR GetEnemyHit() { return m_EnemyHit; }
+	bool GetEnemyHit() { return m_EnemyHit; }
 private:
+	Map* m_pMap;
+	Camera* m_pCamera;
+	BaseEnemy* m_pBaseEnemy;
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// プレイヤーの落下速度。ジャンプ時は反転する
 	VECTOR pos;					// 座標 横：中心　縦：中心
@@ -49,6 +56,7 @@ private:
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
 	int mapChip;
+	VECTER m_EnemyHit;
 	int _isHit;
 	int m_PlayerGraph;
 	int m_kChipNumY;
@@ -57,8 +65,6 @@ private:
 	int m_k1ChipNumX;
 	int m_k2ChipNumY;
 	int m_k2ChipNumX;
-	Map* m_map;
-	Camera* m_camera;
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData[MapDataFile::kChipNumY][MapDataFile::kChipNumX] = {};
 	// 原型チップデータ

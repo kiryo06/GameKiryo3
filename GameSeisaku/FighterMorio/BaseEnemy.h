@@ -44,11 +44,17 @@ public:
 	/// </summary>
 	void CheckIsRight(int mapNumber);
 	/// <summary>
+	/// プレイヤーによる攻撃を受けた時の処理
+	/// </summary>
+	void OnDamage();
+	/// <summary>
 	/// 敵描画
 	/// </summary>
 	void Draw(Camera* camera);
 	VECTOR GetBaseEnemyPos() { return pos; }
 	VECTOR GetBaseEnemyDir() { return dir; }
+	int GetW() { return w; }
+	int GetH() { return h; }
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// 敵の落下速度。ジャンプ時は反転する
@@ -56,19 +62,18 @@ private:
 	VECTOR pos;					// 座標 横：中心　縦：中心
 	VECTOR dir;					// 座標の移動方向
 	VECTOR velocity;			// 速度の計算等
-	bool isGround;				// 敵が接地中か
+	bool isGround;				// 敵の足が地面についているかどうか
 	bool isHitTop;				// 敵の頭が天井に当たっているか
 	bool isLeft;				// 敵が左に当たったか
 	bool isRight;				// 敵が右に当たったか
-	int mapChip;
-	int HitEnemy;				// 当たっているかどうか
 	int m_EnemyGraph;			// クリボウ仮実装
-	int m_kChipNumY;			// マップの大きさ横軸1-1
-	int m_kChipNumX;			// マップの大きさ縦軸1-1
-	int m_k1ChipNumY;			// マップの大きさ横軸1-2
-	int m_k1ChipNumX;			// マップの大きさ縦軸1-2
-	int m_k2ChipNumY;
-	int m_k2ChipNumX;
+	int mapChip;
+	int m_kChipNumY;			// マップの大きさ横軸デバック
+	int m_kChipNumX;			// マップの大きさ縦軸デバック
+	int m_k1ChipNumY;			// マップの大きさ横軸1-1
+	int m_k1ChipNumX;			// マップの大きさ縦軸1-1
+	int m_k2ChipNumY;			// マップの大きさ横軸1-2
+	int m_k2ChipNumX;			// マップの大きさ横軸1-2
 	Map* m_pMap;
 	Camera* m_pCamera;
 	Player* m_pPlayer;

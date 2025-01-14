@@ -28,9 +28,8 @@ BaseEnemy::BaseEnemy() :
 	isHitTop(false),
 	isLeft(false),
 	isRight(false),
-	mapChip(0),
-	HitEnemy(0),
 	m_EnemyGraph(0),
+	mapChip(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
 	m_k1ChipNumY(MapDataFile::k1ChipNumY),
@@ -113,15 +112,6 @@ void BaseEnemy::Update(int mapNumber, Player* player)
 	// “ü—Íó‘Ô‚ðXV
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	// “G‚ÌˆÚ“®ˆ—
-	//if (player->GetPlayerPos().x < pos.x)
-	//{
-	//	dir = VAdd(dir, VGet(-1, 0, 0));
-	//}
-
-	//if (player->GetPlayerPos().x > pos.x)
-	//{
-	//	dir = VAdd(dir, VGet(1, 0, 0));
-	//}
 	dir = VAdd(dir, VGet(-1, 0, 0));
 	// ³‹K‰»
 	if (VSquareSize(dir) > 0)
@@ -960,6 +950,8 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 	}
 }
 
+
+
 void BaseEnemy::Draw(Camera* camera)
 {
 	// “G‚Ì•`‰æ
@@ -981,6 +973,5 @@ void BaseEnemy::Draw(Camera* camera)
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0xff00ff, FALSE);
-	//DrawFormatString(0, 600, 0xffffff, " PlayerIsHit : %d", HitEnemy, true);
 #endif // _DEBUG
 }
