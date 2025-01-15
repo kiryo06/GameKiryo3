@@ -29,6 +29,8 @@ Player::Player() :
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
 	isHitTop(false),
+	isHitEnemy(false),
+	isEnemyHitDese(0),
 	mapChip(0),
 	_isHit(0),
 	m_PlayerGraph(0),
@@ -130,29 +132,28 @@ void Player::Update(int mapNumber)
 		dir = VNorm(dir);
 	}
 
-
-	//if (PAD_INPUT_A)
-	//{
-	//	EnemyHit();
-	//}
-
-
 	// 移動量を出す
 	velocity = VScale(dir, Speed);
 
 	// 落下速度を更新
 	fallSpeed += Gravity;
 
-	// HACK: 先に設定判定をすることでfallSpeed修正＋接地フラグ更新
+	// 先に設定判定をする
 	CheckIsGround(mapNumber);
 	CheckIsTopHit(mapNumber);
 
-	// 地に足が着いている場合のみジャンプボタン(ボタン１ or Ｚキー)を見る
+	// 地に足が着いている場合のみジャンプボタンを見る
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
 	{
 		fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
 		isGround = false;
 	}
+	if (isHitEnemy)
+	{
+		fallSpeed = -JumpPower;	// ジャンプする
+		isHitEnemy = false;
+	}
+
 	// 落下速度を移動量に加える
 	auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
 	velocity = VAdd(velocity, fallVelocity);
@@ -277,10 +278,10 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 					}
 				}
 			}
+			IsHitPlayerAndEnemy(futurePos);
 		}
 		return ret;
 	}
-
 	if (mapChip == 1)
 	{
 		while (loop)
@@ -490,7 +491,44 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		// ↓デバック用
 		const auto& chip = PrototypeChipData[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if (chip.chipKind == 0)
+		if ((chip.chipKind == 0) ||
+			(chip.chipKind == 9) ||
+			(chip.chipKind == 10) ||
+			(chip.chipKind == 11) ||
+			(chip.chipKind == 12) ||
+			(chip.chipKind == 13) ||
+			(chip.chipKind == 14) ||
+			(chip.chipKind == 15) ||
+			(chip.chipKind == 16) ||
+			(chip.chipKind == 17) ||
+			(chip.chipKind == 18) ||
+			(chip.chipKind == 19) ||
+			(chip.chipKind == 20) ||
+			(chip.chipKind == 21) ||
+			(chip.chipKind == 22) ||
+			(chip.chipKind == 23) ||
+			(chip.chipKind == 24) ||
+			(chip.chipKind == 25) ||
+			(chip.chipKind == 26) ||
+			(chip.chipKind == 27) ||
+			(chip.chipKind == 28) ||
+			(chip.chipKind == 29) ||
+			(chip.chipKind == 30) ||
+			(chip.chipKind == 31) ||
+			(chip.chipKind == 32) ||
+			(chip.chipKind == 33) ||
+			(chip.chipKind == 34) ||
+			(chip.chipKind == 35) ||
+			(chip.chipKind == 36) ||
+			(chip.chipKind == 37) ||
+			(chip.chipKind == 38) ||
+			(chip.chipKind == 39) ||
+			(chip.chipKind == 40) ||
+			(chip.chipKind == 41) ||
+			(chip.chipKind == 42) ||
+			(chip.chipKind == 43) ||
+			(chip.chipKind == 44) ||
+			(chip.chipKind == 45))
 		{
 			return false;
 		}
@@ -513,7 +551,6 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		}
 		return false;
 	}
-
 	if (mapChip == 1)
 	{
 		// ↓デバック用
@@ -584,7 +621,44 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		// ↓デバック用
 		const auto& chip = PrototypeChipData2[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if (chip.chipKind == 0)
+		if ((chip.chipKind == 0) ||
+			(chip.chipKind == 9) ||
+			(chip.chipKind == 10) ||
+			(chip.chipKind == 11) ||
+			(chip.chipKind == 12) ||
+			(chip.chipKind == 13) ||
+			(chip.chipKind == 14) ||
+			(chip.chipKind == 15) ||
+			(chip.chipKind == 16) ||
+			(chip.chipKind == 17) ||
+			(chip.chipKind == 18) ||
+			(chip.chipKind == 19) ||
+			(chip.chipKind == 20) ||
+			(chip.chipKind == 21) ||
+			(chip.chipKind == 22) ||
+			(chip.chipKind == 23) ||
+			(chip.chipKind == 24) ||
+			(chip.chipKind == 25) ||
+			(chip.chipKind == 26) ||
+			(chip.chipKind == 27) ||
+			(chip.chipKind == 28) ||
+			(chip.chipKind == 29) ||
+			(chip.chipKind == 30) ||
+			(chip.chipKind == 31) ||
+			(chip.chipKind == 32) ||
+			(chip.chipKind == 33) ||
+			(chip.chipKind == 34) ||
+			(chip.chipKind == 35) ||
+			(chip.chipKind == 36) ||
+			(chip.chipKind == 37) ||
+			(chip.chipKind == 38) ||
+			(chip.chipKind == 39) ||
+			(chip.chipKind == 40) ||
+			(chip.chipKind == 41) ||
+			(chip.chipKind == 42) ||
+			(chip.chipKind == 43) ||
+			(chip.chipKind == 44) ||
+			(chip.chipKind == 45))
 		{
 			return false;
 		}
@@ -607,6 +681,46 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		}
 		return false;
 	}
+}
+
+bool Player::IsHitPlayerAndEnemy(const VECTOR& checkPos)
+{
+	VECTOR Enemypos;
+	int EnemyW;
+	int EnemyH;
+	Enemypos.x = static_cast<int>(m_pBaseEnemy->GetBaseEnemyPos().x);
+	Enemypos.y = static_cast<int>(m_pBaseEnemy->GetBaseEnemyPos().y);
+	EnemyW = static_cast<int>(m_pBaseEnemy->GetW());
+	EnemyH = static_cast<int>(m_pBaseEnemy->GetH());
+
+	// 当たっているかどうか調べる
+	float PosLeft = checkPos.x - w * 0.5f;
+	float PosRight = checkPos.x + w * 0.5f;
+	float PosTop = checkPos.y - h * 0.5f;
+	float PosBottom = checkPos.y + h * 0.5f;
+	float BaseEnemyLeft = Enemypos.x - EnemyW * 0.5f;
+	float BaseEnemyRight = Enemypos.x + EnemyW * 0.5f;
+	float BaseEnemyTop = Enemypos.y - EnemyH * 0.5f;
+	float BaseEnemyBottom = Enemypos.y + EnemyH * 0.5f;
+	//// 矩形同士の当たり判定
+	//if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
+	//	(BaseEnemyLeft = PosRight && PosRight < BaseEnemyRight)) &&
+	//	(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
+	//{
+	//	return true;
+	//}
+	//return false;
+	// 矩形同士の当たり判定
+
+	if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
+		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
+		((BaseEnemyTop <= PosTop && PosTop < BaseEnemyBottom) ||
+			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom)))
+	{
+		return true;
+	}
+	return false;
+	isEnemyHitDese = 1;
 }
 
 void Player::CheckIsTopHit(int mapNumber)
@@ -826,26 +940,31 @@ void Player::CheckIsGround(int mapNumber)
 	}
 }
 
-void Player::EnemyHit(const VECTOR& checkPos)
+void Player::CheckIsEnemyTop()
 {
-	// 当たっているかどうか調べる
-	float PosLeft = checkPos.x - w * 0.5f;
-	float PosRight = checkPos.x + w * 0.5f;
-	float PosTop = checkPos.y - h * 0.5f;
-	float PosBottom = checkPos.y + h * 0.5f;
-	float BaseEnemyLeft = m_pBaseEnemy->GetBaseEnemyPos().x - m_pBaseEnemy->GetW() * 0.5f;
-	float BaseEnemyRight = m_pBaseEnemy->GetBaseEnemyPos().x + m_pBaseEnemy->GetW() * 0.5f;
-	float BaseEnemyTop = m_pBaseEnemy->GetBaseEnemyPos().x - m_pBaseEnemy->GetH() * 0.5f;
-	float BaseEnemyBottom = m_pBaseEnemy->GetBaseEnemyPos().y + m_pBaseEnemy->GetH() * 0.5f;
-	// 矩形同士の当たり判定
-	if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
-		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
-			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
-	{
-	
-	}
 
+	// 1ドット下にずらして当たれば敵に足がぶつかっている （小数点無視）
+	VECTOR checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
+	// 全マップチップ分繰り返す
+	bool isHit = false;
+
+	
+	isHit = IsHitPlayerAndEnemy(checkPos);
+	if (isHit)
+	{
+		isHitEnemy = true;
+		// fallSpeedをゼロにし、急激な落下を防ぐ
+		fallSpeed = 0.0f;
+
+		// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+		pos.y = floorf(pos.y);	// ちょうど地面に付く位置に
+	}
+	else
+	{
+		isHitEnemy = false;
+	}
 }
+
 
 void Player::Draw(int mapNumber,Camera* camera)
 {
@@ -861,6 +980,7 @@ void Player::Draw(int mapNumber,Camera* camera)
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0, 0, 540, 641,
 		m_PlayerGraph, TRUE);
+	DrawFormatString(0, 200, 0xaaaaaa, "当たったら  1 ->: %.1d", isEnemyHitDese, true);
 #ifdef _DEBUG
 	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),

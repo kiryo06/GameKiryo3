@@ -23,18 +23,13 @@ VECTOR VLerp(VECTOR start, VECTOR end, float t)
 	return ret;
 
 	/*if (t < 0.0f) return a;
-
 	if (t > 1.0f) return b;
-
-
 	VECTOR temp;
-
 	temp = VSub(b, a);
-
 	temp.x *= t;
 	temp.y *= t;
-
 	return temp;*/
+
 }
 
 Camera::Camera():

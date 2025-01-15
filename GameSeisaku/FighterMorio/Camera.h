@@ -8,8 +8,8 @@ public:
 	~Camera();
 	void Init();
 	void Update(Player* player);
-	VECTOR GetCameraPos() { return pos; }
-	VECTOR GetCameraDrawOffset() { return drawOffset; }
+	VECTOR GetCameraPos() const { return pos; }
+	VECTOR GetCameraDrawOffset() const { return drawOffset; }
 private:
 	VECTOR pos;				// 実際のカメラのポジション
 	VECTOR drawOffset;		// 全てのDrawObjectに足す値

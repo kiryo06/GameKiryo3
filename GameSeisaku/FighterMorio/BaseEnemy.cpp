@@ -950,8 +950,6 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 	}
 }
 
-
-
 void BaseEnemy::Draw(Camera* camera)
 {
 	// “G‚Ì•`‰æ

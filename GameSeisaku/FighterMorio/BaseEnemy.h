@@ -51,10 +51,10 @@ public:
 	/// 敵描画
 	/// </summary>
 	void Draw(Camera* camera);
-	VECTOR GetBaseEnemyPos() { return pos; }
-	VECTOR GetBaseEnemyDir() { return dir; }
-	int GetW() { return w; }
-	int GetH() { return h; }
+	VECTOR GetBaseEnemyPos() const { return pos; }
+	VECTOR GetBaseEnemyDir() const { return dir; }
+	int GetW() const { return w; }
+	int GetH() const { return h; }
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// 敵の落下速度。ジャンプ時は反転する
@@ -62,6 +62,8 @@ private:
 	VECTOR pos;					// 座標 横：中心　縦：中心
 	VECTOR dir;					// 座標の移動方向
 	VECTOR velocity;			// 速度の計算等
+	int DamageFlag;				// ダメージを受けたとき
+	int Life;					// 敵のHP
 	bool isGround;				// 敵の足が地面についているかどうか
 	bool isHitTop;				// 敵の頭が天井に当たっているか
 	bool isLeft;				// 敵が左に当たったか
