@@ -33,7 +33,7 @@ void GameScene_2::Init()
 }
 void GameScene_2::Update()
 {
-	m_pPlayer->Update(2);
+	m_pPlayer->Update(m_pBaseEnemy,2);
 	m_pBaseEnemy->Update(2, m_pPlayer);
 	m_pCamera->Update(m_pPlayer);
 	Pad::Update();

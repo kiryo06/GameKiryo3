@@ -35,7 +35,7 @@ void GameScene_1::Init()
 }
 void GameScene_1::Update()
 {
-	m_pPlayer->Update(1);
+	m_pPlayer->Update(m_pBaseEnemy,1);
 	m_pBaseEnemy->Update(1,m_pPlayer);
 	m_pCamera->Update(m_pPlayer);
 	Pad::Update();

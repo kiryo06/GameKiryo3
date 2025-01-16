@@ -15,7 +15,7 @@ public:
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
-	void Update(int mapNumber);
+	void Update(BaseEnemy* baseenemy,int mapNumber);
 	/// <summary>
 	/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
 	/// </summary>
@@ -30,7 +30,7 @@ public:
 	/// <summary>
 	/// プレイヤーと敵の当たり判定
 	/// </summary>
-	bool IsHitPlayerAndEnemy(const VECTOR& checkPos);
+	bool IsHitPlayerAndEnemy(BaseEnemy* baseenemy, const VECTOR& checkPos);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
@@ -39,7 +39,7 @@ public:
 	/// 地面に接地しているか見る
 	/// </summary>
 	void CheckIsGround(int mapNumber);
-	void CheckIsEnemyTop();
+	void CheckIsEnemyTop(BaseEnemy* baseenemy);
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>

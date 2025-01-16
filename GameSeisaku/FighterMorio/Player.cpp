@@ -110,7 +110,7 @@ void Player::Init(int mapNumber)
 	}
 }
 
-void Player::Update(int mapNumber)
+void Player::Update(BaseEnemy* baseenemy,int mapNumber)
 {
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
@@ -141,6 +141,7 @@ void Player::Update(int mapNumber)
 	// 先に設定判定をする
 	CheckIsGround(mapNumber);
 	CheckIsTopHit(mapNumber);
+	CheckIsEnemyTop(baseenemy);
 
 	// 地に足が着いている場合のみジャンプボタンを見る
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
@@ -189,7 +190,6 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 
 			// 未来のプレイヤーのポジションをまず出す
 			VECTOR futurePos = VAdd(pos, ret);
-
 			_isHit = 0;
 
 			//全マップチップ分繰り返す
@@ -278,7 +278,6 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 					}
 				}
 			}
-			IsHitPlayerAndEnemy(futurePos);
 		}
 		return ret;
 	}
@@ -683,44 +682,45 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 	}
 }
 
-bool Player::IsHitPlayerAndEnemy(const VECTOR& checkPos)
+bool Player::IsHitPlayerAndEnemy(BaseEnemy* baseenemy,const VECTOR& checkPos)
 {
-	VECTOR Enemypos;
-	int EnemyW;
-	int EnemyH;
-	Enemypos.x = static_cast<int>(m_pBaseEnemy->GetBaseEnemyPos().x);
-	Enemypos.y = static_cast<int>(m_pBaseEnemy->GetBaseEnemyPos().y);
-	EnemyW = static_cast<int>(m_pBaseEnemy->GetW());
-	EnemyH = static_cast<int>(m_pBaseEnemy->GetH());
 
 	// 当たっているかどうか調べる
 	float PosLeft = checkPos.x - w * 0.5f;
 	float PosRight = checkPos.x + w * 0.5f;
 	float PosTop = checkPos.y - h * 0.5f;
 	float PosBottom = checkPos.y + h * 0.5f;
+
+	VECTOR Enemypos;
+	int EnemyW;
+	int EnemyH;
+	Enemypos.x = static_cast<int>(baseenemy->GetBaseEnemyPos().x);
+	Enemypos.y = static_cast<int>(baseenemy->GetBaseEnemyPos().y);
+	EnemyW = static_cast<float>(baseenemy->GetW());
+	EnemyH = static_cast<float>(baseenemy->GetH());
 	float BaseEnemyLeft = Enemypos.x - EnemyW * 0.5f;
 	float BaseEnemyRight = Enemypos.x + EnemyW * 0.5f;
 	float BaseEnemyTop = Enemypos.y - EnemyH * 0.5f;
 	float BaseEnemyBottom = Enemypos.y + EnemyH * 0.5f;
-	//// 矩形同士の当たり判定
+
 	//if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
-	//	(BaseEnemyLeft = PosRight && PosRight < BaseEnemyRight)) &&
-	//	(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
+	//	(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
+	//	((BaseEnemyTop <= PosTop && PosTop < BaseEnemyBottom) ||
+	//		(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom)))
 	//{
 	//	return true;
 	//}
 	//return false;
-	// 矩形同士の当たり判定
 
 	if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
 		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
-		((BaseEnemyTop <= PosTop && PosTop < BaseEnemyBottom) ||
-			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom)))
+			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
 	{
+		isEnemyHitDese = 1;
 		return true;
 	}
+	isEnemyHitDese = 0;
 	return false;
-	isEnemyHitDese = 1;
 }
 
 void Player::CheckIsTopHit(int mapNumber)
@@ -940,7 +940,7 @@ void Player::CheckIsGround(int mapNumber)
 	}
 }
 
-void Player::CheckIsEnemyTop()
+void Player::CheckIsEnemyTop(BaseEnemy* baseenemy)
 {
 
 	// 1ドット下にずらして当たれば敵に足がぶつかっている （小数点無視）
@@ -949,7 +949,7 @@ void Player::CheckIsEnemyTop()
 	bool isHit = false;
 
 	
-	isHit = IsHitPlayerAndEnemy(checkPos);
+	isHit = IsHitPlayerAndEnemy(baseenemy, checkPos);
 	if (isHit)
 	{
 		isHitEnemy = true;

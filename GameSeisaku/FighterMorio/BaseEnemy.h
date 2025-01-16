@@ -53,8 +53,8 @@ public:
 	void Draw(Camera* camera);
 	VECTOR GetBaseEnemyPos() const { return pos; }
 	VECTOR GetBaseEnemyDir() const { return dir; }
-	int GetW() const { return w; }
-	int GetH() const { return h; }
+	float GetW() const { return w; }
+	float GetH() const { return h; }
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// 敵の落下速度。ジャンプ時は反転する
