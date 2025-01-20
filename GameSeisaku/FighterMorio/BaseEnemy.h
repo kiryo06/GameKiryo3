@@ -68,6 +68,8 @@ private:
 	bool isHitTop;				// 敵の頭が天井に当たっているか
 	bool isLeft;				// 敵が左に当たったか
 	bool isRight;				// 敵が右に当たったか
+	bool isDese;
+	int EnemyDese;
 	int m_EnemyGraph;			// クリボウ仮実装
 	int mapChip;
 	int m_kChipNumY;			// マップの大きさ横軸デバック

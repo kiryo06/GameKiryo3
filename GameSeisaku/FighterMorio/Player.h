@@ -31,6 +31,7 @@ public:
 	/// プレイヤーと敵の当たり判定
 	/// </summary>
 	bool IsHitPlayerAndEnemy(BaseEnemy* baseenemy, const VECTOR& checkPos);
+	bool IsHitPlayerAndEnemySide(BaseEnemy* baseenemy, const VECTOR& checkPos);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
@@ -39,13 +40,20 @@ public:
 	/// 地面に接地しているか見る
 	/// </summary>
 	void CheckIsGround(int mapNumber);
-	void CheckIsEnemyTop(BaseEnemy* baseenemy);
+	/// <summary>
+	/// 敵の頭を踏んだかどうか
+	/// </summary>
+	/// <param name="baseenemy"></param>
+	void CheckIsEnemyTopHit(BaseEnemy* baseenemy);
+	void ChickIsEnemyLeftHit(BaseEnemy* baseenemy);
+	void ChickIsEnemyRightHit(BaseEnemy* baseenemy);
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>
 	void Draw(int mapNumber, Camera* camera);
 	VECTOR GetPlayerPos() const { return pos; }
 	VECTOR GetPlayerDir() const { return dir; }
+	bool IsEnemyDese() const { return isEnemyDese; }
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
@@ -58,7 +66,8 @@ private:
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
 	bool isHitEnemy;
-	int isEnemyHitDese;
+	bool isEnemyDese;
+	int isEnemyHitDese;			// デバック
 	int mapChip;
 	int _isHit;
 	int m_PlayerGraph;

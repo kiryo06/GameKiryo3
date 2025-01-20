@@ -48,7 +48,6 @@ void GameScene_2::Update()
 
 void GameScene_2::Draw()
 {
-
 	m_pMap->Draw(2, m_pCamera);
 	m_pPlayer->Draw(2, m_pCamera);
 	m_pBaseEnemy->Draw(m_pCamera);

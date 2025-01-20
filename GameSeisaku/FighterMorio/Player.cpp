@@ -30,6 +30,7 @@ Player::Player() :
 	isGround(false),
 	isHitTop(false),
 	isHitEnemy(false),
+	isEnemyDese(false),
 	isEnemyHitDese(0),
 	mapChip(0),
 	_isHit(0),
@@ -141,7 +142,7 @@ void Player::Update(BaseEnemy* baseenemy,int mapNumber)
 	// 先に設定判定をする
 	CheckIsGround(mapNumber);
 	CheckIsTopHit(mapNumber);
-	CheckIsEnemyTop(baseenemy);
+	CheckIsEnemyTopHit(baseenemy);
 
 	// 地に足が着いている場合のみジャンプボタンを見る
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
@@ -153,6 +154,7 @@ void Player::Update(BaseEnemy* baseenemy,int mapNumber)
 	{
 		fallSpeed = -JumpPower;	// ジャンプする
 		isHitEnemy = false;
+		isEnemyDese = true;
 	}
 
 	// 落下速度を移動量に加える
@@ -703,18 +705,58 @@ bool Player::IsHitPlayerAndEnemy(BaseEnemy* baseenemy,const VECTOR& checkPos)
 	float BaseEnemyTop = Enemypos.y - EnemyH * 0.5f;
 	float BaseEnemyBottom = Enemypos.y + EnemyH * 0.5f;
 
-	//if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
-	//	(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
-	//	((BaseEnemyTop <= PosTop && PosTop < BaseEnemyBottom) ||
-	//		(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom)))
-	//{
-	//	return true;
-	//}
-	//return false;
+	/*if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
+		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
+		((BaseEnemyTop <= PosTop && PosTop < BaseEnemyBottom) ||
+			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom)))
+	{
+		return true;
+	}
+	return false;*/
 
 	if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
 		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
 			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
+	{
+		isEnemyHitDese = 1;
+		return true;
+	}
+	isEnemyHitDese = 0;
+	return false;
+}
+
+bool Player::IsHitPlayerAndEnemySide(BaseEnemy* baseenemy, const VECTOR& checkPos)
+{
+	// 当たっているかどうか調べる
+	float PosLeft = checkPos.x - w * 0.5f;
+	float PosRight = checkPos.x + w * 0.5f;
+	float PosTop = checkPos.y - h * 0.5f;
+	float PosBottom = checkPos.y + h * 0.5f;
+
+	VECTOR Enemypos;
+	int EnemyW;
+	int EnemyH;
+	Enemypos.x = static_cast<int>(baseenemy->GetBaseEnemyPos().x);
+	Enemypos.y = static_cast<int>(baseenemy->GetBaseEnemyPos().y);
+	EnemyW = static_cast<float>(baseenemy->GetW());
+	EnemyH = static_cast<float>(baseenemy->GetH());
+	float BaseEnemyLeft = Enemypos.x - EnemyW * 0.5f;
+	float BaseEnemyRight = Enemypos.x + EnemyW * 0.5f;
+	float BaseEnemyTop = Enemypos.y - EnemyH * 0.5f;
+	float BaseEnemyBottom = Enemypos.y + EnemyH * 0.5f;
+
+	/*if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
+		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
+		((BaseEnemyTop <= PosTop && PosTop < BaseEnemyBottom) ||
+			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom)))
+	{
+		return true;
+	}
+	return false;*/
+
+	if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
+		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
+		(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
 	{
 		isEnemyHitDese = 1;
 		return true;
@@ -940,9 +982,8 @@ void Player::CheckIsGround(int mapNumber)
 	}
 }
 
-void Player::CheckIsEnemyTop(BaseEnemy* baseenemy)
+void Player::CheckIsEnemyTopHit(BaseEnemy* baseenemy)
 {
-
 	// 1ドット下にずらして当たれば敵に足がぶつかっている （小数点無視）
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
 	// 全マップチップ分繰り返す
@@ -963,6 +1004,22 @@ void Player::CheckIsEnemyTop(BaseEnemy* baseenemy)
 	{
 		isHitEnemy = false;
 	}
+}
+
+void Player::ChickIsEnemyLeftHit(BaseEnemy* baseenemy)
+{
+	// 1ドット右にずらして当たれば敵にぶつかっている
+	VECTOR checkPos = VGet(floorf(pos.x) + 1.0f, pos.y, pos.z);
+	// 全マップチップ分繰り返す
+	bool isHit = false;
+}
+
+void Player::ChickIsEnemyRightHit(BaseEnemy* baseenemy)
+{
+	// 1ドット左にずらして当たれば敵にぶつかっている
+	VECTOR checkPos = VGet(floorf(pos.x) - 1.0f, pos.y, pos.z);
+	// 全マップチップ分繰り返す
+	bool isHit = false;
 }
 
 

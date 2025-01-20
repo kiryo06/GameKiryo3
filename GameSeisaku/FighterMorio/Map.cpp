@@ -721,7 +721,7 @@ void Map::Draw(int mapNumber, Camera* camera)
 				// 0は当たり判定がないので0を空色で描画
 				if (PrototypeChipData2[hChip][wChip].chipKind == 0)
 				{
-					DrawBox(leftTop, leftBottom, rightTop, rightBottom, 0x87cefa, TRUE);
+					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
 				}
 				// -１は当たり判定チップ、-1を描画
 				if (PrototypeChipData2[hChip][wChip].chipKind == -1)
@@ -746,31 +746,32 @@ void Map::Draw(int mapNumber, Camera* camera)
 				// 4は当たり判定チップ、4を描画
 				if (PrototypeChipData2[hChip][wChip].chipKind == 4)
 				{
-					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 0, 0, 32, 32, m_HardBlockGraph, FALSE);
+					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 0, 0, 32, 32, m_HardBlockGraph, TRUE);
 				}
 				// 5は当たり判定チップ、5を描画
 				if (PrototypeChipData2[hChip][wChip].chipKind == 5)
 				{
 					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
-					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 0 + 30, 0, 160 - 30, 160, m_dokanGraph, FALSE);	// +○,-○ は切り取り位置を変えている
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 0 + 30, 0, 160 - 30, 160, m_dokanGraph, TRUE);	// +○,-○ は切り取り位置を変えている
 				}
 				// 6は当たり判定チップ、6を描画
 				if (PrototypeChipData2[hChip][wChip].chipKind == 6)
 				{
 					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
-					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 160, 0, 160 - 30, 160, m_dokanGraph, FALSE);	// +○,-○ は切り取り位置を変えている
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 160, 0, 160 - 30, 160, m_dokanGraph, TRUE);	// +○,-○ は切り取り位置を変えている
 				}
 				// 7は当たり判定チップ、7を描画
 				if (PrototypeChipData2[hChip][wChip].chipKind == 7)
 				{
 					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
-					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 0 + 30, 160 - 20, 160 - 30, 160, m_dokanGraph, FALSE);	// +○,-○ は切り取り位置を変えている
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 0 + 30, 160 - 20, 160 - 30, 160, m_dokanGraph, TRUE);	// +○,-○ は切り取り位置を変えている
 				}
 				// 8は当たり判定チップ、8を描画
 				if (PrototypeChipData2[hChip][wChip].chipKind == 8)
 				{
 					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
-					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 160, 160 - 20, 160 - 30, 160, m_dokanGraph, FALSE);	// +○,-○ は切り取り位置を変えている
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 160, 160 - 20, 160 - 30, 160, m_dokanGraph, TRUE);	// +○,-○ は切り取り位置を変えている
 				}
 				// 9は当たり判定がないチップ、9を描画
 				if (PrototypeChipData2[hChip][wChip].chipKind == 9)

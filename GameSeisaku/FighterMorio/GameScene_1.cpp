@@ -12,8 +12,6 @@
 #include "Player.h"
 #include "BaseEnemy.h"
 
-
-
 GameScene_1::GameScene_1(SceneManager& manager) : BaseScene(manager),
 m_pMap(new Map()),
 m_pCamera(new Camera()),

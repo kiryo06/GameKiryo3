@@ -28,6 +28,8 @@ BaseEnemy::BaseEnemy() :
 	isHitTop(false),
 	isLeft(false),
 	isRight(false),
+	isDese(false),
+	EnemyDese(0),
 	m_EnemyGraph(0),
 	mapChip(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
@@ -108,63 +110,70 @@ void BaseEnemy::Init(int mapNumber)
 
 void BaseEnemy::Update(int mapNumber, Player* player)
 {
-
-	// 入力状態を更新
-	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-	// 敵の移動処理
-	dir = VAdd(dir, VGet(-1, 0, 0));
-	// 正規化
-	if (VSquareSize(dir) > 0)
+	if (!isDese)
 	{
-		dir = VNorm(dir);
+		// 入力状態を更新
+		auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+		// 敵の移動処理
+		dir = VAdd(dir, VGet(-1, 0, 0));
+		// 正規化
+		if (VSquareSize(dir) > 0)
+		{
+			dir = VNorm(dir);
+		}
+
+		// 移動量を出す
+		velocity = VScale(dir, Speed);
+
+		// 落下速度を更新
+		fallSpeed += Gravity;
+
+		// 左右移動
+		workSpeed = Speed;
+
+		// HACK: 先に設定判定をすることでfallSpeed修正＋接地フラグ更新
+		CheckIsGround(mapNumber);
+		CheckIsTopHit(mapNumber);
+		CheckIsLeft(mapNumber);
+		CheckIsRight(mapNumber);
+
+		if (!isLeft && !isRight)
+		{
+			workSpeed = -EnemySpeed;
+		}
+		// 左に当たったら
+		if (isLeft && !isRight)
+		{
+			workSpeed = +EnemySpeed;
+		}
+
+		// 右に当たったら
+		if (isRight && !isLeft)
+		{
+			workSpeed = -EnemySpeed;
+		}
+
+		if (isRight && isLeft)
+		{
+			isLeft = false;
+			isRight = false;
+		}
+
+		// 落下速度を移動量に加える
+		auto fallVelocity = VGet(workSpeed, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
+		velocity = VAdd(velocity, fallVelocity);
+
+		// 当たり判定をして、壁にめり込まないようにvelocityを操作する
+		velocity = CheckBaseEnemyHitWithMap(mapNumber);
+
+		// 移動
+		pos = VAdd(pos, velocity);
 	}
-
-	// 移動量を出す
-	velocity = VScale(dir, Speed);
-
-	// 落下速度を更新
-	fallSpeed += Gravity;
-
-	// 左右移動
-	workSpeed = Speed;
-
-	// HACK: 先に設定判定をすることでfallSpeed修正＋接地フラグ更新
-	CheckIsGround(mapNumber);
-	CheckIsTopHit(mapNumber);
-	CheckIsLeft(mapNumber);
-	CheckIsRight(mapNumber);
-
-	if (!isLeft && !isRight)
+	if (player->IsEnemyDese())
 	{
-		workSpeed = -EnemySpeed;
+		EnemyDese = 123;
+		isDese = true;
 	}
-	// 左に当たったら
-	if (isLeft && !isRight)
-	{
-		workSpeed = +EnemySpeed;
-	}
-
-	// 右に当たったら
-	if (isRight && !isLeft)
-	{
-		workSpeed = -EnemySpeed;
-	}
-
-	if (isRight && isLeft)
-	{
-		isLeft = false;
-		isRight = false;
-	}
-
-	// 落下速度を移動量に加える
-	auto fallVelocity = VGet(workSpeed, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
-	velocity = VAdd(velocity, fallVelocity);
-
-	// 当たり判定をして、壁にめり込まないようにvelocityを操作する
-	velocity = CheckBaseEnemyHitWithMap(mapNumber);
-
-	// 移動
-	pos = VAdd(pos, velocity);
 }
 
 VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
@@ -957,13 +966,17 @@ void BaseEnemy::Draw(Camera* camera)
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);
 	auto rightTop = static_cast<int>(pos.x + w * 0.5f);
 	auto rightBottom = static_cast<int>(pos.y + h * 0.5f);
-	DrawRectExtendGraph(
-		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		7, 15, 18, 18,
-		m_EnemyGraph, TRUE);
+	if (!isDese)
+	{
+		DrawRectExtendGraph(
+			leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			7, 15, 18, 18,
+			m_EnemyGraph, TRUE);
+	}
+	DrawFormatString(0, 250, 0xaa0000, "敵消滅する場合は123 -> %d", EnemyDese, true);
 #ifdef _DEBUG
 	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
