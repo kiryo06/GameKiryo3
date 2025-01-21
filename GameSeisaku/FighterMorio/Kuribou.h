@@ -1,13 +1,13 @@
 #pragma once
 #include "MapData.h"
-class Map;
+	class Map;
 class Camera;
 class Player;
-class BaseEnemy
+class Kuribou
 {
 public:
-	BaseEnemy();
-	~BaseEnemy();
+	Kuribou();
+	~Kuribou();
 	/// <summary>
 	/// 敵の初期化
 	/// </summary>
@@ -19,14 +19,14 @@ public:
 	/// <summary>
 	/// 未来の敵位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
 	/// </summary>
-	VECTOR CheckBaseEnemyHitWithMap(int mapNumber);
+	VECTOR CheckKuribouHitWithMap(int mapNumber);
 	/// <summary>
 	/// 敵とマップの当たり判定
 	/// </summary>
 	/// <param name="isHitWithMapY">横軸の変数</param>
 	/// <param name="isHitWithMapX">縦軸の変数</param>
 	/// <returns></returns>
-	bool IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip);
+	bool IsHitKuribouWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
@@ -51,10 +51,12 @@ public:
 	/// 敵描画
 	/// </summary>
 	void Draw(Camera* camera);
-	VECTOR GetBaseEnemyPos() const { return pos; }
-	VECTOR GetBaseEnemyDir() const { return dir; }
+	VECTOR GetKuribouPos() const { return pos; }
+	VECTOR GetKuribouDir() const { return dir; }
 	float GetW() const { return w; }
 	float GetH() const { return h; }
+	void SetDese(bool isdese) { isDese = isdese; }
+	bool IsDese()const { return isDese; }
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// 敵の落下速度。ジャンプ時は反転する
@@ -88,3 +90,4 @@ private:
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData2[MapDataFile::k2ChipNumY][MapDataFile::k2ChipNumX] = {};
 };
+

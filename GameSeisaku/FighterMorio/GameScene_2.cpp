@@ -10,13 +10,13 @@
 #include "Map.h"
 #include "MapData.h"
 #include "Player.h"
-#include "BaseEnemy.h"
+#include "Kuribou.h"
 
 GameScene_2::GameScene_2(SceneManager& manager) : BaseScene(manager),
 m_pMap(new Map()),
 m_pCamera(new Camera()),
 m_pPlayer(new Player()),
-m_pBaseEnemy(new BaseEnemy())
+m_pKuribou(new Kuribou())
 {
 }
 
@@ -29,12 +29,12 @@ void GameScene_2::Init()
 	m_pMap->Init(2);
 	m_pCamera->Init();
 	m_pPlayer->Init(2);
-	m_pBaseEnemy->Init(2);
+	m_pKuribou->Init(2);
 }
 void GameScene_2::Update()
 {
-	m_pPlayer->Update(m_pBaseEnemy,2);
-	m_pBaseEnemy->Update(2, m_pPlayer);
+	m_pPlayer->Update(m_pKuribou,2);
+	m_pKuribou->Update(2, m_pPlayer);
 	m_pCamera->Update(m_pPlayer);
 	Pad::Update();
 	// “ü—Íó‘Ô‚ðXV
@@ -50,14 +50,14 @@ void GameScene_2::Draw()
 {
 	m_pMap->Draw(2, m_pCamera);
 	m_pPlayer->Draw(2, m_pCamera);
-	m_pBaseEnemy->Draw(m_pCamera);
+	m_pKuribou->Draw(m_pCamera);
 #ifdef _DEBUG
 	DrawBox(0, 0, 300, 200, 0x444444, true);
 	DrawFormatString(0, 0 , 0xffffff, " GameScene_2         ", true);
 	DrawFormatString(0, 16, 0xcc0000, " PlayerPosX    : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0, 32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
-	DrawFormatString(0, 48, 0x00cc00, " BaseEnemyPosX : %.1f", m_pBaseEnemy->GetBaseEnemyPos().x, true);
-	DrawFormatString(0, 64, 0x00cc00, " BaseEnemyPosY : %.1f", m_pBaseEnemy->GetBaseEnemyPos().y, true);
+	DrawFormatString(0, 48, 0x00cc00, " KuribouPosX   : %.1f", m_pKuribou->GetKuribouPos().x, true);
+	DrawFormatString(0, 64, 0x00cc00, " KuribouPosY   : %.1f", m_pKuribou->GetKuribouPos().y, true);
 	DrawFormatString(0, 80, 0x00aaaa, " CameraPosX    : %.1f", m_pCamera->GetCameraDrawOffset().x, true);
 	DrawFormatString(0, 96, 0x00aaaa, " CameraPosY    : %.1f", m_pCamera->GetCameraDrawOffset().y, true);
 #endif // _DEBUG

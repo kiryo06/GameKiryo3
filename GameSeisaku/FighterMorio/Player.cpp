@@ -3,7 +3,7 @@
 #include "DxLib.h"
 #include "Map.h"
 #include "Camera.h"
-#include "BaseEnemy.h"
+#include "Kuribou.h"
 
 namespace
 {
@@ -20,7 +20,7 @@ namespace
 Player::Player() :
 	m_pMap(),
 	m_pCamera(),
-	m_pBaseEnemy(),
+	m_pKuribou(new Kuribou),
 	w(25),
 	h(32),
 	fallSpeed(0.0f),
@@ -29,8 +29,6 @@ Player::Player() :
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
 	isHitTop(false),
-	isHitEnemy(false),
-	isEnemyDese(false),
 	isEnemyHitDese(0),
 	mapChip(0),
 	_isHit(0),
@@ -111,7 +109,8 @@ void Player::Init(int mapNumber)
 	}
 }
 
-void Player::Update(BaseEnemy* baseenemy,int mapNumber)
+void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
+//void Player::Update(Kuribou* Kuribou,int mapNumber)
 {
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
@@ -142,20 +141,35 @@ void Player::Update(BaseEnemy* baseenemy,int mapNumber)
 	// 先に設定判定をする
 	CheckIsGround(mapNumber);
 	CheckIsTopHit(mapNumber);
-	CheckIsEnemyTopHit(baseenemy);
-
+	// 画面上にでていない弾があるか、弾の数だけ繰り返して調べる
+	for (auto& item : Kuribou)
+	{
+		if (!item->IsDese())
+		{
+			if (CheckIsEnemyTopHit(item))
+			{
+				fallSpeed = -JumpPower;	// ジャンプする
+				item->SetDese(true);
+				//delete(m_pKuribou);
+			}
+		}
+	}
+	//if (!Kuribou->IsDese())
+	//{
+	//	if (CheckIsEnemyTopHit(Kuribou))
+	//	{
+	//		fallSpeed = -JumpPower;	// ジャンプする
+	//		Kuribou->SetDese(true);
+	//		//delete(m_pKuribou);
+	//	}
+	//}
 	// 地に足が着いている場合のみジャンプボタンを見る
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
 	{
 		fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
 		isGround = false;
 	}
-	if (isHitEnemy)
-	{
-		fallSpeed = -JumpPower;	// ジャンプする
-		isHitEnemy = false;
-		isEnemyDese = true;
-	}
+	
 
 	// 落下速度を移動量に加える
 	auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
@@ -684,7 +698,7 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 	}
 }
 
-bool Player::IsHitPlayerAndEnemy(BaseEnemy* baseenemy,const VECTOR& checkPos)
+bool Player::IsHitPlayerAndEnemy(Kuribou* Kuribou,const VECTOR& checkPos)
 {
 
 	// 当たっているかどうか調べる
@@ -696,27 +710,18 @@ bool Player::IsHitPlayerAndEnemy(BaseEnemy* baseenemy,const VECTOR& checkPos)
 	VECTOR Enemypos;
 	int EnemyW;
 	int EnemyH;
-	Enemypos.x = static_cast<int>(baseenemy->GetBaseEnemyPos().x);
-	Enemypos.y = static_cast<int>(baseenemy->GetBaseEnemyPos().y);
-	EnemyW = static_cast<float>(baseenemy->GetW());
-	EnemyH = static_cast<float>(baseenemy->GetH());
-	float BaseEnemyLeft = Enemypos.x - EnemyW * 0.5f;
-	float BaseEnemyRight = Enemypos.x + EnemyW * 0.5f;
-	float BaseEnemyTop = Enemypos.y - EnemyH * 0.5f;
-	float BaseEnemyBottom = Enemypos.y + EnemyH * 0.5f;
+	Enemypos.x = static_cast<int>(Kuribou->GetKuribouPos().x);
+	Enemypos.y = static_cast<int>(Kuribou->GetKuribouPos().y);
+	EnemyW = static_cast<float>(Kuribou->GetW());
+	EnemyH = static_cast<float>(Kuribou->GetH());
+	float KuribouLeft = Enemypos.x - EnemyW * 0.5f;
+	float KuribouRight = Enemypos.x + EnemyW * 0.5f;
+	float KuribouTop = Enemypos.y - EnemyH * 0.5f;
+	float KuribouBottom = Enemypos.y + EnemyH * 0.5f;
 
-	/*if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
-		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
-		((BaseEnemyTop <= PosTop && PosTop < BaseEnemyBottom) ||
-			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom)))
-	{
-		return true;
-	}
-	return false;*/
-
-	if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
-		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
-			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
+	if (((KuribouLeft <= PosLeft && PosLeft < KuribouRight) ||
+		(KuribouLeft > PosLeft && KuribouLeft < PosRight)) &&
+			(KuribouTop > PosTop && KuribouTop < PosBottom))
 	{
 		isEnemyHitDese = 1;
 		return true;
@@ -725,7 +730,7 @@ bool Player::IsHitPlayerAndEnemy(BaseEnemy* baseenemy,const VECTOR& checkPos)
 	return false;
 }
 
-bool Player::IsHitPlayerAndEnemySide(BaseEnemy* baseenemy, const VECTOR& checkPos)
+bool Player::IsHitPlayerAndEnemySide(Kuribou* Kuribou, const VECTOR& checkPos)
 {
 	// 当たっているかどうか調べる
 	float PosLeft = checkPos.x - w * 0.5f;
@@ -736,27 +741,27 @@ bool Player::IsHitPlayerAndEnemySide(BaseEnemy* baseenemy, const VECTOR& checkPo
 	VECTOR Enemypos;
 	int EnemyW;
 	int EnemyH;
-	Enemypos.x = static_cast<int>(baseenemy->GetBaseEnemyPos().x);
-	Enemypos.y = static_cast<int>(baseenemy->GetBaseEnemyPos().y);
-	EnemyW = static_cast<float>(baseenemy->GetW());
-	EnemyH = static_cast<float>(baseenemy->GetH());
-	float BaseEnemyLeft = Enemypos.x - EnemyW * 0.5f;
-	float BaseEnemyRight = Enemypos.x + EnemyW * 0.5f;
-	float BaseEnemyTop = Enemypos.y - EnemyH * 0.5f;
-	float BaseEnemyBottom = Enemypos.y + EnemyH * 0.5f;
+	Enemypos.x = static_cast<int>(Kuribou->GetKuribouPos().x);
+	Enemypos.y = static_cast<int>(Kuribou->GetKuribouPos().y);
+	EnemyW = static_cast<float>(Kuribou->GetW());
+	EnemyH = static_cast<float>(Kuribou->GetH());
+	float KuribouLeft = Enemypos.x - EnemyW * 0.5f;
+	float KuribouRight = Enemypos.x + EnemyW * 0.5f;
+	float KuribouTop = Enemypos.y - EnemyH * 0.5f;
+	float KuribouBottom = Enemypos.y + EnemyH * 0.5f;
 
-	/*if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
-		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
-		((BaseEnemyTop <= PosTop && PosTop < BaseEnemyBottom) ||
-			(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom)))
+	/*if (((KuribouLeft <= PosLeft && PosLeft < KuribouRight) ||
+		(KuribouLeft > PosLeft && KuribouLeft < PosRight)) &&
+		((KuribouTop <= PosTop && PosTop < KuribouBottom) ||
+			(KuribouTop > PosTop && KuribouTop < PosBottom)))
 	{
 		return true;
 	}
 	return false;*/
 
-	if (((BaseEnemyLeft <= PosLeft && PosLeft < BaseEnemyRight) ||
-		(BaseEnemyLeft > PosLeft && BaseEnemyLeft < PosRight)) &&
-		(BaseEnemyTop > PosTop && BaseEnemyTop < PosBottom))
+	if (((KuribouLeft <= PosLeft && PosLeft < KuribouRight) ||
+		(KuribouLeft > PosLeft && KuribouLeft < PosRight)) &&
+		(KuribouTop > PosTop && KuribouTop < PosBottom))
 	{
 		isEnemyHitDese = 1;
 		return true;
@@ -982,7 +987,7 @@ void Player::CheckIsGround(int mapNumber)
 	}
 }
 
-void Player::CheckIsEnemyTopHit(BaseEnemy* baseenemy)
+bool Player::CheckIsEnemyTopHit(Kuribou* Kuribou)
 {
 	// 1ドット下にずらして当たれば敵に足がぶつかっている （小数点無視）
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
@@ -990,23 +995,23 @@ void Player::CheckIsEnemyTopHit(BaseEnemy* baseenemy)
 	bool isHit = false;
 
 	
-	isHit = IsHitPlayerAndEnemy(baseenemy, checkPos);
+	isHit = IsHitPlayerAndEnemy(Kuribou, checkPos);
 	if (isHit)
 	{
-		isHitEnemy = true;
 		// fallSpeedをゼロにし、急激な落下を防ぐ
 		fallSpeed = 0.0f;
 
 		// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
 		pos.y = floorf(pos.y);	// ちょうど地面に付く位置に
+		return true;
 	}
 	else
 	{
-		isHitEnemy = false;
+		return false;
 	}
 }
 
-void Player::ChickIsEnemyLeftHit(BaseEnemy* baseenemy)
+void Player::ChickIsEnemyLeftHit(Kuribou* Kuribou)
 {
 	// 1ドット右にずらして当たれば敵にぶつかっている
 	VECTOR checkPos = VGet(floorf(pos.x) + 1.0f, pos.y, pos.z);
@@ -1014,7 +1019,7 @@ void Player::ChickIsEnemyLeftHit(BaseEnemy* baseenemy)
 	bool isHit = false;
 }
 
-void Player::ChickIsEnemyRightHit(BaseEnemy* baseenemy)
+void Player::ChickIsEnemyRightHit(Kuribou* Kuribou)
 {
 	// 1ドット左にずらして当たれば敵にぶつかっている
 	VECTOR checkPos = VGet(floorf(pos.x) - 1.0f, pos.y, pos.z);

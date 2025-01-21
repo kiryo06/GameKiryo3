@@ -3,6 +3,7 @@
 #include "DxLib.h"
 #include "Player.h"
 #include "Screen.h"
+#include "game.h"
 namespace
 {
 	// ƒJƒƒ‰”ÍˆÍ

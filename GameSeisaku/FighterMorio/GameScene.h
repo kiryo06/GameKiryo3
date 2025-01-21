@@ -2,11 +2,13 @@
 #include "BaseScene.h"
 
 #include "game.h"
+#include <list>
+
 class SceneManager;
 class Map;
 class Camera;
 class Player;
-class BaseEnemy;
+class Kuribou;
 class GameScene : public BaseScene
 {
 public:
@@ -19,5 +21,6 @@ private:
 	Map* m_pMap;
 	Camera* m_pCamera;
 	Player* m_pPlayer;
-	BaseEnemy* m_pBaseEnemy;
+	//Kuribou* m_pKuribou;
+	std::list<Kuribou*>m_pKuribou;
 };

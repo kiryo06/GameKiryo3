@@ -1,4 +1,4 @@
-#include "BaseEnemy.h"
+#include "Kuribou.h"
 #include <cmath>
 #include "DxLib.h"
 #include "Camera.h"
@@ -13,7 +13,7 @@ namespace
 	const float Speed = 0.0f;		// 敵の移動スピード
 }
 
-BaseEnemy::BaseEnemy() :
+Kuribou::Kuribou() :
 	m_pCamera(),
 	m_pMap(),
 	m_pPlayer(),
@@ -41,12 +41,12 @@ BaseEnemy::BaseEnemy() :
 {
 }
 
-BaseEnemy::~BaseEnemy()
+Kuribou::~Kuribou()
 {
 	DeleteGraph(m_EnemyGraph);
 }
 
-void BaseEnemy::Init(int mapNumber)
+void Kuribou::Init(int mapNumber)
 {
 	m_EnemyGraph = LoadGraph("data/image/Enemy.png");
 	switch (mapNumber)
@@ -108,75 +108,72 @@ void BaseEnemy::Init(int mapNumber)
 	}
 }
 
-void BaseEnemy::Update(int mapNumber, Player* player)
+void Kuribou::Update(int mapNumber, Player* player)
 {
-	if (!isDese)
+	if (isDese)return;
+	// 入力状態を更新
+	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+	// 敵の移動処理
+	dir = VAdd(dir, VGet(-1, 0, 0));
+	// 正規化
+	if (VSquareSize(dir) > 0)
 	{
-		// 入力状態を更新
-		auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
-		// 敵の移動処理
-		dir = VAdd(dir, VGet(-1, 0, 0));
-		// 正規化
-		if (VSquareSize(dir) > 0)
-		{
-			dir = VNorm(dir);
-		}
-
-		// 移動量を出す
-		velocity = VScale(dir, Speed);
-
-		// 落下速度を更新
-		fallSpeed += Gravity;
-
-		// 左右移動
-		workSpeed = Speed;
-
-		// HACK: 先に設定判定をすることでfallSpeed修正＋接地フラグ更新
-		CheckIsGround(mapNumber);
-		CheckIsTopHit(mapNumber);
-		CheckIsLeft(mapNumber);
-		CheckIsRight(mapNumber);
-
-		if (!isLeft && !isRight)
-		{
-			workSpeed = -EnemySpeed;
-		}
-		// 左に当たったら
-		if (isLeft && !isRight)
-		{
-			workSpeed = +EnemySpeed;
-		}
-
-		// 右に当たったら
-		if (isRight && !isLeft)
-		{
-			workSpeed = -EnemySpeed;
-		}
-
-		if (isRight && isLeft)
-		{
-			isLeft = false;
-			isRight = false;
-		}
-
-		// 落下速度を移動量に加える
-		auto fallVelocity = VGet(workSpeed, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
-		velocity = VAdd(velocity, fallVelocity);
-
-		// 当たり判定をして、壁にめり込まないようにvelocityを操作する
-		velocity = CheckBaseEnemyHitWithMap(mapNumber);
-
-		// 移動
-		pos = VAdd(pos, velocity);
+		dir = VNorm(dir);
 	}
-	if (player->IsEnemyDese())
+
+	// 移動量を出す
+	velocity = VScale(dir, Speed);
+
+	// 落下速度を更新
+	fallSpeed += Gravity;
+
+	// 左右移動
+	workSpeed = Speed;
+
+	// HACK: 先に設定判定をすることでfallSpeed修正＋接地フラグ更新
+	CheckIsGround(mapNumber);
+	CheckIsTopHit(mapNumber);
+	CheckIsLeft(mapNumber);
+	CheckIsRight(mapNumber);
+
+	if (!isLeft && !isRight)
+	{
+		workSpeed = -EnemySpeed;
+	}
+	// 左に当たったら
+	if (isLeft && !isRight)
+	{
+		workSpeed = +EnemySpeed;
+	}
+
+	// 右に当たったら
+	if (isRight && !isLeft)
+	{
+		workSpeed = -EnemySpeed;
+	}
+
+	if (isRight && isLeft)
+	{
+		isLeft = false;
+		isRight = false;
+	}
+
+	// 落下速度を移動量に加える
+	auto fallVelocity = VGet(workSpeed, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
+	velocity = VAdd(velocity, fallVelocity);
+
+	// 当たり判定をして、壁にめり込まないようにvelocityを操作する
+	velocity = CheckKuribouHitWithMap(mapNumber);
+
+	// 移動
+	pos = VAdd(pos, velocity);
+	if (isDese)
 	{
 		EnemyDese = 123;
-		isDese = true;
 	}
 }
 
-VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
+VECTOR Kuribou::CheckKuribouHitWithMap(int mapNumber)
 {
 	// 速度が最初から0なら動かさず早期return
 	if (VSize(velocity) == 0)
@@ -205,7 +202,7 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 				bool isHit = false;
 				for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 				{
-					bool isHit = IsHitBaseEnemyWithMapChip(mapNumber, futurePos, hChip, wChip);
+					bool isHit = IsHitKuribouWithMapChip(mapNumber, futurePos, hChip, wChip);
 
 					// 初回に当たったとき
 					if (isHit && isFirstHit)
@@ -302,7 +299,7 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 				bool isHit = false;
 				for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 				{
-					bool isHit = IsHitBaseEnemyWithMapChip(mapNumber, futurePos, hChip, wChip);
+					bool isHit = IsHitKuribouWithMapChip(mapNumber, futurePos, hChip, wChip);
 
 					// 初回に当たったとき
 					if (isHit && isFirstHit)
@@ -399,7 +396,7 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 				bool isHit = false;
 				for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 				{
-					bool isHit = IsHitBaseEnemyWithMapChip(mapNumber, futurePos, hChip, wChip);
+					bool isHit = IsHitKuribouWithMapChip(mapNumber, futurePos, hChip, wChip);
 
 					// 初回に当たったとき
 					if (isHit && isFirstHit)
@@ -482,7 +479,7 @@ VECTOR BaseEnemy::CheckBaseEnemyHitWithMap(int mapNumber)
 
 }
 
-bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip)
+bool Kuribou::IsHitKuribouWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip)
 {
 	if (mapChip == 0)
 	{
@@ -570,7 +567,7 @@ bool BaseEnemy::IsHitBaseEnemyWithMapChip(int mapNumber, const VECTOR& checkPos,
 	}
 }
 
-void BaseEnemy::CheckIsTopHit(int mapNumber)
+void Kuribou::CheckIsTopHit(int mapNumber)
 {
 	// 1ドット上にずらして当たれば頭上がぶつかっている （小数点無視）
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) - 1.0f, pos.z);
@@ -582,7 +579,7 @@ void BaseEnemy::CheckIsTopHit(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -616,7 +613,7 @@ void BaseEnemy::CheckIsTopHit(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -650,7 +647,7 @@ void BaseEnemy::CheckIsTopHit(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -680,7 +677,7 @@ void BaseEnemy::CheckIsTopHit(int mapNumber)
 	}
 }
 
-void BaseEnemy::CheckIsGround(int mapNumber)
+void Kuribou::CheckIsGround(int mapNumber)
 {
 	// 1ドット下にずらして当たれば地面に足がぶつかっている （小数点無視）
 	VECTOR checkPos = VGet(pos.x, floorf(pos.y) + 1.0f, pos.z);
@@ -692,7 +689,7 @@ void BaseEnemy::CheckIsGround(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -723,7 +720,7 @@ void BaseEnemy::CheckIsGround(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -754,7 +751,7 @@ void BaseEnemy::CheckIsGround(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -781,7 +778,7 @@ void BaseEnemy::CheckIsGround(int mapNumber)
 	}
 }
 
-void BaseEnemy::CheckIsLeft(int mapNumber)
+void Kuribou::CheckIsLeft(int mapNumber)
 {
 	// 左に動いて当たれば壁に体がぶつかっている
 	VECTOR checkPos = VGet(floorf(pos.x) - 1.0f, pos.y, pos.z);
@@ -793,7 +790,7 @@ void BaseEnemy::CheckIsLeft(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -820,7 +817,7 @@ void BaseEnemy::CheckIsLeft(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -847,7 +844,7 @@ void BaseEnemy::CheckIsLeft(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -870,7 +867,7 @@ void BaseEnemy::CheckIsLeft(int mapNumber)
 	}
 }
 
-void BaseEnemy::CheckIsRight(int mapNumber)
+void Kuribou::CheckIsRight(int mapNumber)
 {
 	// 左に動いて当たれば壁に体がぶつかっている
 	VECTOR checkPos = VGet(floorf(pos.x) + 1.0f, pos.y, pos.z);
@@ -882,7 +879,7 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -909,7 +906,7 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -936,7 +933,7 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 		{
 			for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 			{
-				isHit = IsHitBaseEnemyWithMapChip(mapNumber, checkPos, hChip, wChip);
+				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)
 				{
 					break;
@@ -959,24 +956,22 @@ void BaseEnemy::CheckIsRight(int mapNumber)
 	}
 }
 
-void BaseEnemy::Draw(Camera* camera)
+void Kuribou::Draw(Camera* camera)
 {
+	DrawFormatString(0, 250, 0xaa0000, "敵消滅する場合は123 -> %d", EnemyDese, true);
+	if (isDese)return;
 	// 敵の描画
 	auto leftTop = static_cast<int>(pos.x - w * 0.5f);
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);
 	auto rightTop = static_cast<int>(pos.x + w * 0.5f);
 	auto rightBottom = static_cast<int>(pos.y + h * 0.5f);
-	if (!isDese)
-	{
-		DrawRectExtendGraph(
-			leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-			leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-			rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-			rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-			7, 15, 18, 18,
-			m_EnemyGraph, TRUE);
-	}
-	DrawFormatString(0, 250, 0xaa0000, "敵消滅する場合は123 -> %d", EnemyDese, true);
+	DrawRectExtendGraph(
+		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		7, 15, 18, 18,
+		m_EnemyGraph, TRUE);
 #ifdef _DEBUG
 	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),

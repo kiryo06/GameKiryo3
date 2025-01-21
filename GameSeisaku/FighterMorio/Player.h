@@ -1,8 +1,10 @@
 #pragma once
 #include "MapData.h"
+#include <list>
+
 class Map;
 class Camera;
-class BaseEnemy;
+class Kuribou;
 class Player
 {
 public:
@@ -15,7 +17,8 @@ public:
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
-	void Update(BaseEnemy* baseenemy,int mapNumber);
+	void Update(std::list<Kuribou*>& Kuribou, int mapNumber);
+	//void Update(Kuribou* Kuribou,int mapNumber);
 	/// <summary>
 	/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
 	/// </summary>
@@ -30,8 +33,8 @@ public:
 	/// <summary>
 	/// プレイヤーと敵の当たり判定
 	/// </summary>
-	bool IsHitPlayerAndEnemy(BaseEnemy* baseenemy, const VECTOR& checkPos);
-	bool IsHitPlayerAndEnemySide(BaseEnemy* baseenemy, const VECTOR& checkPos);
+	bool IsHitPlayerAndEnemy(Kuribou* Kuribou, const VECTOR& checkPos);
+	bool IsHitPlayerAndEnemySide(Kuribou* Kuribou, const VECTOR& checkPos);
 	/// <summary>
 	/// 頭上がぶつかっているか見る
 	/// </summary>
@@ -43,21 +46,21 @@ public:
 	/// <summary>
 	/// 敵の頭を踏んだかどうか
 	/// </summary>
-	/// <param name="baseenemy"></param>
-	void CheckIsEnemyTopHit(BaseEnemy* baseenemy);
-	void ChickIsEnemyLeftHit(BaseEnemy* baseenemy);
-	void ChickIsEnemyRightHit(BaseEnemy* baseenemy);
+	/// <param name="Kuribou"></param>
+	bool CheckIsEnemyTopHit(Kuribou* Kuribou);
+	void ChickIsEnemyLeftHit(Kuribou* Kuribou);
+	void ChickIsEnemyRightHit(Kuribou* Kuribou);
+
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>
 	void Draw(int mapNumber, Camera* camera);
 	VECTOR GetPlayerPos() const { return pos; }
 	VECTOR GetPlayerDir() const { return dir; }
-	bool IsEnemyDese() const { return isEnemyDese; }
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
-	BaseEnemy* m_pBaseEnemy;
+	Kuribou* m_pKuribou = nullptr;
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// プレイヤーの落下速度。ジャンプ時は反転する
 	VECTOR pos;					// 座標 横：中心　縦：中心
@@ -65,8 +68,6 @@ private:
 	VECTOR velocity;
 	bool isGround;				// プレイヤーが接地中か
 	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
-	bool isHitEnemy;
-	bool isEnemyDese;
 	int isEnemyHitDese;			// デバック
 	int mapChip;
 	int _isHit;

@@ -130,6 +130,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>c:\DxLib_VC\プロジェクトに追加すべきファイル_VC用</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,7 +141,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="BaseMapChip.cpp" />
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -151,6 +151,7 @@
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GroundRectangle_HitJudgement.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Kuribou.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapChipHitPoints.cpp" />
@@ -164,7 +165,6 @@
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseEnemy.h" />
     <ClInclude Include="BaseMapChip.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Camera.h" />
@@ -176,6 +176,7 @@
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="GroundRectangle_HitJudgement.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Kuribou.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MapChipHitPoints.h" />
     <ClInclude Include="MapData.h" />
