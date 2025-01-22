@@ -13,65 +13,101 @@ public:
 	/// <summary>
 	/// プレイヤーの初期化
 	/// </summary>
+	/// <param name="mapNumber">マップ番号</param>
 	void Init(int mapNumber);
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
+	/// <param name="Kuribou">敵キャラクターのリスト</param>
+	/// <param name="mapNumber">マップ番号</param>
 	void Update(std::list<Kuribou*>& Kuribou, int mapNumber);
-	//void Update(Kuribou* Kuribou,int mapNumber);
 	/// <summary>
-	/// 未来のプレイヤー位置とマップの当たり判定を行い、調整したvelocity（移動ベクトル)を返す
+	/// 現在のプレイヤー位置とマップの衝突判定を行い、修正されたvelocity（移動ベクトル）を返す
 	/// </summary>
+	/// <param name="mapNumber">マップ番号</param>
+	/// <returns>修正された移動ベクトル</returns>
 	VECTOR CheckPlayerHitWithMap(int mapNumber);
 	/// <summary>
-	/// プレイヤーとマップの当たり判定
+	/// プレイヤーとマップの衝突判定
 	/// </summary>
-	/// <param name="isHitWithMapY">横軸の変数</param>
-	/// <param name="isHitWithMapX">縦軸の変数</param>
-	/// <returns></returns>
+	/// <param name="mapNumber">マップ番号</param>
+	/// <param name="checkPos">チェックする位置</param>
+	/// <param name="hChip">マップチップの高さ</param>
+	/// <param name="wChip">マップチップの幅</param>
+	/// <returns>衝突しているかどうか</returns>
 	bool IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip);
 	/// <summary>
-	/// プレイヤーと敵の当たり判定
+	/// プレイヤーと敵の衝突判定
 	/// </summary>
+	/// <param name="Kuribou">敵キャラクター</param>
+	/// <param name="checkPos">チェックする位置</param>
+	/// <returns>衝突しているかどうか</returns>
 	bool IsHitPlayerAndEnemy(Kuribou* Kuribou, const VECTOR& checkPos);
+	/// <summary>
+	/// プレイヤーと敵の側面衝突判定
+	/// </summary>
+	/// <param name="Kuribou">敵キャラクター</param>
+	/// <param name="checkPos">チェックする位置</param>
+	/// <returns>側面衝突しているかどうか</returns>
 	bool IsHitPlayerAndEnemySide(Kuribou* Kuribou, const VECTOR& checkPos);
 	/// <summary>
-	/// 頭上がぶつかっているか見る
+	/// 頭上に障害物があるか確認
 	/// </summary>
+	/// <param name="mapNumber">マップ番号</param>
 	void CheckIsTopHit(int mapNumber);
 	/// <summary>
-	/// 地面に接地しているか見る
+	/// 地面に足がついているか確認
 	/// </summary>
+	/// <param name="mapNumber">マップ番号</param>
 	void CheckIsGround(int mapNumber);
 	/// <summary>
-	/// 敵の頭を踏んだかどうか
+	/// 敵の左側に衝突しているか確認
 	/// </summary>
-	/// <param name="Kuribou"></param>
+	/// <param name="Kuribou">敵キャラクター</param>
 	bool CheckIsEnemyTopHit(Kuribou* Kuribou);
-	void ChickIsEnemyLeftHit(Kuribou* Kuribou);
-	void ChickIsEnemyRightHit(Kuribou* Kuribou);
-
+	/// <summary>
+	/// 敵の右側に衝突しているか確認
+	/// </summary>
+	/// <param name="Kuribou">敵キャラクター</param>
+	bool ChickIsEnemyLeftHit(Kuribou* Kuribou);
 	/// <summary>
 	/// プレイヤー描画
 	/// </summary>
+	/// <param name="mapNumber">マップ番号</param>
+	/// <param name="camera">カメラオブジェクト</param>
+	bool ChickIsEnemyRightHit(Kuribou* Kuribou);
+	/// <summary>
+	/// プレイヤー描画
+	/// </summary>
+	/// <param name="mapNumber">マップ番号</param>
+	/// <param name="camera">カメラオブジェクト</param>
 	void Draw(int mapNumber, Camera* camera);
+	/// <summary>
+	/// プレイヤーの位置を取得
+	/// </summary>
+	/// <returns>プレイヤーの位置</returns>
 	VECTOR GetPlayerPos() const { return pos; }
+	/// <summary>
+	/// プレイヤーの方向を取得
+	/// </summary>
+	/// <returns>プレイヤーの方向</returns>
 	VECTOR GetPlayerDir() const { return dir; }
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
-	Kuribou* m_pKuribou = nullptr;
-	float w, h;					// 幅、高さ
-	float fallSpeed;			// プレイヤーの落下速度。ジャンプ時は反転する
-	VECTOR pos;					// 座標 横：中心　縦：中心
-	VECTOR dir;					// 座標の移動方向
-	VECTOR velocity;
-	bool isGround;				// プレイヤーが接地中か
-	bool isHitTop;				// プレイヤーの頭が天井に当たっているか
-	int isEnemyHitDese;			// デバック
-	int mapChip;
-	int _isHit;
-	int m_PlayerGraph;
+	Kuribou* m_pKuribou;
+	float w, h;					// プレイヤーの幅と高さ
+	float fallSpeed;			// 落下速度
+	VECTOR pos;                 // プレイヤーの位置
+	VECTOR dir;					// 方向ベクトル
+	VECTOR velocity;            // 移動ベクトル
+	bool isGround;              // 地面に足がついているかどうか
+	bool isHitTop;              // 頭上に障害物があるかどうか
+	bool isPlayerKuribouHit;    // プレイヤーが敵に衝突したかどうか
+	int isEnemyHitDese;         // 敵に衝突したかどうか
+	int mapChip;                // マップチップ
+	int _isHit;                 // 衝突フラグ
+	int m_PlayerGraph;			// プレイヤーグラフィック
 	int m_kChipNumY;
 	int m_kChipNumX;
 	int m_k1ChipNumY;

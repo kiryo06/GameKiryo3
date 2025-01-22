@@ -8,7 +8,6 @@ namespace Game
 	constexpr int kScreenBitNum = 32;				// 画面サイズの変更
 	constexpr bool kDefaultWindowMode = true;		// ウィンドウモードの状態にする
 	
-
 	// クリボウの情報
 	constexpr int kuribouNumber = 2;				// クリボウの数
 }

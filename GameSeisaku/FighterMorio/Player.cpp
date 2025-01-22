@@ -50,19 +50,7 @@ Player::~Player()
 void Player::Init(int mapNumber)
 {
 	m_PlayerGraph = LoadGraph("data/image/player(kari).png");
-	switch (mapNumber)
-	{
-	case 0:
-		mapChip = 0;
-		break;
-	case 1:
-		mapChip = 1;
-		break;
-	case 2:
-		mapChip = 2;
-		break;
-	}
-
+	mapChip = mapNumber;
 	if (mapChip == 0)
 	{
 		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
@@ -112,6 +100,7 @@ void Player::Init(int mapNumber)
 void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 //void Player::Update(Kuribou* Kuribou,int mapNumber)
 {
+	if(isPlayerKuribouHit)return;
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	// プレイヤーの移動処理
@@ -131,6 +120,7 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 	{
 		dir = VNorm(dir);
 	}
+	
 
 	// 移動量を出す
 	velocity = VScale(dir, Speed);
@@ -152,17 +142,20 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 				item->SetDese(true);
 				//delete(m_pKuribou);
 			}
+			/*if (ChickIsEnemyLeftHit(m_pKuribou))
+			{
+				isPlayerKuribouHit = true;
+			}
+			if (ChickIsEnemyRighttHit(m_pKuribou))
+			{
+				isPlayerKuribouHit = true;
+			}*/
 		}
 	}
-	//if (!Kuribou->IsDese())
-	//{
-	//	if (CheckIsEnemyTopHit(Kuribou))
-	//	{
-	//		fallSpeed = -JumpPower;	// ジャンプする
-	//		Kuribou->SetDese(true);
-	//		//delete(m_pKuribou);
-	//	}
-	//}
+	/*if ((ChickIsEnemyLeftHit(m_pKuribou)) || (ChickIsEnemyRightHit(m_pKuribou)))
+	{
+		isPlayerKuribouHit = true;
+	}*/
 	// 地に足が着いている場合のみジャンプボタンを見る
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
 	{
@@ -750,18 +743,10 @@ bool Player::IsHitPlayerAndEnemySide(Kuribou* Kuribou, const VECTOR& checkPos)
 	float KuribouTop = Enemypos.y - EnemyH * 0.5f;
 	float KuribouBottom = Enemypos.y + EnemyH * 0.5f;
 
-	/*if (((KuribouLeft <= PosLeft && PosLeft < KuribouRight) ||
+	if (((KuribouLeft <= PosLeft && PosLeft < KuribouRight) ||
 		(KuribouLeft > PosLeft && KuribouLeft < PosRight)) &&
 		((KuribouTop <= PosTop && PosTop < KuribouBottom) ||
 			(KuribouTop > PosTop && KuribouTop < PosBottom)))
-	{
-		return true;
-	}
-	return false;*/
-
-	if (((KuribouLeft <= PosLeft && PosLeft < KuribouRight) ||
-		(KuribouLeft > PosLeft && KuribouLeft < PosRight)) &&
-		(KuribouTop > PosTop && KuribouTop < PosBottom))
 	{
 		isEnemyHitDese = 1;
 		return true;
@@ -1011,20 +996,48 @@ bool Player::CheckIsEnemyTopHit(Kuribou* Kuribou)
 	}
 }
 
-void Player::ChickIsEnemyLeftHit(Kuribou* Kuribou)
+bool Player::ChickIsEnemyLeftHit(Kuribou* Kuribou)
 {
 	// 1ドット右にずらして当たれば敵にぶつかっている
 	VECTOR checkPos = VGet(floorf(pos.x) + 1.0f, pos.y, pos.z);
 	// 全マップチップ分繰り返す
 	bool isHit = false;
+	isHit = IsHitPlayerAndEnemySide(Kuribou, checkPos);
+	if (isHit)
+	{
+		// fallSpeedをゼロにし、急激な落下を防ぐ
+		fallSpeed = 0.0f;
+
+		// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+		pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
-void Player::ChickIsEnemyRightHit(Kuribou* Kuribou)
+bool Player::ChickIsEnemyRightHit(Kuribou* Kuribou)
 {
 	// 1ドット左にずらして当たれば敵にぶつかっている
 	VECTOR checkPos = VGet(floorf(pos.x) - 1.0f, pos.y, pos.z);
 	// 全マップチップ分繰り返す
 	bool isHit = false;
+	isHit = IsHitPlayerAndEnemySide(Kuribou, checkPos);
+	if (isHit)
+	{
+		// fallSpeedをゼロにし、急激な落下を防ぐ
+		fallSpeed = 0.0f;
+
+		// 後々の雑計算に響くので、y座標の小数点を消し飛ばす
+		pos.x = floorf(pos.x);	// ちょうど地面に付く位置に
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 

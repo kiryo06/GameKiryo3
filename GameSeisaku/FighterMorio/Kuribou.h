@@ -90,4 +90,3 @@ private:
 	// 原型チップデータ
 	MapDataFile::ChipData PrototypeChipData2[MapDataFile::k2ChipNumY][MapDataFile::k2ChipNumX] = {};
 };
-

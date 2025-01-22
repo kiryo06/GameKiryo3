@@ -49,18 +49,7 @@ Kuribou::~Kuribou()
 void Kuribou::Init(int mapNumber)
 {
 	m_EnemyGraph = LoadGraph("data/image/Enemy.png");
-	switch (mapNumber)
-	{
-	case 0:
-		mapChip = 0;
-		break;
-	case 1:
-		mapChip = 1;
-		break;
-	case 2:
-		mapChip = 2;
-		break;
-	}
+	mapChip = mapNumber;
 
 	if (mapChip == 0)
 	{
