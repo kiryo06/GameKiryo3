@@ -4,9 +4,8 @@
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	/*コンソールDebug用*/
 #ifdef _DEBUG
-	AllocConsole();        // コンソール
+	AllocConsole();        // Debug用コンソール
 	FILE* out = 0; 
 	freopen_s(&out, "CON", "w", stdout); // stdout
 	FILE* in = 0; 
@@ -62,9 +61,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	WaitKey();				// キー入力待ち
 
-		/*終了処理*/
+	//終了処理
+
 	DxLib_End();//Dxlib終了処理
-#ifdef _DEBUG//コンソールDebug用
+
+#ifdef _DEBUG	//コンソールDebug用
 	fclose(out); fclose(in); FreeConsole();//コンソール解放
 #endif
 	return 0;//プログラム終了

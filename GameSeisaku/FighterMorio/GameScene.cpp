@@ -79,6 +79,7 @@
 #include "GameScene.h"
 #include "SceneManager.h"
 #include "GameScene_1.h"
+#include "GameOverScene.h"
 
 #include "DxLib.h"
 #include "Pad.h"
@@ -132,7 +133,7 @@ void GameScene::Update()
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	if (Pad::IsTrigger(input & PAD_INPUT_X))
 	{
-		auto next = std::make_shared<GameScene_1>(m_sceneManager);
+		auto next = std::make_shared<GameOverScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
 }
