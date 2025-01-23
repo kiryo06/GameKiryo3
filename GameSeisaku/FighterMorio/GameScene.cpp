@@ -156,7 +156,7 @@ void GameScene::Draw()
 	DrawFormatString(0,  48, 0x00cc00, " KuribouPosX  : %.1f", Kuribou().GetKuribouPos().x, true);
 	DrawFormatString(0,  64, 0x00cc00, " KuribouPosY  : %.1f", Kuribou().GetKuribouPos().y, true);
 	DrawFormatString(0,  80, 0xaaaaaa, " Kuribou      : %d", m_pKuribou.size(), true);
-	DrawFormatString(0,  96, 0xaaaaaa, "              : %.1f", 123456789, true);
+	DrawFormatString(0,  96, 0xaaaaaa, " PlayerDeath  : %.1d", m_pPlayer->GetPlayerDeath(), true);
 	DrawFormatString(0, 112, 0xaaaaaa, "              : %.1f", 123456789, true);
 	DrawFormatString(0, 128, 0xaaaaaa, "              : %.1f", 123456789, true);
 	DrawFormatString(0, 144, 0xaaaaaa, "              : %.1f", 123456789, true);

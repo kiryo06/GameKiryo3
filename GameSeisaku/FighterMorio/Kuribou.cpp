@@ -28,8 +28,7 @@ Kuribou::Kuribou() :
 	isHitTop(false),
 	isLeft(false),
 	isRight(false),
-	isDese(false),
-	EnemyDese(0),
+	isEnemyDeath(false),
 	m_EnemyGraph(0),
 	mapChip(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
@@ -99,7 +98,7 @@ void Kuribou::Init(int mapNumber)
 
 void Kuribou::Update(int mapNumber, Player* player)
 {
-	if (isDese)return;
+	if (isEnemyDeath)return;
 	// “ü—Íó‘Ô‚ðXV
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	// “G‚ÌˆÚ“®ˆ—
@@ -156,10 +155,6 @@ void Kuribou::Update(int mapNumber, Player* player)
 
 	// ˆÚ“®
 	pos = VAdd(pos, velocity);
-	if (isDese)
-	{
-		EnemyDese = 123;
-	}
 }
 
 VECTOR Kuribou::CheckKuribouHitWithMap(int mapNumber)
@@ -947,8 +942,7 @@ void Kuribou::CheckIsRight(int mapNumber)
 
 void Kuribou::Draw(Camera* camera)
 {
-	DrawFormatString(0, 250, 0xaa0000, "“GÁ–Å‚·‚éê‡‚Í123 -> %d", EnemyDese, true);
-	if (isDese)return;
+	if (isEnemyDeath)return;
 	// “G‚Ì•`‰æ
 	auto leftTop = static_cast<int>(pos.x - w * 0.5f);
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);

@@ -29,7 +29,8 @@ Player::Player() :
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
 	isHitTop(false),
-	isEnemyHitDese(0),
+	isPlayerKuribouHit(false),
+	playerDeath(0),
 	mapChip(0),
 	_isHit(0),
 	m_PlayerGraph(0),
@@ -131,31 +132,26 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 	// æ‚ÉÝ’è”»’è‚ð‚·‚é
 	CheckIsGround(mapNumber);
 	CheckIsTopHit(mapNumber);
-	// ‰æ–Êã‚É‚Å‚Ä‚¢‚È‚¢’e‚ª‚ ‚é‚©A’e‚Ì”‚¾‚¯ŒJ‚è•Ô‚µ‚Ä’²‚×‚é
+	// ‰æ–Êã‚É‚¢‚é“G‚Ì”‚¾‚¯ŒJ‚è•Ô‚µ‚Ä’²‚×‚é
 	for (auto& item : Kuribou)
 	{
-		if (!item->IsDese())
+		if (!item->IsEnemyDeath())
 		{
 			if (CheckIsEnemyTopHit(item))
 			{
 				fallSpeed = -JumpPower;	// ƒWƒƒƒ“ƒv‚·‚é
-				item->SetDese(true);
-				//delete(m_pKuribou);
+				item->SetEnemyDeath(true);
 			}
-			/*if (ChickIsEnemyLeftHit(m_pKuribou))
+			else
 			{
-				isPlayerKuribouHit = true;
+				if ((ChickIsEnemyLeftHit(item)) || (ChickIsEnemyRightHit(item)))
+				{
+					//isPlayerKuribouHit = true;
+					playerDeath += 1;
+				}
 			}
-			if (ChickIsEnemyRighttHit(m_pKuribou))
-			{
-				isPlayerKuribouHit = true;
-			}*/
 		}
 	}
-	/*if ((ChickIsEnemyLeftHit(m_pKuribou)) || (ChickIsEnemyRightHit(m_pKuribou)))
-	{
-		isPlayerKuribouHit = true;
-	}*/
 	// ’n‚É‘«‚ª’…‚¢‚Ä‚¢‚éê‡‚Ì‚ÝƒWƒƒƒ“ƒvƒ{ƒ^ƒ“‚ðŒ©‚é
 	if (isGround && !isHitTop && input & PAD_INPUT_B)
 	{
@@ -716,10 +712,8 @@ bool Player::IsHitPlayerAndEnemy(Kuribou* Kuribou,const VECTOR& checkPos)
 		(KuribouLeft > PosLeft && KuribouLeft < PosRight)) &&
 			(KuribouTop > PosTop && KuribouTop < PosBottom))
 	{
-		isEnemyHitDese = 1;
 		return true;
 	}
-	isEnemyHitDese = 0;
 	return false;
 }
 
@@ -743,15 +737,14 @@ bool Player::IsHitPlayerAndEnemySide(Kuribou* Kuribou, const VECTOR& checkPos)
 	float KuribouTop = Enemypos.y - EnemyH * 0.5f;
 	float KuribouBottom = Enemypos.y + EnemyH * 0.5f;
 
-	if (((KuribouLeft <= PosLeft && PosLeft < KuribouRight) ||
-		(KuribouLeft > PosLeft && KuribouLeft < PosRight)) &&
+	if (((KuribouLeft > PosLeft && KuribouLeft < PosRight) ||
+		(KuribouRight < PosRight && KuribouRight > PosLeft)) &&
 		((KuribouTop <= PosTop && PosTop < KuribouBottom) ||
 			(KuribouTop > PosTop && KuribouTop < PosBottom)))
 	{
-		isEnemyHitDese = 1;
 		return true;
 	}
-	isEnemyHitDese = 0;
+
 	return false;
 }
 
@@ -1005,9 +998,6 @@ bool Player::ChickIsEnemyLeftHit(Kuribou* Kuribou)
 	isHit = IsHitPlayerAndEnemySide(Kuribou, checkPos);
 	if (isHit)
 	{
-		// fallSpeed‚ðƒ[ƒ‚É‚µA‹}Œƒ‚È—Ž‰º‚ð–h‚®
-		fallSpeed = 0.0f;
-
 		// ŒãX‚ÌŽGŒvŽZ‚É‹¿‚­‚Ì‚ÅAyÀ•W‚Ì¬”“_‚ðÁ‚µ”ò‚Î‚·
 		pos.x = floorf(pos.x);	// ‚¿‚å‚¤‚Ç’n–Ê‚É•t‚­ˆÊ’u‚É
 		return true;
@@ -1027,9 +1017,6 @@ bool Player::ChickIsEnemyRightHit(Kuribou* Kuribou)
 	isHit = IsHitPlayerAndEnemySide(Kuribou, checkPos);
 	if (isHit)
 	{
-		// fallSpeed‚ðƒ[ƒ‚É‚µA‹}Œƒ‚È—Ž‰º‚ð–h‚®
-		fallSpeed = 0.0f;
-
 		// ŒãX‚ÌŽGŒvŽZ‚É‹¿‚­‚Ì‚ÅAyÀ•W‚Ì¬”“_‚ðÁ‚µ”ò‚Î‚·
 		pos.x = floorf(pos.x);	// ‚¿‚å‚¤‚Ç’n–Ê‚É•t‚­ˆÊ’u‚É
 		return true;
@@ -1055,7 +1042,6 @@ void Player::Draw(int mapNumber,Camera* camera)
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0, 0, 540, 641,
 		m_PlayerGraph, TRUE);
-	DrawFormatString(0, 200, 0xaaaaaa, "“–‚½‚Á‚½‚ç  1 ->: %.1d", isEnemyHitDese, true);
 #ifdef _DEBUG
 	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
