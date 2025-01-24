@@ -1,0 +1,24 @@
+X = 690,1270,1624,1664,2560,2650,3110
+
+
+
+
+
+if (mapChip == 0)
+{
+	// ↓デバック用
+	const auto& chip = PrototypeChipData[hChip][wChip];
+	IsHitMapChipKind(chip, checkPos);
+}
+if (mapChip == 1)
+{
+	// ↓デバック用
+	const auto& chip = PrototypeChipData1[hChip][wChip];
+	IsHitMapChipKind(chip, checkPos);
+}
+if (mapChip == 2)
+{
+	// ↓デバック用
+	const auto& chip = PrototypeChipData2[hChip][wChip];
+	IsHitMapChipKind(chip, checkPos);
+}

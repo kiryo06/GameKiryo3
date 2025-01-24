@@ -98,7 +98,10 @@ void Kuribou::Init(int mapNumber)
 
 void Kuribou::Update(int mapNumber, Player* player)
 {
-	if (isEnemyDeath)return;
+	if (isEnemyDeath)
+	{
+		return;
+	}
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	// 敵の移動処理
@@ -465,20 +468,24 @@ VECTOR Kuribou::CheckKuribouHitWithMap(int mapNumber)
 
 bool Kuribou::IsHitKuribouWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip)
 {
+	// 当たっているかどうか調べる
+	float futurePosLeft = checkPos.x - w * 0.5f;
+	float futurePosRight = checkPos.x + w * 0.5f;
+	float futurePosTop = checkPos.y - h * 0.5f;
+	float futurePosBottom = checkPos.y + h * 0.5f;
+
 	if (mapChip == 0)
 	{
 		// ↓デバック用
 		const auto& chip = PrototypeChipData[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if (chip.chipKind == 0)
+		if ((chip.chipKind == 0) ||
+			(chip.chipKind >= 9) &&
+			(chip.chipKind <= 45))
 		{
 			return false;
 		}
 		// 当たっているかどうか調べる
-		float futurePosLeft = checkPos.x - w * 0.5f;
-		float futurePosRight = checkPos.x + w * 0.5f;
-		float futurePosTop = checkPos.y - h * 0.5f;
-		float futurePosBottom = checkPos.y + h * 0.5f;
 		float targetLeft = chip.pos.x - chip.w * 0.5f;
 		float targetRight = chip.pos.x + chip.w * 0.5f;
 		float targetTop = chip.pos.y - chip.h * 0.5f;
@@ -498,15 +505,13 @@ bool Kuribou::IsHitKuribouWithMapChip(int mapNumber, const VECTOR& checkPos, int
 		// ↓デバック用
 		const auto& chip = PrototypeChipData1[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if (chip.chipKind == 0)
+		if ((chip.chipKind == 0) ||
+			(chip.chipKind >= 9) &&
+			(chip.chipKind <= 45))
 		{
 			return false;
 		}
 		// 当たっているかどうか調べる
-		float futurePosLeft = checkPos.x - w * 0.5f;
-		float futurePosRight = checkPos.x + w * 0.5f;
-		float futurePosTop = checkPos.y - h * 0.5f;
-		float futurePosBottom = checkPos.y + h * 0.5f;
 		float targetLeft = chip.pos.x - chip.w * 0.5f;
 		float targetRight = chip.pos.x + chip.w * 0.5f;
 		float targetTop = chip.pos.y - chip.h * 0.5f;
@@ -526,15 +531,13 @@ bool Kuribou::IsHitKuribouWithMapChip(int mapNumber, const VECTOR& checkPos, int
 		// ↓デバック用
 		const auto& chip = PrototypeChipData2[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if (chip.chipKind == 0)
+		if ((chip.chipKind == 0) ||
+			(chip.chipKind >= 9) &&
+			(chip.chipKind <= 45))
 		{
 			return false;
 		}
 		// 当たっているかどうか調べる
-		float futurePosLeft = checkPos.x - w * 0.5f;
-		float futurePosRight = checkPos.x + w * 0.5f;
-		float futurePosTop = checkPos.y - h * 0.5f;
-		float futurePosBottom = checkPos.y + h * 0.5f;
 		float targetLeft = chip.pos.x - chip.w * 0.5f;
 		float targetRight = chip.pos.x + chip.w * 0.5f;
 		float targetTop = chip.pos.y - chip.h * 0.5f;
@@ -886,9 +889,9 @@ void Kuribou::CheckIsRight(int mapNumber)
 	}
 	if (mapChip == 1)
 	{
-		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
+		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 		{
-			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
+			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 			{
 				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)

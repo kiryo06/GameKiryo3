@@ -4,6 +4,7 @@
 #include "Map.h"
 #include "Camera.h"
 #include "Kuribou.h"
+#include "SystemEngineer.h"
 
 namespace
 {
@@ -21,6 +22,7 @@ Player::Player() :
 	m_pMap(),
 	m_pCamera(),
 	m_pKuribou(new Kuribou),
+	m_pSystemEngineer(new SystemEngineer),
 	w(25),
 	h(32),
 	fallSpeed(0.0f),
@@ -48,10 +50,11 @@ Player::~Player()
 	DeleteGraph(m_PlayerGraph);
 }
 
-void Player::Init(int mapNumber)
+void Player::Init(int mapNumber, SystemEngineer* pSE)
 {
 	m_PlayerGraph = LoadGraph("data/image/player(kari).png");
 	mapChip = mapNumber;
+	m_pSystemEngineer = pSE;
 	if (mapChip == 0)
 	{
 		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
@@ -99,7 +102,6 @@ void Player::Init(int mapNumber)
 }
 
 void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
-//void Player::Update(Kuribou* Kuribou,int mapNumber)
 {
 	if(isPlayerKuribouHit)return;
 	// 入力状態を更新
@@ -141,13 +143,15 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 			{
 				fallSpeed = -JumpPower;	// ジャンプする
 				item->SetEnemyDeath(true);
+				m_pSystemEngineer->SetScore(true);
+				break;
 			}
 			else
 			{
 				if ((ChickIsEnemyLeftHit(item)) || (ChickIsEnemyRightHit(item)))
 				{
-					//isPlayerKuribouHit = true;
 					playerDeath += 1;
+					break;
 				}
 			}
 		}
@@ -403,6 +407,7 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 				bool isHit = false;
 				for (int wChip = 0; wChip < m_k2ChipNumX; wChip++)
 				{
+
 					bool isHit = IsHitPlayerWithMapChip(mapNumber, futurePos, hChip, wChip);
 
 					// 初回に当たったとき
@@ -490,57 +495,23 @@ VECTOR Player::CheckPlayerHitWithMap(int mapNumber)
 
 bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int hChip, int wChip)
 {
+	// 当たっているかどうか調べる
+	float futurePosLeft = checkPos.x - w * 0.5f;
+	float futurePosRight = checkPos.x + w * 0.5f;
+	float futurePosTop = checkPos.y - h * 0.5f;
+	float futurePosBottom = checkPos.y + h * 0.5f;
 	if (mapChip == 0)
 	{
 		// ↓デバック用
 		const auto& chip = PrototypeChipData[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
 		if ((chip.chipKind == 0) ||
-			(chip.chipKind == 9) ||
-			(chip.chipKind == 10) ||
-			(chip.chipKind == 11) ||
-			(chip.chipKind == 12) ||
-			(chip.chipKind == 13) ||
-			(chip.chipKind == 14) ||
-			(chip.chipKind == 15) ||
-			(chip.chipKind == 16) ||
-			(chip.chipKind == 17) ||
-			(chip.chipKind == 18) ||
-			(chip.chipKind == 19) ||
-			(chip.chipKind == 20) ||
-			(chip.chipKind == 21) ||
-			(chip.chipKind == 22) ||
-			(chip.chipKind == 23) ||
-			(chip.chipKind == 24) ||
-			(chip.chipKind == 25) ||
-			(chip.chipKind == 26) ||
-			(chip.chipKind == 27) ||
-			(chip.chipKind == 28) ||
-			(chip.chipKind == 29) ||
-			(chip.chipKind == 30) ||
-			(chip.chipKind == 31) ||
-			(chip.chipKind == 32) ||
-			(chip.chipKind == 33) ||
-			(chip.chipKind == 34) ||
-			(chip.chipKind == 35) ||
-			(chip.chipKind == 36) ||
-			(chip.chipKind == 37) ||
-			(chip.chipKind == 38) ||
-			(chip.chipKind == 39) ||
-			(chip.chipKind == 40) ||
-			(chip.chipKind == 41) ||
-			(chip.chipKind == 42) ||
-			(chip.chipKind == 43) ||
-			(chip.chipKind == 44) ||
-			(chip.chipKind == 45))
+			(chip.chipKind >= 9) &&
+			(chip.chipKind <= 45))
 		{
 			return false;
 		}
 		// 当たっているかどうか調べる
-		float futurePosLeft = checkPos.x - w * 0.5f;
-		float futurePosRight = checkPos.x + w * 0.5f;
-		float futurePosTop = checkPos.y - h * 0.5f;
-		float futurePosBottom = checkPos.y + h * 0.5f;
 		float targetLeft = chip.pos.x - chip.w * 0.5f;
 		float targetRight = chip.pos.x + chip.w * 0.5f;
 		float targetTop = chip.pos.y - chip.h * 0.5f;
@@ -560,52 +531,13 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		// ↓デバック用
 		const auto& chip = PrototypeChipData1[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
-		if ((chip.chipKind ==  0) ||
-			(chip.chipKind ==  9) ||
-			(chip.chipKind == 10) ||
-			(chip.chipKind == 11) ||
-			(chip.chipKind == 12) ||
-			(chip.chipKind == 13) ||
-			(chip.chipKind == 14) ||
-			(chip.chipKind == 15) ||
-			(chip.chipKind == 16) ||
-			(chip.chipKind == 17) ||
-			(chip.chipKind == 18) ||
-			(chip.chipKind == 19) ||
-			(chip.chipKind == 20) ||
-			(chip.chipKind == 21) ||
-			(chip.chipKind == 22) ||
-			(chip.chipKind == 23) ||
-			(chip.chipKind == 24) ||
-			(chip.chipKind == 25) ||
-			(chip.chipKind == 26) ||
-			(chip.chipKind == 27) ||
-			(chip.chipKind == 28) ||
-			(chip.chipKind == 29) ||
-			(chip.chipKind == 30) ||
-			(chip.chipKind == 31) ||
-			(chip.chipKind == 32) ||
-			(chip.chipKind == 33) ||
-			(chip.chipKind == 34) ||
-			(chip.chipKind == 35) ||
-			(chip.chipKind == 36) ||
-			(chip.chipKind == 37) ||
-			(chip.chipKind == 38) ||
-			(chip.chipKind == 39) ||
-			(chip.chipKind == 40) ||
-			(chip.chipKind == 41) ||
-			(chip.chipKind == 42) ||
-			(chip.chipKind == 43) ||
-			(chip.chipKind == 44) ||
-			(chip.chipKind == 45))
+		if ((chip.chipKind == 0) ||
+			(chip.chipKind >= 9) &&
+			(chip.chipKind <= 45))
 		{
 			return false;
 		}
 		// 当たっているかどうか調べる
-		float futurePosLeft = checkPos.x - w * 0.5f;
-		float futurePosRight = checkPos.x + w * 0.5f;
-		float futurePosTop = checkPos.y - h * 0.5f;
-		float futurePosBottom = checkPos.y + h * 0.5f;
 		float targetLeft = chip.pos.x - chip.w * 0.5f;
 		float targetRight = chip.pos.x + chip.w * 0.5f;
 		float targetTop = chip.pos.y - chip.h * 0.5f;
@@ -626,51 +558,12 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		const auto& chip = PrototypeChipData2[hChip][wChip];
 		// マップチップが当たらない種類なら早期return
 		if ((chip.chipKind == 0) ||
-			(chip.chipKind == 9) ||
-			(chip.chipKind == 10) ||
-			(chip.chipKind == 11) ||
-			(chip.chipKind == 12) ||
-			(chip.chipKind == 13) ||
-			(chip.chipKind == 14) ||
-			(chip.chipKind == 15) ||
-			(chip.chipKind == 16) ||
-			(chip.chipKind == 17) ||
-			(chip.chipKind == 18) ||
-			(chip.chipKind == 19) ||
-			(chip.chipKind == 20) ||
-			(chip.chipKind == 21) ||
-			(chip.chipKind == 22) ||
-			(chip.chipKind == 23) ||
-			(chip.chipKind == 24) ||
-			(chip.chipKind == 25) ||
-			(chip.chipKind == 26) ||
-			(chip.chipKind == 27) ||
-			(chip.chipKind == 28) ||
-			(chip.chipKind == 29) ||
-			(chip.chipKind == 30) ||
-			(chip.chipKind == 31) ||
-			(chip.chipKind == 32) ||
-			(chip.chipKind == 33) ||
-			(chip.chipKind == 34) ||
-			(chip.chipKind == 35) ||
-			(chip.chipKind == 36) ||
-			(chip.chipKind == 37) ||
-			(chip.chipKind == 38) ||
-			(chip.chipKind == 39) ||
-			(chip.chipKind == 40) ||
-			(chip.chipKind == 41) ||
-			(chip.chipKind == 42) ||
-			(chip.chipKind == 43) ||
-			(chip.chipKind == 44) ||
-			(chip.chipKind == 45))
+			(chip.chipKind >= 9) &&
+			(chip.chipKind <= 45))
 		{
 			return false;
 		}
 		// 当たっているかどうか調べる
-		float futurePosLeft = checkPos.x - w * 0.5f;
-		float futurePosRight = checkPos.x + w * 0.5f;
-		float futurePosTop = checkPos.y - h * 0.5f;
-		float futurePosBottom = checkPos.y + h * 0.5f;
 		float targetLeft = chip.pos.x - chip.w * 0.5f;
 		float targetRight = chip.pos.x + chip.w * 0.5f;
 		float targetTop = chip.pos.y - chip.h * 0.5f;
@@ -1047,6 +940,12 @@ void Player::Draw(int mapNumber,Camera* camera)
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		0xff0000, FALSE);
+	DrawBox(
+		static_cast<int>(pos.x) + static_cast<int>(camera->GetCameraDrawOffset().x),
+		static_cast<int>(pos.y - h * 1) + static_cast<int>(camera->GetCameraDrawOffset().y),
+		static_cast<int>(pos.x) + static_cast<int>(camera->GetCameraDrawOffset().x),
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0xff0000, FALSE);
 #endif // _DEBUG

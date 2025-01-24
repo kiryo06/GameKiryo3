@@ -5,6 +5,7 @@
 class Map;
 class Camera;
 class Kuribou;
+class SystemEngineer;
 class Player
 {
 public:
@@ -14,7 +15,7 @@ public:
 	/// プレイヤーの初期化
 	/// </summary>
 	/// <param name="mapNumber">マップ番号</param>
-	void Init(int mapNumber);
+	void Init(int mapNumber, SystemEngineer* pSE);
 	/// <summary>
 	/// プレイヤーの更新
 	/// </summary>
@@ -82,6 +83,7 @@ public:
 	/// <param name="mapNumber">マップ番号</param>
 	/// <param name="camera">カメラオブジェクト</param>
 	void Draw(int mapNumber, Camera* camera);
+	//     bool IsHitMapChipKind(auto chip, const VECTOR& checkPos);
 	/// <summary>
 	/// プレイヤーの位置を取得
 	/// </summary>
@@ -102,6 +104,7 @@ private:
 	Map* m_pMap;
 	Camera* m_pCamera;
 	Kuribou* m_pKuribou;
+	SystemEngineer* m_pSystemEngineer;
 	float w, h;					// プレイヤーの幅と高さ
 	float fallSpeed;			// 落下速度
 	VECTOR pos;                 // プレイヤーの位置

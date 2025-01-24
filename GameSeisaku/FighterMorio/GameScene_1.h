@@ -9,6 +9,7 @@ class Map;
 class Camera;
 class Player;
 class Kuribou;
+class SystemEngineer;
 class GameScene_1 : public BaseScene
 {
 public:
@@ -21,6 +22,6 @@ private:
 	Map* m_pMap;
 	Camera* m_pCamera;
 	Player* m_pPlayer;
-	//Kuribou* m_pKuribou;
 	std::list<Kuribou*>m_pKuribou;
+	SystemEngineer* m_pSystemEngineer;
 };

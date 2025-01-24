@@ -3,7 +3,6 @@
 class Map;
 class Camera;
 class Player;
-
 class Kuribou
 {
 public:
@@ -97,7 +96,7 @@ private:
 	bool isRight;				// 敵が右に当たったか
 	bool isEnemyDeath;			// 敵が死んだかどうか    
 	int m_EnemyGraph;			// クリボウ仮実装
-	int mapChip;
+	int mapChip;				// マップチップ
 	int m_kChipNumY;			// マップの大きさ横軸デバック
 	int m_kChipNumX;			// マップの大きさ縦軸デバック
 	int m_k1ChipNumY;			// マップの大きさ横軸1-1
