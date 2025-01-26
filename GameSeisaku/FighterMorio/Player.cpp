@@ -141,7 +141,7 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 		{
 			if (CheckIsEnemyTopHit(item))
 			{
-				fallSpeed = -JumpPower;	// ジャンプする
+				fallSpeed = -JumpPower + 4;	// ジャンプする
 				item->SetEnemyDeath(true);
 				m_pSystemEngineer->SetScore(true);
 				break;
