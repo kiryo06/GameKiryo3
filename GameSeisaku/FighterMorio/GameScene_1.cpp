@@ -54,6 +54,13 @@ void GameScene_1::Update()
 		newKuribou->Init(1);
 		m_pKuribou.emplace_back(newKuribou);
 	}
+	// プレイヤーがある位置に到着すると敵が出現する
+	if (m_pPlayer->GetPlayerPos().x == 957)
+	{
+		Kuribou* newKuribou = new Kuribou;
+		newKuribou->Init(1);
+		m_pKuribou.emplace_back(newKuribou);
+	}
 	for (auto& item : m_pKuribou)
 	{
 		item->Update(1, m_pPlayer);

@@ -71,6 +71,8 @@ public:
     /// </summary>
     /// <returns>“G‚Ì‚‚³</returns>
     float GetH() const { return h; }
+    void SetPosX(bool isPosX) { pos.x= isPosX; }
+    void SetPosY(bool isPosY) { pos.y= isPosY; }
     /// <summary>
     /// “G‚ª€‚ñ‚¾‚©‚Ç‚¤‚©‚ğİ’è
     /// </summary>
