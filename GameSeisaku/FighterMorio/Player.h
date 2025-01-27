@@ -100,6 +100,7 @@ public:
 	/// <param name="isdeath">衝突したかどうかのフラグ</param>
 	/// <returns>設定されたフラグ</returns>
 	int GetPlayerDeath() const { return playerDeath; }
+	/*bool IsPlayerDeath()const { return isDeath; }*/
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
@@ -113,7 +114,8 @@ private:
 	bool isGround;              // 地面に足がついているかどうか
 	bool isHitTop;              // 頭上に障害物があるかどうか
 	bool isPlayerKuribouHit;    // プレイヤーが敵に衝突したかどうか
-	int playerDeath;           // プレイヤーが死んだかどうか
+	int playerDeath;			// プレイヤーが死んだかどうか
+	//bool isDeath;				// プレイヤーが死んだかどうか
 	int mapChip;                // マップチップ
 	int _isHit;                 // 衝突フラグ
 	int m_PlayerGraph;			// プレイヤーグラフィック

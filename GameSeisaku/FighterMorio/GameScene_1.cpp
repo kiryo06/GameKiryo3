@@ -1,9 +1,11 @@
 #include "GameScene_1.h"
 #include "SceneManager.h"
 #include "GameScene_2.h"
+#include "GameOverScene.h"
 
 #include "DxLib.h"
 #include "Pad.h"
+
 
 #include "Screen.h"
 #include "Camera.h"
@@ -59,8 +61,17 @@ void GameScene_1::Update()
 	{
 		Kuribou* newKuribou = new Kuribou;
 		newKuribou->Init(1);
+		newKuribou->SetPosY(200);
 		m_pKuribou.emplace_back(newKuribou);
 	}
+	// “G‚ªŽ€–S‚·‚é‚ÆV‚µ‚¢“G‚ªoŒ»‚·‚é
+	if(Kuribou().IsEnemyDeath() == true)
+	{
+		Kuribou* newKuribou = new Kuribou;
+		newKuribou->Init(1);
+		m_pKuribou.emplace_back(newKuribou);
+	}
+
 	for (auto& item : m_pKuribou)
 	{
 		item->Update(1, m_pPlayer);
@@ -74,6 +85,12 @@ void GameScene_1::Update()
 		auto next = std::make_shared<GameScene_2>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
+	// ƒQ[ƒ€ƒI[ƒo[
+	//if (m_pPlayer->IsPlayerDeath())
+	//{
+	//	auto next = std::make_shared<GameOverScene>(m_sceneManager);
+	//	m_sceneManager.ChangeScene(next);
+	//}
 }
 
 void GameScene_1::Draw()

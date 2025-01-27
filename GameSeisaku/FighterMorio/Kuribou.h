@@ -44,10 +44,6 @@ public:
     /// </summary>
     void CheckIsRight(int mapNumber);
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚É‚æ‚éUŒ‚‚ğó‚¯‚½‚Ìˆ—
-    /// </summary>
-    void OnDamage();
-    /// <summary>
     /// “G•`‰æ
     /// </summary>
     void Draw(Camera* camera);

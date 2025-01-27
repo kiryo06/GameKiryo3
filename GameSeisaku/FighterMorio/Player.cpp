@@ -33,6 +33,7 @@ Player::Player() :
 	isHitTop(false),
 	isPlayerKuribouHit(false),
 	playerDeath(0),
+	/*isDeath(false),*/
 	mapChip(0),
 	_isHit(0),
 	m_PlayerGraph(0),
@@ -162,7 +163,11 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 		fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
 		isGround = false;
 	}
-	
+	if (pos.y > 1500)
+	{
+		playerDeath += 1;
+		//isDeath = true;
+	}
 
 	// 落下速度を移動量に加える
 	auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする

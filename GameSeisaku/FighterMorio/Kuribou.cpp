@@ -148,6 +148,10 @@ void Kuribou::Update(int mapNumber, Player* player)
 		isLeft = false;
 		isRight = false;
 	}
+	if (pos.y > 1500)
+	{
+		isEnemyDeath = true;
+	}
 
 	// 落下速度を移動量に加える
 	auto fallVelocity = VGet(workSpeed, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする

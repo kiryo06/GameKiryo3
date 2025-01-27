@@ -67,6 +67,12 @@ void GameScene_2::Update()
 		auto next = std::make_shared<GameOverScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
+	// ゲームオーバー
+	/*if (m_pPlayer->GetIsDeath())
+	{
+		auto next = std::make_shared<GameOverScene>(m_sceneManager);
+		m_sceneManager.ChangeScene(next);
+	}*/
 }
 
 void GameScene_2::Draw()
