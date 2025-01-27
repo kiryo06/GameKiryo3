@@ -161,6 +161,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="StageSelectionScene.cpp" />
     <ClCompile Include="SystemEngineer.cpp" />
+    <ClCompile Include="TitlePlayMovie.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Vector3.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="StageSelectionScene.h" />
     <ClInclude Include="SystemEngineer.h" />
+    <ClInclude Include="TitlePlayMovie.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vector3.h" />

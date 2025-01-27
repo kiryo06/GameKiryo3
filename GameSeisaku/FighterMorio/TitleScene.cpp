@@ -1,12 +1,16 @@
 #include "TitleScene.h"
 #include "SceneManager.h"
 #include "StageSelectionScene.h"
+#include "TitlePlayMovie.h"
+
+#include "game.h"
 
 #include "DxLib.h"
 #include "Pad.h"
 
 TitleScene::TitleScene(SceneManager& manager) : 
 	BaseScene(manager),
+	m_pTitlePlayMovie(new TitlePlayMovie),
 	m_Graph(0)
 {
 }
@@ -19,6 +23,7 @@ TitleScene::~TitleScene()
 void TitleScene::Init()
 {
 	m_Graph = LoadGraph("data/image/tekikou_1114.png");
+	m_pTitlePlayMovie->Init();
 }
 
 void TitleScene::Update()
@@ -31,13 +36,15 @@ void TitleScene::Update()
 		auto next = std::make_shared<StageSelectionScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
+	m_pTitlePlayMovie->Update();
 }
 
 void TitleScene::Draw()
 {
-	DrawBox(0, 0, 1280, 640, 0x00baa0, true);
+
+	/*DrawBox(0, 0, 1280, 640, 0x00baa0, true);
 	DrawFormatString(0, 0, 0xffffff, "TitleScene", true);
 	DrawFormatString(550, 500, 0xffffff, "Aキーを押してください", true);
 	DrawFormatString(550, 516, 0xffffff, "Yボタンを押してください", true);
-	DrawRotaGraph(640, 225, 0.5 , 0 , m_Graph,TRUE);
+	DrawRotaGraph(640, 225, 0.5 , 0 , m_Graph,TRUE);*/
 }
