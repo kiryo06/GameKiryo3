@@ -2,37 +2,45 @@
 #include "DxLib.h"
 
 TitlePlayMovie::TitlePlayMovie():
-	MovieGraphHandle(0)
+    MovieGraphHandle(-1),
+    IsPlay(false)
 {
 }
 
 TitlePlayMovie::~TitlePlayMovie()
 {
-	DeleteGraph(MovieGraphHandle);
+    DeleteGraph(MovieGraphHandle);
 }
 
 void TitlePlayMovie::Init()
 {
-	MovieGraphHandle = LoadGraph("data/image/download.mp4");
+    // 動画ファイルを開く
+    MovieGraphHandle = LoadGraph("data/image/Teitle.mp4");
+    PlayMovieToGraph(MovieGraphHandle);
 }
 
 void TitlePlayMovie::Update()
 {
-    // ムービーを再生状態にします
-    PlayMovieToGraph(MovieGraphHandle);
-
-    // ループ、GetMovieStateToGraph 関数はムービーの再生状態を得る関数です
-    // 戻り値が１の間は再生状態ですのでループを続けます
-    while (ProcessMessage() == 0 && GetMovieStateToGraph(MovieGraphHandle) == 1)
+    // 動画の再生状態を更新
+    if (!IsPlay)
     {
-        // ムービー映像を画面いっぱいに描画します
-        DrawExtendGraph(0, 0, 640, 480, MovieGraphHandle, FALSE);
+        if (MovieGraphHandle != -1 && GetMovieStateToGraph(MovieGraphHandle) == DX_MOVIEPLAYTYPE_BCANCEL)
+        {
+            // 再生が終了したら再生をリセット
+            SeekMovieToGraph(MovieGraphHandle, 0);
+            PlayMovieToGraph(MovieGraphHandle);
+        }
+    }
+    else
+    {
 
-        // ウエイトをかけます、あまり速く描画すると画面がちらつくからです
-        WaitTimer(17);
     }
 }
 
 void TitlePlayMovie::Draw()
 {
+    // 動画を描画
+    //DrawGraph(0, 0, MovieGraphHandle, TRUE);
+   // DrawRectExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, );
+    DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, MovieGraphHandle, TRUE);
 }

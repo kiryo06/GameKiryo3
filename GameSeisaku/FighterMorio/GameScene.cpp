@@ -4,6 +4,7 @@
 
 #include "DxLib.h"
 #include "Pad.h"
+#include "Debug.h"
 
 #include "Screen.h"
 #include "Camera.h"
@@ -12,7 +13,6 @@
 #include "Player.h"
 #include "Kuribou.h"
 #include "SystemEngineer.h"
-
 
 
 GameScene::GameScene(SceneManager& manager) : BaseScene(manager),
@@ -79,7 +79,11 @@ void GameScene::Draw()
 	}
 	m_pSystemEngineer->Draw();
 #ifdef _DEBUG
+	// 半透明の設定
+	DEBUG_TRANSPARENCY
 	DrawBox(0, 0, 300, 200, 0x444444, true);
+	// ブレンドモードをリセット
+	DEBUG_RESET
 	DrawFormatString(0,   0, 0xffffff, " GameScene          ", true);
 	DrawFormatString(0,  16, 0xcc0000, " PlayerPosX   : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY   : %.1f", m_pPlayer->GetPlayerPos().y, true);

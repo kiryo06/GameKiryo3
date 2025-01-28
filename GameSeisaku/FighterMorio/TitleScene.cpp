@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "StageSelectionScene.h"
 #include "TitlePlayMovie.h"
+#include "GameScene_1.h"
 
 #include "game.h"
 
@@ -18,12 +19,16 @@ TitleScene::TitleScene(SceneManager& manager) :
 TitleScene::~TitleScene()
 {
 	DeleteGraph(m_Graph);
+	delete m_pTitlePlayMovie;
 }
 
 void TitleScene::Init()
 {
-	m_Graph = LoadGraph("data/image/tekikou_1114.png");
-	m_pTitlePlayMovie->Init();
+	m_Graph = LoadGraph("data/image/FighterMorio.png");
+	if (m_pTitlePlayMovie != nullptr)
+	{
+		m_pTitlePlayMovie->Init();
+	}
 }
 
 void TitleScene::Update()
@@ -31,20 +36,42 @@ void TitleScene::Update()
 	Pad::Update();
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+
+	if (m_pTitlePlayMovie != nullptr)
+	{
+		m_pTitlePlayMovie->Update();
+	}
+#ifdef _DEBUG
 	if (Pad::IsTrigger(input & PAD_INPUT_X))
 	{
+		m_pTitlePlayMovie->SetPlaySwitch(true);
 		auto next = std::make_shared<StageSelectionScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
-	m_pTitlePlayMovie->Update();
+#else	//_DEBUG
+	if (Pad::IsTrigger(input & PAD_INPUT_C))
+	{
+		m_pTitlePlayMovie->SetPlaySwitch(true);
+		auto next = std::make_shared<GameScene_1>(m_sceneManager);
+		m_sceneManager.ChangeScene(next);
+	}
+#endif  //_DEBUG
 }
 
 void TitleScene::Draw()
 {
+	if (m_pTitlePlayMovie != nullptr)
+	{
+		m_pTitlePlayMovie->Draw();
+	}
 
-	/*DrawBox(0, 0, 1280, 640, 0x00baa0, true);
+#ifdef _DEBUG
 	DrawFormatString(0, 0, 0xffffff, "TitleScene", true);
 	DrawFormatString(550, 500, 0xffffff, "Aキーを押してください", true);
 	DrawFormatString(550, 516, 0xffffff, "Yボタンを押してください", true);
-	DrawRotaGraph(640, 225, 0.5 , 0 , m_Graph,TRUE);*/
+	DrawRotaGraph(640, 200, 1.0, 0, m_Graph, TRUE);
+#else	 //_DEBUG
+	DrawFormatString(550, 516, 0xffffff, "Xボタンを押してください", true);
+	DrawRotaGraph(640, 200, 1.0, 0, m_Graph, TRUE);
+#endif  //__DEBUG
 }

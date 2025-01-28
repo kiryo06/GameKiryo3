@@ -5,7 +5,7 @@
 
 #include "DxLib.h"
 #include "Pad.h"
-
+#include "Debug.h"
 
 #include "Screen.h"
 #include "Camera.h"
@@ -56,22 +56,6 @@ void GameScene_1::Update()
 		newKuribou->Init(1);
 		m_pKuribou.emplace_back(newKuribou);
 	}
-	// プレイヤーがある位置に到着すると敵が出現する
-	if (m_pPlayer->GetPlayerPos().x == 957)
-	{
-		Kuribou* newKuribou = new Kuribou;
-		newKuribou->Init(1);
-		newKuribou->SetPosY(200);
-		m_pKuribou.emplace_back(newKuribou);
-	}
-	// 敵が死亡すると新しい敵が出現する
-	if(Kuribou().IsEnemyDeath() == true)
-	{
-		Kuribou* newKuribou = new Kuribou;
-		newKuribou->Init(1);
-		m_pKuribou.emplace_back(newKuribou);
-	}
-
 	for (auto& item : m_pKuribou)
 	{
 		item->Update(1, m_pPlayer);
@@ -95,6 +79,7 @@ void GameScene_1::Update()
 
 void GameScene_1::Draw()
 {
+	Kuribou* newKuribou = new Kuribou;
 	m_pMap->Draw(1, m_pCamera);
 	m_pPlayer->Draw(1,m_pCamera);
 	for (auto& item : m_pKuribou)
@@ -103,16 +88,20 @@ void GameScene_1::Draw()
 	}
 	m_pSystemEngineer->Draw();
 #ifdef _DEBUG
-	DrawBox(0, 0, 300, 200, 0x444444, true);
+	// 半透明の設定
+	DEBUG_TRANSPARENCY
+		DrawBox(0, 0, 300, 200, 0x444444, true);
+	// ブレンドモードをリセット
+	DEBUG_RESET
 	DrawFormatString(0,   0 ,0xffffff, " GameScene_1         ", true);
 	DrawFormatString(0,  16, 0xcc0000, " PlayerPosX    : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
-	DrawFormatString(0,  48, 0x00cc00, " KuribouPosX   : %.1f", Kuribou().GetKuribouPos().x, true);
-	DrawFormatString(0,  64, 0x00cc00, " KuribouPosY   : %.1f", Kuribou().GetKuribouPos().y, true);
+	DrawFormatString(0,  48, 0x00cc00, " KuribouPosX   : %.1f", newKuribou->GetKuribouPos().x, true);
+	DrawFormatString(0,  64, 0x00cc00, " KuribouPosY   : %.1f", newKuribou->GetKuribouPos().y, true);
 	DrawFormatString(0,  80, 0xaaaaaa, " Kuribou       : %d  ", m_pKuribou.size(), true);
 	DrawFormatString(0,  96, 0xaaaaaa, " PlayerDeath   : %1d ", m_pPlayer->GetPlayerDeath(), true);
 	DrawFormatString(0, 112, 0xaaaaaa, " Score         : %1d ", m_pSystemEngineer->GetScore(), true);
-	DrawFormatString(0, 128, 0xaaaaaa, "               : %.1f", 123456789, true);
+	DrawFormatString(0, 128, 0xaaaaaa, "               : %1d ", 123456789, true);
 	DrawFormatString(0, 144, 0xaaaaaa, "               : %.1f", 123456789, true);
 	DrawFormatString(0, 160, 0x00aaaa, " CameraPosX    : %.1f", m_pCamera->GetCameraDrawOffset().x, true);
 	DrawFormatString(0, 176, 0x00aaaa, " CameraPosY    : %.1f", m_pCamera->GetCameraDrawOffset().y, true);

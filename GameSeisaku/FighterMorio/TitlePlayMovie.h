@@ -1,4 +1,5 @@
 #pragma once
+#include "game.h"
 class TitlePlayMovie
 {
 public:
@@ -7,7 +8,9 @@ public:
 	void Init();
 	void Update();
 	void Draw();
+	void SetPlaySwitch(bool isPlay) { IsPlay = isPlay; }
 private:
-	int MovieGraphHandle;
+	int MovieGraphHandle;		// “®‰æƒnƒ“ƒhƒ‹
+	bool IsPlay;
 };
 
