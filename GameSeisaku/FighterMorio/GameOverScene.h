@@ -3,7 +3,8 @@
 
 #include "game.h"
 class SceneManager;
-class GameOverScene :public BaseScene
+class GameOver;
+class GameOverScene : public BaseScene
 {
 public:
 	GameOverScene(SceneManager& manager);
@@ -11,4 +12,6 @@ public:
 	void Init();
 	void Update();
 	void Draw();
+private:
+	GameOver* m_pGameOver;
 };

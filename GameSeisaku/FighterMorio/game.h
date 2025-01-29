@@ -9,5 +9,5 @@ namespace Game
 	constexpr bool kDefaultWindowMode = true;		// ウィンドウモードの状態にする
 	
 	// クリボウの情報
-	constexpr int kuribouNumber = 2;				// クリボウの数
+	constexpr int kuribouNumber = 16;
 }

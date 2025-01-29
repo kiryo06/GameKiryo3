@@ -804,9 +804,9 @@ void Kuribou::CheckIsLeft(int mapNumber)
 	}
 	if (mapChip == 1)
 	{
-		for (int hChip = 0; hChip < m_kChipNumY; hChip++)
+		for (int hChip = 0; hChip < m_k1ChipNumY; hChip++)
 		{
-			for (int wChip = 0; wChip < m_kChipNumX; wChip++)
+			for (int wChip = 0; wChip < m_k1ChipNumX; wChip++)
 			{
 				isHit = IsHitKuribouWithMapChip(mapNumber, checkPos, hChip, wChip);
 				if (isHit)

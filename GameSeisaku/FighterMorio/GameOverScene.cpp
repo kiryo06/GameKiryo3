@@ -4,8 +4,13 @@
 
 #include "DxLib.h"
 #include "Pad.h"
+#include "Debug.h"
 
-GameOverScene::GameOverScene(SceneManager& manager) : BaseScene(manager)
+#include "GameOver.h"
+
+
+GameOverScene::GameOverScene(SceneManager& manager) : BaseScene(manager),
+m_pGameOver(new GameOver())
 {
 }
 
@@ -15,6 +20,7 @@ GameOverScene::~GameOverScene()
 
 void GameOverScene::Init()
 {
+	m_pGameOver->Init();
 }
 
 void GameOverScene::Update()
@@ -27,10 +33,10 @@ void GameOverScene::Update()
 		auto next = std::make_shared<TitleScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
+	m_pGameOver->Update();
 }
 
 void GameOverScene::Draw()
 {
-	DrawFormatString(0, 0, 0xffffff, "GameOverScene", true);
-	DrawBox(100, 100, 640, 640, 0x3afdaa, true);
+	m_pGameOver->Draw();
 }

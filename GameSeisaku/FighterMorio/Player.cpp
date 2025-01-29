@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "Kuribou.h"
 #include "SystemEngineer.h"
+#include "Pad.h"
+#include "GameScene_1.h"
 
 namespace
 {
@@ -23,6 +25,7 @@ Player::Player() :
 	m_pCamera(),
 	m_pKuribou(new Kuribou),
 	m_pSystemEngineer(new SystemEngineer),
+	m_pGameScene_1(),
 	w(25),
 	h(32),
 	fallSpeed(0.0f),
@@ -33,7 +36,6 @@ Player::Player() :
 	isHitTop(false),
 	isPlayerKuribouHit(false),
 	playerDeath(0),
-	/*isDeath(false),*/
 	mapChip(0),
 	_isHit(0),
 	m_PlayerGraph(0),
@@ -152,13 +154,14 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 				if ((ChickIsEnemyLeftHit(item)) || (ChickIsEnemyRightHit(item)))
 				{
 					playerDeath += 1;
+					m_pGameScene_1->SetDeath(true);
 					break;
 				}
 			}
 		}
 	}
 	// 地に足が着いている場合のみジャンプボタンを見る
-	if (isGround && !isHitTop && input & PAD_INPUT_B)
+	if (isGround && !isHitTop && Pad::IsTrigger(input & PAD_INPUT_B))
 	{
 		fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
 		isGround = false;
@@ -166,7 +169,7 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 	if (pos.y > 1500)
 	{
 		playerDeath += 1;
-		//isDeath = true;
+		m_pGameScene_1->SetDeath(true);
 	}
 
 	// 落下速度を移動量に加える

@@ -7,7 +7,7 @@
 namespace
 {
 	// ƒJƒƒ‰”ÍˆÍ
-	const float CameraScopeRangeRight = 250.0f;
+	const float CameraScopeRangeRight = 500.0f;
 	const float CameraScopeRangeLeft = -10.0f;
 	const float CameraScopeRangeH = 300.0f;
 	const float CameraScopeRangeTop = 320.0f;

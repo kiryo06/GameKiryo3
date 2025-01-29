@@ -5,15 +5,11 @@
 namespace
 {
 	constexpr float kGameOverGravity = 0.3f;	// ゲームオーバーに掛かる重力加速度
-	constexpr int kGameOverX = 200;				// ゲームオーバー表示位置X
-	constexpr int kGameOverY = 600;				// ゲームオーバー表示位置Y
+	constexpr int kGameOverX = Game::kScreenWidth;				// ゲームオーバー表示位置X
+	constexpr int kGameOverY = Game::kScreenHeight;				// ゲームオーバー表示位置Y
+	constexpr int ksada = 100;
 }
 GameOver::GameOver():
-	w(120),
-	h(120),
-	fallSpeed(0.0f),
-	pos(VGet(20.0f, 992, 0)),
-	velocity(VGet(0, 0, 0)),
 	m_GameOverGraph_A(0),
 	m_GameOverGraph_E(0),
 	m_GameOverGraph_G(0),
@@ -48,37 +44,24 @@ void GameOver::Init()
 
 void GameOver::Update()
 {
-	// 落下速度を更新
-	fallSpeed += kGameOverGravity;
-	// 先に設定判定をする
-	CheckIsGround();
-	// 落下速度を移動量に加える
-	auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
-	velocity = VAdd(velocity, fallVelocity);
+	//// 落下速度を更新
+	//fallSpeed += kGameOverGravity;
+	//// 先に設定判定をする
+	//CheckIsGround();
+	//// 落下速度を移動量に加える
+	//auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
+	//velocity = VAdd(velocity, fallVelocity);
 }
 
 void GameOver::Draw()
 {
-	DrawGraph(kGameOverX, kGameOverY, m_GameOverGraph_G, TRUE);
-	DrawGraph(kGameOverX + 100, kGameOverY, m_GameOverGraph_A, TRUE);
-	DrawGraph(kGameOverX + 200, kGameOverY, m_GameOverGraph_M, TRUE);
-	DrawGraph(kGameOverX + 300, kGameOverY, m_GameOverGraph_E, TRUE);
-	DrawGraph(kGameOverX + 400, kGameOverY, m_GameOverGraph_O, TRUE);
-	DrawGraph(kGameOverX + 500, kGameOverY, m_GameOverGraph_V, TRUE);
-	DrawGraph(kGameOverX + 600, kGameOverY, m_GameOverGraph_E, TRUE);
-	DrawGraph(kGameOverX + 700, kGameOverY, m_GameOverGraph_R, TRUE);
-}
+	DrawExtendGraph(kGameOverX / 2 - 400, kGameOverY / 2 - 50, kGameOverX / 2 - 300, kGameOverY / 2 + 50, m_GameOverGraph_G, TRUE);
+	DrawExtendGraph(kGameOverX / 2 - 300, kGameOverY / 2 - 50, kGameOverX / 2 - 200, kGameOverY / 2 + 50, m_GameOverGraph_A, TRUE);
+	DrawExtendGraph(kGameOverX / 2 - 200, kGameOverY / 2 - 50, kGameOverX / 2 - 100, kGameOverY / 2 + 50, m_GameOverGraph_M, TRUE);
+	DrawExtendGraph(kGameOverX / 2 - 100, kGameOverY / 2 - 50, kGameOverX / 2      , kGameOverY / 2 + 50, m_GameOverGraph_E, TRUE);
+	DrawExtendGraph(kGameOverX / 2      , kGameOverY / 2 - 50, kGameOverX / 2 + 100, kGameOverY / 2 + 50, m_GameOverGraph_O, TRUE);
+	DrawExtendGraph(kGameOverX / 2 + 100, kGameOverY / 2 - 50, kGameOverX / 2 + 200, kGameOverY / 2 + 50, m_GameOverGraph_V, TRUE);
+	DrawExtendGraph(kGameOverX / 2 + 200, kGameOverY / 2 - 50, kGameOverX / 2 + 300, kGameOverY / 2 + 50, m_GameOverGraph_E, TRUE);
+	DrawExtendGraph(kGameOverX / 2 + 300, kGameOverY / 2 - 50, kGameOverX / 2 + 400, kGameOverY / 2 + 50, m_GameOverGraph_R, TRUE);
 
-void GameOver::CheckIsGround()
-{
-	// 1ドット下にずらして当たれば地面に足がぶつかっている （小数点無視）
-	VECTOR checkPos = VGet(pos.x, kGameOverY, pos.z);
-	// 全マップチップ分繰り返す
-	bool isHit = false;
-	isHit = IsHitGround(checkPos);
-}
-
-bool GameOver::IsHitGround(const VECTOR& checkPos)
-{
-	return false;
 }

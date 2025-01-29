@@ -6,6 +6,7 @@ class Map;
 class Camera;
 class Kuribou;
 class SystemEngineer;
+class GameScene_1;
 class Player
 {
 public:
@@ -83,7 +84,7 @@ public:
 	/// <param name="mapNumber">マップ番号</param>
 	/// <param name="camera">カメラオブジェクト</param>
 	void Draw(int mapNumber, Camera* camera);
-	//     bool IsHitMapChipKind(auto chip, const VECTOR& checkPos);
+	//  bool IsHitMapChipKind(auto chip, const VECTOR& checkPos);
 	/// <summary>
 	/// プレイヤーの位置を取得
 	/// </summary>
@@ -100,12 +101,12 @@ public:
 	/// <param name="isdeath">衝突したかどうかのフラグ</param>
 	/// <returns>設定されたフラグ</returns>
 	int GetPlayerDeath() const { return playerDeath; }
-	/*bool IsPlayerDeath()const { return isDeath; }*/
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
 	Kuribou* m_pKuribou;
 	SystemEngineer* m_pSystemEngineer;
+	GameScene_1* m_pGameScene_1;
 	float w, h;					// プレイヤーの幅と高さ
 	float fallSpeed;			// 落下速度
 	VECTOR pos;                 // プレイヤーの位置
@@ -115,7 +116,6 @@ private:
 	bool isHitTop;              // 頭上に障害物があるかどうか
 	bool isPlayerKuribouHit;    // プレイヤーが敵に衝突したかどうか
 	int playerDeath;			// プレイヤーが死んだかどうか
-	//bool isDeath;				// プレイヤーが死んだかどうか
 	int mapChip;                // マップチップ
 	int _isHit;                 // 衝突フラグ
 	int m_PlayerGraph;			// プレイヤーグラフィック
