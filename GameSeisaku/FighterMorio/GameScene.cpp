@@ -46,7 +46,7 @@ void GameScene::Update()
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	Pad::Update();
 
-	m_pPlayer->Update(m_pKuribou, 0);
+	m_pPlayer->Update(m_pCamera, m_pKuribou, 0);
 	// XƒL[‚ğ‰Ÿ‚µ‚½‚ç“G‚Ì’†g‚ª‘‚¦‚é
 	if (input & PAD_INPUT_C)
 	{

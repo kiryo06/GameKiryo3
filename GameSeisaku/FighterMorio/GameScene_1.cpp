@@ -70,7 +70,7 @@ void GameScene_1::Update()
 
 	/*if (Pad::IsTrigger(input & PAD_INPUT_B))*/
 
-	m_pPlayer->Update(m_pKuribou,1);
+	m_pPlayer->Update(m_pCamera, m_pKuribou,1);
 	SpawnPos();
 	for (auto& item : m_pKuribou)
 	{
@@ -80,11 +80,11 @@ void GameScene_1::Update()
 	m_pSystemEngineer->Update();
 
 	// ゲームオーバー
-	if (m_pPlayer->GetDeath())
+	/*if (m_pPlayer->GetDeath())
 	{
 		auto next = std::make_shared<GameOverScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
-	}
+	}*/
 
 	// シーン遷移
 #ifdef _DEBUG
@@ -199,7 +199,7 @@ void GameScene_1::SpawnPos()
 		EnemyPos(13);
 	}
 	// 14体目
-	if (m_kuribou14 && PlayerPosX >= Master::kKuribouPosY14)
+	if (m_kuribou14 && PlayerPosX >= Master::kSpawnPosX14)
 	{
 		EnemyPos(14);
 	}

@@ -29,7 +29,7 @@ Player::Player() :
 	w(25),
 	h(32),
 	fallSpeed(0.0f),
-	pos(VGet(20.0f + h * 0.5f, 992, 0)),
+	pos(VGet(40.0f + h * 0.5f, 992, 0)),
 	dir(VGet(0, 0, 0)),
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
@@ -105,7 +105,7 @@ void Player::Init(int mapNumber, SystemEngineer* pSE)
 	}
 }
 
-void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
+void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 {
 	if(isPlayerKuribouHit)return;
 	// “ü—Íó‘Ô‚ğXV
@@ -116,7 +116,6 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 	{
 		dir = VAdd(dir, VGet(-1, 0, 0));
 	}
-
 	if (input & PAD_INPUT_RIGHT)
 	{
 		dir = VAdd(dir, VGet(1, 0, 0));

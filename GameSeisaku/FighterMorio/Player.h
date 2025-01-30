@@ -22,7 +22,7 @@ public:
 	/// </summary>
 	/// <param name="Kuribou">敵キャラクターのリスト</param>
 	/// <param name="mapNumber">マップ番号</param>
-	void Update(std::list<Kuribou*>& Kuribou, int mapNumber);
+	void Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber);
 	/// <summary>
 	/// 現在のプレイヤー位置とマップの衝突判定を行い、修正されたvelocity（移動ベクトル）を返す
 	/// </summary>
