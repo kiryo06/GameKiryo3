@@ -21,7 +21,6 @@ public:
 	void Draw();
 	void SpawnPos();
 	void EnemyPos(int EnemyNumber);
-	bool SetDeath(bool isDeath) { PlayerDeath = isDeath; }
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;

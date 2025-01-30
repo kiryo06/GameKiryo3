@@ -36,6 +36,7 @@ Player::Player() :
 	isHitTop(false),
 	isPlayerKuribouHit(false),
 	playerDeath(0),
+	isDeath(false),
 	mapChip(0),
 	_isHit(0),
 	m_PlayerGraph(0),
@@ -154,7 +155,7 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 				if ((ChickIsEnemyLeftHit(item)) || (ChickIsEnemyRightHit(item)))
 				{
 					playerDeath += 1;
-					m_pGameScene_1->SetDeath(true);
+					isDeath = true;
 					break;
 				}
 			}
@@ -168,8 +169,8 @@ void Player::Update(std::list<Kuribou*>& Kuribou, int mapNumber)
 	}
 	if (pos.y > 1500)
 	{
+		isDeath = true;
 		playerDeath += 1;
-		m_pGameScene_1->SetDeath(true);
 	}
 
 	// —Ž‰º‘¬“x‚ðˆÚ“®—Ê‚É‰Á‚¦‚é

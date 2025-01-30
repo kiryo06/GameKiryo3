@@ -34,41 +34,41 @@ namespace Master
 
     constexpr int kKuribouPosX07 = 3120;    // クリボウ07の初期X座標
     constexpr int kKuribouPosY07 = 992;     // クリボウ07の初期Y座標
-    constexpr int kSpawnPosX07 = 0;
+    constexpr int kSpawnPosX07 = 2300;
 
     constexpr int kKuribouPosX08 = 3170;    // クリボウ08の初期X座標
     constexpr int kKuribouPosY08 = 992;     // クリボウ08の初期Y座標
-    constexpr int kSpawnPosX08 = 0;
+    constexpr int kSpawnPosX08 = 2300;
 
     constexpr int kKuribouPosX09 = 3665;    // クリボウ09の初期X座標
     constexpr int kKuribouPosY09 = 992;     // クリボウ09の初期Y座標
-    constexpr int kSpawnPosX09 = 0;
+    constexpr int kSpawnPosX09 = 2850;
 
     constexpr int kKuribouPosX10 = 3710;    // クリボウ10の初期X座標
     constexpr int kKuribouPosY10 = 992;     // クリボウ10の初期Y座標
-    constexpr int kSpawnPosX10 = 0;
+    constexpr int kSpawnPosX10 = 2850;
 
     constexpr int kKuribouPosX11 = 3970;    // クリボウ11の初期X座標
     constexpr int kKuribouPosY11 = 992;     // クリボウ11の初期Y座標
-    constexpr int kSpawnPosX11 = 0;
+    constexpr int kSpawnPosX11 = 3100;
 
     constexpr int kKuribouPosX12 = 4020;    // クリボウ12の初期X座標
     constexpr int kKuribouPosY12 = 992;     // クリボウ12の初期Y座標
-    constexpr int kSpawnPosX12 = 0;
+    constexpr int kSpawnPosX12 = 3100;
 
     constexpr int kKuribouPosX13 = 4100;    // クリボウ13の初期X座標
     constexpr int kKuribouPosY13 = 992;     // クリボウ13の初期Y座標
-    constexpr int kSpawnPosX13 = 0;
+    constexpr int kSpawnPosX13 = 3150;
 
     constexpr int kKuribouPosX14 = 4160;    // クリボウ14の初期X座標
     constexpr int kKuribouPosY14 = 992;     // クリボウ14の初期Y座標
-    constexpr int kSpawnPosX14 = 0;
+    constexpr int kSpawnPosX14 = 3150;
 
     constexpr int kKuribouPosX15 = 5590;    // クリボウ15の初期X座標
     constexpr int kKuribouPosY15 = 992;     // クリボウ15の初期Y座標
-    constexpr int kSpawnPosX15 = 0;
+    constexpr int kSpawnPosX15 = 4707;
 
     constexpr int kKuribouPosX16 = 5630;    // クリボウ16の初期X座標
     constexpr int kKuribouPosY16 = 992;     // クリボウ16の初期Y座標
-    constexpr int kSpawnPosX16 = 0;
+    constexpr int kSpawnPosX16 = 4707;
 }

@@ -62,18 +62,19 @@ void GameScene_2::Update()
 	m_pCamera->Update(m_pPlayer);
 	m_pSystemEngineer->Update();
 
+	// ゲームオーバー
+	if (m_pPlayer->GetDeath())
+	{
+		auto next = std::make_shared<GameOverScene>(m_sceneManager);
+		m_sceneManager.ChangeScene(next);
+	}
+
 	// シーン遷移
 	if (Pad::IsTrigger(input & PAD_INPUT_X))
 	{
 		auto next = std::make_shared<GameOverScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
-	// ゲームオーバー
-	/*if (m_pPlayer->GetPlayerDeath())
-	{
-		auto next = std::make_shared<GameOverScene>(m_sceneManager);
-		m_sceneManager.ChangeScene(next);
-	}*/
 }
 
 void GameScene_2::Draw()
@@ -89,7 +90,7 @@ void GameScene_2::Draw()
 #ifdef _DEBUG
 	// 半透明の設定
 	DEBUG_TRANSPARENCY
-		DrawBox(0, 0, 300, 200, 0x444444, true);
+	DrawBox(0, 0, 300, 200, 0x444444, true);
 	// ブレンドモードをリセット
 	DEBUG_RESET
 	DrawFormatString(0,   0 , 0xffffff, " GameScene_2         ", true);
