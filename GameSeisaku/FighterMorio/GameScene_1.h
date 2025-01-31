@@ -29,6 +29,8 @@ private:
 	SystemEngineer* m_pSystemEngineer;
 	int PlayerPosX;
 	int enemyNum;
+	int m_FrameCounter;
+	int m_Timer;
 	bool PlayerDeath;
 	bool m_kuribou00;
 	bool m_kuribou01;

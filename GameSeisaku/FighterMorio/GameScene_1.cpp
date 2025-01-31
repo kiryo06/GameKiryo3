@@ -26,6 +26,8 @@ m_pKuribou(),
 m_pSystemEngineer(new SystemEngineer),
 PlayerPosX(0),
 enemyNum(0),
+m_FrameCounter(0),
+m_Timer(0),
 PlayerDeath(false),
 m_kuribou00(true),
 m_kuribou01(true),
@@ -79,12 +81,15 @@ void GameScene_1::Update()
 	}
 	m_pCamera->Update(m_pPlayer);
 	m_pSystemEngineer->Update();
-
 	// ゲームオーバー
 	if (m_pPlayer->GetDeath())
 	{
-		auto next = std::make_shared<GameOverScene>(m_sceneManager);
-		m_sceneManager.ChangeScene(next);
+		m_FrameCounter++;
+		if (m_FrameCounter >= 60 * 3)
+		{
+			auto next = std::make_shared<GameOverScene>(m_sceneManager);
+			m_sceneManager.ChangeScene(next);
+		}
 	}
 
 	// 間に合えばポーズ画面を写す
@@ -115,6 +120,7 @@ void GameScene_1::Draw()
 	DrawBox(0, 0, 300, 200, 0x444444, true);
 	// ブレンドモードをリセット
 	DEBUG_RESET
+	DrawLine(0, 0, 200, 200, 0xff0000); // (50, 50) から (200, 200) まで赤い線を描画
 	DrawFormatString(0,   0 ,0xffffff, " GameScene_1         ", true);
 	DrawFormatString(0,  16, 0xcc0000, " PlayerPosX    : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);

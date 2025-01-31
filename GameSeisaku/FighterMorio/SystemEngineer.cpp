@@ -30,10 +30,10 @@ void SystemEngineer::Init()
 void SystemEngineer::Update()
 {
 	m_FrameCounter++;
-	if (m_FrameCounter == 60)
+	if (m_FrameCounter >= 60)
 	{
 		m_Timer--;
-		m_FrameCounter = 0;
+		m_FrameCounter -= 60;
 	}
 	if (IsScore)
 	{

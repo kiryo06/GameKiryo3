@@ -31,10 +31,6 @@ void TitlePlayMovie::Update()
             PlayMovieToGraph(MovieGraphHandle);
         }
     }
-    else
-    {
-
-    }
 }
 
 void TitlePlayMovie::Draw()

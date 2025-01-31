@@ -10,14 +10,11 @@
 
 namespace
 {
-	//const float Gravity = 0.3f;		// キャラに掛かる重力加速度
-	//const float JumpPower = 8.75f;	// キャラのジャンプ力
-	//const float Speed = 7.5f;		// キャラの移動スピード
-
-	// ダッシュ時の数値
 	const float Gravity = 0.5f;		// キャラに掛かる重力加速度
 	const float JumpPower = 11.75f;	// キャラのジャンプ力
-	const float Speed = 6.5f;		// キャラの移動スピード
+	const float Speed = 4.5f;		// キャラの移動スピード
+	const float RunSpeed = 6.5f;		// キャラのダッシュ時移動スピード
+	const int	Width = 32;
 }
 
 Player::Player() :
@@ -26,7 +23,7 @@ Player::Player() :
 	m_pKuribou(new Kuribou),
 	m_pSystemEngineer(new SystemEngineer),
 	m_pGameScene_1(),
-	w(25),
+	w(32),
 	h(32),
 	fallSpeed(0.0f),
 	pos(VGet(40.0f + h * 0.5f, 992, 0)),
@@ -126,10 +123,19 @@ void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 	{
 		dir = VNorm(dir);
 	}
-	
 
-	// 移動量を出す
-	velocity = VScale(dir, Speed);
+	// 走っているかどうか
+	if (input & PAD_INPUT_A)
+	{
+		// 走っている場合移動量を出す
+		velocity = VScale(dir, RunSpeed);
+	}
+	else
+	{
+		// 通常時移動量を出す
+		velocity = VScale(dir, Speed);
+	}
+
 
 	// 落下速度を更新
 	fallSpeed += Gravity;
@@ -943,6 +949,16 @@ void Player::Draw(int mapNumber,Camera* camera)
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0, 0, 540, 641,
 		m_PlayerGraph, TRUE);
+	/*DrawRectExtendGraph(leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		0, 0, 32, 32, 
+		m_PlayerGraph, TRUE);*/
+	DrawLine(6336 + static_cast<int>(camera->GetCameraDrawOffset().x),
+		10000 + static_cast<int>(camera->GetCameraDrawOffset().y),
+		6336 + static_cast<int>(camera->GetCameraDrawOffset().x),
+		10 + static_cast<int>(camera->GetCameraDrawOffset().y), 0xff0000); // (50, 50) から (200, 200) まで赤い線を描画
 #ifdef _DEBUG
 	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
@@ -957,5 +973,4 @@ void Player::Draw(int mapNumber,Camera* camera)
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0xff0000, FALSE);
 #endif // _DEBUG
-
 }

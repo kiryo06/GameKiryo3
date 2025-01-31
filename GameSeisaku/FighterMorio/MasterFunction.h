@@ -4,6 +4,9 @@ namespace Master
 {
     // const        初期化後変更不可
     // constexpr    初期化後変更可能?   
+
+
+    // クリボウの位置情報
     constexpr int kKuribouPosX00 = 1070;    // クリボウ00の初期X座標
     constexpr int kKuribouPosY00 = 992;     // クリボウ00の初期Y座標
     constexpr int kSpawnPosX00 = 0;
