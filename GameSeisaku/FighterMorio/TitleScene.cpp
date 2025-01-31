@@ -42,7 +42,7 @@ void TitleScene::Update()
 		m_pTitlePlayMovie->Update();
 	}
 #ifdef _DEBUG
-	if (Pad::IsTrigger(input & PAD_INPUT_X))
+	if (Pad::IsTrigger(input & PAD_INPUT_L))
 	{
 		m_pTitlePlayMovie->SetPlaySwitch(true);
 		auto next = std::make_shared<StageSelectionScene>(m_sceneManager);

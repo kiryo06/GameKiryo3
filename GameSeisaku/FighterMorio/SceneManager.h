@@ -9,7 +9,8 @@ enum class SceneState
 	Game,
 	Game_1,
 	Game_2,
-	GameOver
+	GameOver,
+	GameClear
 };
 
 class SceneManager

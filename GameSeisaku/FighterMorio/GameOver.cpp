@@ -44,13 +44,6 @@ void GameOver::Init()
 
 void GameOver::Update()
 {
-	//// 落下速度を更新
-	//fallSpeed += kGameOverGravity;
-	//// 先に設定判定をする
-	//CheckIsGround();
-	//// 落下速度を移動量に加える
-	//auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
-	//velocity = VAdd(velocity, fallVelocity);
 }
 
 void GameOver::Draw()

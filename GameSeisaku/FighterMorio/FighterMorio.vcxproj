@@ -145,6 +145,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EnemySpawnPoint.cpp" />
     <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameClearScene.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="EnemySpawnPoint.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameClearScene.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameScene.h" />

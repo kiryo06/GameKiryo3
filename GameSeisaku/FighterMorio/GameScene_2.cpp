@@ -1,6 +1,9 @@
 #include "GameScene_2.h"
 #include "SceneManager.h"
 #include "GameOverScene.h"
+#ifdef _DEBUG
+#include "GameClearScene.h"
+#endif // _DEBUG
 
 #include "DxLib.h"
 #include "Pad.h"
@@ -69,12 +72,14 @@ void GameScene_2::Update()
 		m_sceneManager.ChangeScene(next);
 	}
 
+#ifdef _DEBUG
 	// ÉVÅ[ÉìëJà⁄
-	if (Pad::IsTrigger(input & PAD_INPUT_X))
+	if (Pad::IsTrigger(input & PAD_INPUT_L))
 	{
-		auto next = std::make_shared<GameOverScene>(m_sceneManager);
+		auto next = std::make_shared<GameClearScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
+#endif // _DEBUG
 }
 
 void GameScene_2::Draw()

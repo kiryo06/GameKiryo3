@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "GameScene_2.h"
 #include "GameOverScene.h"
+#include "GameClearScene.h"
 
 #include "DxLib.h"
 #include "Pad.h"
@@ -80,21 +81,21 @@ void GameScene_1::Update()
 	m_pSystemEngineer->Update();
 
 	// ゲームオーバー
-	/*if (m_pPlayer->GetDeath())
+	if (m_pPlayer->GetDeath())
 	{
 		auto next = std::make_shared<GameOverScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
-	}*/
+	}
+
+	// 間に合えばポーズ画面を写す
 
 	// シーン遷移
 #ifdef _DEBUG
-	if(Pad::IsTrigger(input & PAD_INPUT_X))
+	if(Pad::IsTrigger(input & PAD_INPUT_L))
 	{
 		auto next = std::make_shared<GameScene_2>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
-#else	//_DEBUG
-	// 間に合えばポーズ画面を写す
 #endif  //_DEBUG
 }
 
