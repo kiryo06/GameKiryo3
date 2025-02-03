@@ -6,7 +6,6 @@
 #include "Kuribou.h"
 #include "SystemEngineer.h"
 #include "Pad.h"
-#include "GameScene_1.h"
 
 namespace
 {
@@ -20,9 +19,8 @@ namespace
 Player::Player() :
 	m_pMap(),
 	m_pCamera(),
-	m_pKuribou(new Kuribou),
+	//m_pKuribou(new Kuribou),
 	m_pSystemEngineer(new SystemEngineer),
-	m_pGameScene_1(),
 	w(32),
 	h(32),
 	fallSpeed(0.0f),
@@ -31,9 +29,9 @@ Player::Player() :
 	velocity(VGet(0, 0, 0)),
 	isGround(false),
 	isHitTop(false),
-	isPlayerKuribouHit(false),
 	playerDeath(0),
 	isDeath(false),
+	isClear(false),
 	mapChip(0),
 	_isHit(0),
 	m_PlayerGraph(0),
@@ -49,6 +47,7 @@ Player::Player() :
 Player::~Player()
 {
 	DeleteGraph(m_PlayerGraph);
+	delete m_pSystemManager;
 }
 
 void Player::Init(int mapNumber, SystemEngineer* pSE)
@@ -104,7 +103,7 @@ void Player::Init(int mapNumber, SystemEngineer* pSE)
 
 void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 {
-	if(isPlayerKuribouHit)return;
+	if(isDeath)return;
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	// プレイヤーの移動処理
@@ -135,7 +134,13 @@ void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 		// 通常時移動量を出す
 		velocity = VScale(dir, Speed);
 	}
-
+#ifdef _DEBUG
+	if (input & PAD_INPUT_C)
+	{
+		fallSpeed = -JumpPower + 4;
+		isGround = false;
+	}
+#endif // _DEBUG
 
 	// 落下速度を更新
 	fallSpeed += Gravity;
@@ -172,10 +177,16 @@ void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 		fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
 		isGround = false;
 	}
+	// プレイヤーの死ぬ高さ
 	if (pos.y > 1500)
 	{
 		isDeath = true;
 		playerDeath += 1;
+	}
+	//976, 656
+	if (pos.x >= 6320)
+	{
+		isClear = true;
 	}
 
 	// 落下速度を移動量に加える
@@ -949,16 +960,11 @@ void Player::Draw(int mapNumber,Camera* camera)
 		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 		0, 0, 540, 641,
 		m_PlayerGraph, TRUE);
-	/*DrawRectExtendGraph(leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		0, 0, 32, 32, 
-		m_PlayerGraph, TRUE);*/
-	DrawLine(6336 + static_cast<int>(camera->GetCameraDrawOffset().x),
-		10000 + static_cast<int>(camera->GetCameraDrawOffset().y),
+	DrawLine(
 		6336 + static_cast<int>(camera->GetCameraDrawOffset().x),
-		10 + static_cast<int>(camera->GetCameraDrawOffset().y), 0xff0000); // (50, 50) から (200, 200) まで赤い線を描画
+		976 + static_cast<int>(camera->GetCameraDrawOffset().y),
+		6336 + static_cast<int>(camera->GetCameraDrawOffset().x),
+		656 + static_cast<int>(camera->GetCameraDrawOffset().y), 0xff0000); // (50, 50) から (200, 200) まで赤い線を描画
 #ifdef _DEBUG
 	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
@@ -974,3 +980,8 @@ void Player::Draw(int mapNumber,Camera* camera)
 		0xff0000, FALSE);
 #endif // _DEBUG
 }
+
+
+
+//x = 6336
+//y =976, 656

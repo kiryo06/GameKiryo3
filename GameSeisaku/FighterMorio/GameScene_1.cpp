@@ -15,6 +15,7 @@
 #include "Player.h"
 #include "Kuribou.h"
 #include "SystemEngineer.h"
+#include "SceneChange.h"
 
 
 
@@ -24,7 +25,8 @@ m_pCamera(new Camera()),
 m_pPlayer(new Player()),
 m_pKuribou(),
 m_pSystemEngineer(new SystemEngineer),
-PlayerPosX(0),
+m_pSceneChange(new SceneChange),
+PlayerPosX(0.0f),
 enemyNum(0),
 m_FrameCounter(0),
 m_Timer(0),
@@ -81,14 +83,30 @@ void GameScene_1::Update()
 	}
 	m_pCamera->Update(m_pPlayer);
 	m_pSystemEngineer->Update();
+	m_pSceneChange->Update();
+
+	// ゲームクリア
+	if (m_pPlayer->GetClear())
+	{
+		auto next = std::make_shared<GameClearScene>(m_sceneManager);
+		m_sceneManager.ChangeScene(next);
+		return;
+	}
+
 	// ゲームオーバー
 	if (m_pPlayer->GetDeath())
 	{
 		m_FrameCounter++;
-		if (m_FrameCounter >= 60 * 3)
+
+		if (m_FrameCounter >= 60 * 1)
 		{
-			auto next = std::make_shared<GameOverScene>(m_sceneManager);
-			m_sceneManager.ChangeScene(next);
+			m_pSceneChange->SetDese(true);
+			if (m_pSceneChange->GetChange())
+			{
+				auto next = std::make_shared<GameOverScene>(m_sceneManager);
+				m_sceneManager.ChangeScene(next);
+				return;
+			}
 		}
 	}
 
@@ -100,6 +118,7 @@ void GameScene_1::Update()
 	{
 		auto next = std::make_shared<GameScene_2>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
+		return;
 	}
 #endif  //_DEBUG
 }
@@ -134,7 +153,25 @@ void GameScene_1::Draw()
 	DrawFormatString(0, 160, 0x00aaaa, " CameraPosX    : %.1f", m_pCamera->GetCameraDrawOffset().x, true);
 	DrawFormatString(0, 176, 0x00aaaa, " CameraPosY    : %.1f", m_pCamera->GetCameraDrawOffset().y, true);
 #endif // _DEBUG
+	m_pSceneChange->Draw();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void GameScene_1::SpawnPos()
 {

@@ -12,19 +12,23 @@
 TitleScene::TitleScene(SceneManager& manager) : 
 	BaseScene(manager),
 	m_pTitlePlayMovie(new TitlePlayMovie),
-	m_Graph(0)
+	m_Graph(0),
+	m_TitleStart(0),
+	m_BrinkCounter(0)
 {
 }
 
 TitleScene::~TitleScene()
 {
 	DeleteGraph(m_Graph);
+	DeleteGraph(m_TitleStart);
 	delete m_pTitlePlayMovie;
 }
 
 void TitleScene::Init()
 {
 	m_Graph = LoadGraph("data/image/FighterMorio.png");
+	m_TitleStart = LoadGraph("data/image/TitleUIStart.png");
 	if (m_pTitlePlayMovie != nullptr)
 	{
 		m_pTitlePlayMovie->Init();
@@ -40,6 +44,15 @@ void TitleScene::Update()
 	if (m_pTitlePlayMovie != nullptr)
 	{
 		m_pTitlePlayMovie->Update();
+	}
+
+	// 点滅変数に1を足す
+	m_BrinkCounter++;
+
+	// 点滅変数が60になっていたら0にする
+	if (m_BrinkCounter == 60)
+	{
+		m_BrinkCounter = 0;
 	}
 #ifdef _DEBUG
 	if (Pad::IsTrigger(input & PAD_INPUT_L))
@@ -64,7 +77,6 @@ void TitleScene::Draw()
 	{
 		m_pTitlePlayMovie->Draw();
 	}
-
 #ifdef _DEBUG
 	DrawFormatString(0, 0, 0xffffff, "TitleScene", true);
 	DrawFormatString(550, 500, 0xffffff, "Aキーを押してください", true);
@@ -74,4 +86,9 @@ void TitleScene::Draw()
 	DrawFormatString(550, 516, 0xffffff, "Xボタンを押してください", true);
 	DrawRotaGraph(640, 200, 1.0, 0, m_Graph, TRUE);
 #endif  //__DEBUG
+	// 点滅用の変数の値が 30 未満のときだけ描画する
+	if (m_BrinkCounter < 30)
+	{
+		DrawRotaGraph(640, 500, 0.5, 0, m_TitleStart, TRUE);
+	}
 }

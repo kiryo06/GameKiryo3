@@ -6,7 +6,6 @@ class Map;
 class Camera;
 class Kuribou;
 class SystemEngineer;
-class GameScene_1;
 class Player
 {
 public:
@@ -102,12 +101,12 @@ public:
 	/// <returns>設定されたフラグ</returns>
 	int GetPlayerDeath() const { return playerDeath; }
 	bool GetDeath() const { return isDeath; }
+	bool GetClear() const { return isClear; }
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
 	Kuribou* m_pKuribou;
 	SystemEngineer* m_pSystemEngineer;
-	GameScene_1* m_pGameScene_1;
 	float w, h;					// プレイヤーの幅と高さ
 	float fallSpeed;			// 落下速度
 	VECTOR pos;                 // プレイヤーの位置
@@ -115,9 +114,9 @@ private:
 	VECTOR velocity;            // 移動ベクトル
 	bool isGround;              // 地面に足がついているかどうか
 	bool isHitTop;              // 頭上に障害物があるかどうか
-	bool isPlayerKuribouHit;    // プレイヤーが敵に衝突したかどうか
 	int playerDeath;			// プレイヤーが死んだ回数
 	bool isDeath;				// プレイヤーが死んだかどうか
+	bool isClear;				// プレイヤーがクリアしたかどうか
 	int mapChip;                // マップチップ
 	int _isHit;                 // 衝突フラグ
 	int m_PlayerGraph;			// プレイヤーグラフィック

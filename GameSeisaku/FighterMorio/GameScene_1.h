@@ -11,6 +11,7 @@ class Camera;
 class Player;
 class Kuribou;
 class SystemEngineer;
+class SceneChange;
 class GameScene_1 : public BaseScene
 {
 public:
@@ -27,7 +28,8 @@ private:
 	Player* m_pPlayer;
 	std::list<Kuribou*>m_pKuribou;
 	SystemEngineer* m_pSystemEngineer;
-	int PlayerPosX;
+	SceneChange* m_pSceneChange;
+	float PlayerPosX;
 	int enemyNum;
 	int m_FrameCounter;
 	int m_Timer;

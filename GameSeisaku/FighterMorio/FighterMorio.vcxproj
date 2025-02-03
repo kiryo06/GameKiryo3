@@ -161,6 +161,7 @@
     <ClCompile Include="Pad.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rect.cpp" />
+    <ClCompile Include="SceneChange.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="StageSelectionScene.cpp" />
     <ClCompile Include="SystemEngineer.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Pad.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Rect.h" />
+    <ClInclude Include="SceneChange.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="StageSelectionScene.h" />

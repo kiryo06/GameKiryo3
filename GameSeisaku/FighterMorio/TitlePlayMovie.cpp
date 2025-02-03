@@ -21,16 +21,16 @@ void TitlePlayMovie::Init()
 
 void TitlePlayMovie::Update()
 {
-    // 動画の再生状態を更新
-    if (!IsPlay)
-    {
-        if (MovieGraphHandle != -1 && GetMovieStateToGraph(MovieGraphHandle) == DX_MOVIEPLAYTYPE_BCANCEL)
-        {
-            // 再生が終了したら再生をリセット
-            SeekMovieToGraph(MovieGraphHandle, 0);
-            PlayMovieToGraph(MovieGraphHandle);
-        }
-    }
+    //// 動画の再生状態を更新
+    //if (!IsPlay)
+    //{
+    //    if (MovieGraphHandle != -1 && GetMovieStateToGraph(MovieGraphHandle) == DX_MOVIEPLAYTYPE_BCANCEL)
+    //    {
+    //        // 再生が終了したら再生をリセット
+    //        SeekMovieToGraph(MovieGraphHandle, 0);
+    //        PlayMovieToGraph(MovieGraphHandle);
+    //    }
+    //}
 }
 
 void TitlePlayMovie::Draw()

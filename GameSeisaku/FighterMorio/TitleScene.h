@@ -14,5 +14,7 @@ public:
 private:
 	TitlePlayMovie* m_pTitlePlayMovie;
 	int m_Graph;
+	int m_TitleStart;
+	int m_BrinkCounter;
 };
 

@@ -56,7 +56,6 @@ void EnemySpawnPoint::Update()
 
 void EnemySpawnPoint::Draw()
 {
-	Kuribou* newKuribou = new Kuribou;
 	for (auto& item : m_pKuribou)
 	{
 		item->Draw(m_pCamera);
