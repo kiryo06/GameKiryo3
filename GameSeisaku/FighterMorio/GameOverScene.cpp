@@ -8,6 +8,7 @@
 #include "Debug.h"
 
 #include "GameOver.h"
+#include "SceneChange.h"
 
 
 GameOverScene::GameOverScene(SceneManager& manager) : BaseScene(manager),

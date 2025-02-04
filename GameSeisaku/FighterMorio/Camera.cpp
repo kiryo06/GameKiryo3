@@ -11,7 +11,7 @@ namespace
 	const float CameraScopeRangeLeft = -10.0f;
 	const float CameraScopeRangeH = 300.0f;
 	const float CameraScopeRangeTop = 320.0f;
-	const float CameraScopeRangeBottom = 1000.0f;
+	const float CameraScopeRangeBottom = 900.0f;
 	const float CameraLerpRate = 0.9f;
 }
 
@@ -26,8 +26,7 @@ VECTOR VLerp(VECTOR start, VECTOR end, float t)
 
 Camera::Camera():
 	pos(VGet(0, 0, 0)),
-	drawOffset(VGet(0, 0, 0)),
-	isLeftHit(false)
+	drawOffset(VGet(0, 0, 0))
 {
 }
 
@@ -56,7 +55,6 @@ VECTOR Camera::CalculateAimCameraPos(const VECTOR& playerPos)
 	if (playerPos.x > pos.x + (CameraScopeRangeRight * 1.0f))
 	{
 		aimCameraPos.x = playerPos.x - (CameraScopeRangeRight * 1.0f);
-		isLeftHit = true;
 	}
 	else if (playerPos.x < pos.x - (CameraScopeRangeLeft * 5.0f))
 	{
@@ -84,6 +82,11 @@ void Camera::ClampCameraPos()
 	if (pos.y < CameraScopeRangeTop)
 	{
 		pos.y = CameraScopeRangeTop;
+	}
+	// Ž~‚ß‚é
+	if (pos.x < 20)
+	{
+		pos.x = 20;
 	}
 }
 

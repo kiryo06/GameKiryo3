@@ -18,9 +18,7 @@ public:
 	void UpdateDrawOffset();
 	VECTOR GetCameraPos() const { return pos; }
 	VECTOR GetCameraDrawOffset() const { return drawOffset; }
-	bool GetPlayerLeftHit()const { return isLeftHit; }
 private:
 	VECTOR pos;				// 実際のカメラのポジション
 	VECTOR drawOffset;		// 全てのDrawObjectに足す値
-	bool isLeftHit;
 };

@@ -116,6 +116,9 @@ private:
 	int playerDeath;			// プレイヤーが死んだ回数
 	bool isDeath;				// プレイヤーが死んだかどうか
 	bool isClear;				// プレイヤーがクリアしたかどうか
+	bool GameoverJump;
+	int m_FrameCounter;
+	/*bool m_;*/
 	int mapChip;                // マップチップ
 	int _isHit;                 // 衝突フラグ
 	int m_PlayerGraph;			// プレイヤーグラフィック

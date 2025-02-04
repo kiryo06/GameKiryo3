@@ -84,7 +84,7 @@ void GameScene_2::Update()
 
 void GameScene_2::Draw()
 {
-	Kuribou* newKuribou = new Kuribou;
+	//Kuribou* newKuribou = new Kuribou;
 	m_pMap->Draw(2, m_pCamera);
 	m_pPlayer->Draw(2, m_pCamera);
 	for (auto& item : m_pKuribou)
@@ -101,8 +101,8 @@ void GameScene_2::Draw()
 	DrawFormatString(0,   0 , 0xffffff, " GameScene_2         ", true);
 	DrawFormatString(0,  16, 0xcc0000, " PlayerPosX    : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
-	DrawFormatString(0,  48, 0x00cc00, " KuribouPosX   : %.1f", newKuribou->GetKuribouPos().x, true);
-	DrawFormatString(0,  64, 0x00cc00, " KuribouPosY   : %.1f", newKuribou->GetKuribouPos().y, true);
+	//DrawFormatString(0,  48, 0x00cc00, " KuribouPosX   : %.1f", newKuribou->GetKuribouPos().x, true);
+	//DrawFormatString(0,  64, 0x00cc00, " KuribouPosY   : %.1f", newKuribou->GetKuribouPos().y, true);
 	DrawFormatString(0,  80, 0xaaaaaa, " Kuribou       : %d  ", m_pKuribou.size(), true);
 	DrawFormatString(0,  96, 0xaaaaaa, " PlayerDeath   : %1d ", m_pPlayer->GetPlayerDeath(), true);
 	DrawFormatString(0, 112, 0xaaaaaa, " Score         : %1d ", m_pSystemEngineer->GetScore(), true);

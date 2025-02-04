@@ -14,6 +14,13 @@ namespace
 	const float Speed = 4.5f;		// キャラの移動スピード
 	const float RunSpeed = 6.5f;		// キャラのダッシュ時移動スピード
 	const int	Width = 32;
+	const int GraphSizeX = 3840;
+	const int frameWidth = 32;  // フレームの幅
+	const int frameHeight = 32; // フレームの高さ
+	const int currentFrame = 0; // 現在のフレーム
+	const int frameCount = 2;   // フレームの総数
+	const int frameTime = 10;   // フレームの表示時間
+	const int frameTimer = 0;   // フレームタイマー
 }
 
 Player::Player() :
@@ -31,6 +38,8 @@ Player::Player() :
 	playerDeath(0),
 	isDeath(false),
 	isClear(false),
+	GameoverJump(false),
+	m_FrameCounter(0),
 	mapChip(0),
 	_isHit(0),
 	m_PlayerGraph(0),
@@ -102,101 +111,226 @@ void Player::Init(int mapNumber, SystemEngineer* pSE)
 
 void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 {
-	if(isDeath)return;
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	// プレイヤーの移動処理
 	dir = VGet(0, 0, 0);
-	if (input & PAD_INPUT_LEFT)
-	{
-		dir = VAdd(dir, VGet(-1, 0, 0));
-	}
-	if (input & PAD_INPUT_RIGHT)
-	{
-		dir = VAdd(dir, VGet(1, 0, 0));
-	}
 
-	// 正規化
-	if (VSquareSize(dir) > 0)
+	if (isDeath)
 	{
-		dir = VNorm(dir);
-	}
-
-	// 走っているかどうか
-	if (input & PAD_INPUT_A)
-	{
-		// 走っている場合移動量を出す
-		velocity = VScale(dir, RunSpeed);
-	}
-	else
-	{
-		// 通常時移動量を出す
-		velocity = VScale(dir, Speed);
-	}
-#ifdef _DEBUG
-	if (input & PAD_INPUT_C)
-	{
-		fallSpeed = -JumpPower + 4;
-		isGround = false;
-	}
-#endif // _DEBUG
-
-	// 落下速度を更新
-	fallSpeed += Gravity;
-
-	// 先に設定判定をする
-	CheckIsGround(mapNumber);
-	CheckIsTopHit(mapNumber);
-	// 画面上にいる敵の数だけ繰り返して調べる
-	for (auto& item : Kuribou)
-	{
-		if (!item->IsEnemyDeath())
+		m_FrameCounter++;
+		if (m_FrameCounter >= 60 / 2)
 		{
-			if (CheckIsEnemyTopHit(item))
+			if (!GameoverJump)
 			{
-				fallSpeed = -JumpPower + 4;	// ジャンプする
-				item->SetEnemyDeath(true);
-				m_pSystemEngineer->SetScore(true);
-				break;
+				fallSpeed = -JumpPower;
+				GameoverJump = true;
 			}
 			else
 			{
-				if ((ChickIsEnemyLeftHit(item)) || (ChickIsEnemyRightHit(item)))
+				fallSpeed += Gravity;
+			}
+			// 落下速度を更新
+			//fallSpeed += Gravity;
+			velocity = VScale(dir, 0.0f);
+			// 先に設定判定をする
+			//CheckIsGround(mapNumber);
+			//CheckIsTopHit(mapNumber);
+
+			// 落下速度を移動量に加える
+			auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
+			velocity = VAdd(velocity, fallVelocity);
+
+			// 当たり判定をして、壁にめり込まないようにvelocityを操作する
+			//velocity = CheckPlayerHitWithMap(mapNumber);
+
+			// 移動
+			pos = VAdd(pos, velocity);
+		}
+	}
+	else
+	{
+		if (input & PAD_INPUT_LEFT)
+		{
+			dir = VAdd(dir, VGet(-1, 0, 0));
+		}
+		if (input & PAD_INPUT_RIGHT)
+		{
+			dir = VAdd(dir, VGet(1, 0, 0));
+		}
+
+		// 正規化
+		if (VSquareSize(dir) > 0)
+		{
+			dir = VNorm(dir);
+		}
+
+		// 走っているかどうか
+		if (input & PAD_INPUT_A)
+		{
+			// 走っている場合移動量を出す
+			velocity = VScale(dir, RunSpeed);
+		}
+		else
+		{
+			// 通常時移動量を出す
+			velocity = VScale(dir, Speed);
+		}
+#ifdef _DEBUG
+		if (input & PAD_INPUT_C)
+		{
+			fallSpeed = -JumpPower + 4;
+			isGround = false;
+		}
+#endif // _DEBUG
+
+		// 落下速度を更新
+		fallSpeed += Gravity;
+
+		// 先に設定判定をする
+		CheckIsGround(mapNumber);
+		CheckIsTopHit(mapNumber);
+		// 画面上にいる敵の数だけ繰り返して調べる
+		for (auto& item : Kuribou)
+		{
+			if (!item->IsEnemyDeath())
+			{
+				if (CheckIsEnemyTopHit(item))
 				{
-					playerDeath += 1;
-					isDeath = true;
+					fallSpeed = -JumpPower + 4;	// ジャンプする
+					item->SetEnemyDeath(true);
+					m_pSystemEngineer->SetScore(true);
 					break;
+				}
+				else
+				{
+					if ((ChickIsEnemyLeftHit(item)) || (ChickIsEnemyRightHit(item)))
+					{
+						playerDeath += 1;
+						isDeath = true;
+						break;
+					}
 				}
 			}
 		}
-	}
-	// 地に足が着いている場合のみジャンプボタンを見る
-	if (isGround && !isHitTop && Pad::IsTrigger(input & PAD_INPUT_B))
-	{
-		fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
-		isGround = false;
-	}
-	// プレイヤーの死ぬ高さ
-	if (pos.y > 1500)
-	{
-		isDeath = true;
-		playerDeath += 1;
-	}
-	//976, 656
-	if (pos.x >= 6320)
-	{
-		isClear = true;
-	}
+		// 地に足が着いている場合のみジャンプボタンを見る
+		if (isGround && !isHitTop && Pad::IsTrigger(input & PAD_INPUT_B))
+		{
+			fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
+			isGround = false;
+		}
+		// プレイヤーの死ぬ高さ
+		if (pos.y > 1500)
+		{
+			isDeath = true;
+			playerDeath += 1;
+		}
+		//976, 656
+		if (pos.x >= 6320)
+		{
+			isClear = true;
+		}
 
-	// 落下速度を移動量に加える
-	auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
-	velocity = VAdd(velocity, fallVelocity);
+		// 落下速度を移動量に加える
+		auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
+		velocity = VAdd(velocity, fallVelocity);
 
-	// 当たり判定をして、壁にめり込まないようにvelocityを操作する
-	velocity = CheckPlayerHitWithMap(mapNumber);
+		// 当たり判定をして、壁にめり込まないようにvelocityを操作する
+		velocity = CheckPlayerHitWithMap(mapNumber);
 
-	// 移動
-	pos = VAdd(pos, velocity);
+		// 移動
+		pos = VAdd(pos, velocity);
+	}
+//	if (input & PAD_INPUT_LEFT)
+//	{
+//		dir = VAdd(dir, VGet(-1, 0, 0));
+//	}
+//	if (input & PAD_INPUT_RIGHT)
+//	{
+//		dir = VAdd(dir, VGet(1, 0, 0));
+//	}
+//
+//	// 正規化
+//	if (VSquareSize(dir) > 0)
+//	{
+//		dir = VNorm(dir);
+//	}
+//
+//	// 走っているかどうか
+//	if (input & PAD_INPUT_A)
+//	{
+//		// 走っている場合移動量を出す
+//		velocity = VScale(dir, RunSpeed);
+//	}
+//	else
+//	{
+//		// 通常時移動量を出す
+//		velocity = VScale(dir, Speed);
+//	}
+//#ifdef _DEBUG
+//	if (input & PAD_INPUT_C)
+//	{
+//		fallSpeed = -JumpPower + 4;
+//		isGround = false;
+//	}
+//#endif // _DEBUG
+//
+//	// 落下速度を更新
+//	fallSpeed += Gravity;
+//
+//	// 先に設定判定をする
+//	CheckIsGround(mapNumber);
+//	CheckIsTopHit(mapNumber);
+//	// 画面上にいる敵の数だけ繰り返して調べる
+//	for (auto& item : Kuribou)
+//	{
+//		if (!item->IsEnemyDeath())
+//		{
+//			if (CheckIsEnemyTopHit(item))
+//			{
+//				fallSpeed = -JumpPower + 4;	// ジャンプする
+//				item->SetEnemyDeath(true);
+//				m_pSystemEngineer->SetScore(true);
+//				break;
+//			}
+//			else
+//			{
+//				if ((ChickIsEnemyLeftHit(item)) || (ChickIsEnemyRightHit(item)))
+//				{
+//					playerDeath += 1;
+//					isDeath = true;
+//					break;
+//				}
+//			}
+//		}
+//	}
+//	// 地に足が着いている場合のみジャンプボタンを見る
+//	if (isGround && !isHitTop && Pad::IsTrigger(input & PAD_INPUT_B))
+//	{
+//		fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
+//		isGround = false;
+//	}
+//	// プレイヤーの死ぬ高さ
+//	if (pos.y > 1500)
+//	{
+//		isDeath = true;
+//		playerDeath += 1;
+//	}
+//	//976, 656
+//	if (pos.x >= 6320)
+//	{
+//		isClear = true;
+//	}
+//
+//	// 落下速度を移動量に加える
+//	auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
+//	velocity = VAdd(velocity, fallVelocity);
+//
+//	// 当たり判定をして、壁にめり込まないようにvelocityを操作する
+//	velocity = CheckPlayerHitWithMap(mapNumber);
+//
+//	// 移動
+//	pos = VAdd(pos, velocity);
 }
 
 
@@ -952,13 +1086,26 @@ void Player::Draw(int mapNumber,Camera* camera)
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);
 	auto rightTop = static_cast<int>(pos.x + w * 0.5f);
 	auto rightBottom = static_cast<int>(pos.y + h * 0.5f);
-	DrawRectExtendGraph(
-		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
-		rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
-		0, 0, 540, 641,
-		m_PlayerGraph, TRUE);
+	if (isDeath)
+	{
+		DrawRectExtendGraph(
+			rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			0, 0, 540, 641,
+			m_PlayerGraph, TRUE);
+	}
+	else
+	{
+		DrawRectExtendGraph(
+			leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			0, 0, 540, 641,
+			m_PlayerGraph, TRUE);
+	}
 	DrawLine(
 		6336 + static_cast<int>(camera->GetCameraDrawOffset().x),
 		976 + static_cast<int>(camera->GetCameraDrawOffset().y),

@@ -10,6 +10,7 @@ public:
 	void Draw();
 private:
 	int m_Graph_GAMECLEAR;
+	int m_Graph_;
 	int m_BrinkCounter;
 };
 

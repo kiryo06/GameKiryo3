@@ -80,13 +80,13 @@ void TitleScene::Draw()
 	{
 		m_pTitlePlayMovie->Draw();
 	}
+	DrawBox(0, 0, 1280, 640, 0x999999,true);
 #ifdef _DEBUG
 	DrawFormatString(0, 0, 0xffffff, "TitleScene", true);
 	DrawFormatString(550, 500, 0xffffff, "Aキーを押してください", true);
 	DrawFormatString(550, 516, 0xffffff, "Yボタンを押してください", true);
 	DrawRotaGraph(640, 200, 1.0, 0, m_Graph, TRUE);
 #else	 //_DEBUG
-	DrawFormatString(550, 516, 0xffffff, "Xボタンを押してください", true);
 	DrawRotaGraph(640, 200, 1.0, 0, m_Graph, TRUE);
 #endif  //__DEBUG
 	// 点滅用の変数の値が 30 未満のときだけ描画する

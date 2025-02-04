@@ -11,6 +11,7 @@ namespace
 	const float JumpPower = 9.0f;	// キャラのジャンプ力
 	const float EnemySpeed = 2.0f;	// 仮速度
 	const float Speed = 0.0f;		// 敵の移動スピード
+
 }
 
 Kuribou::Kuribou() :

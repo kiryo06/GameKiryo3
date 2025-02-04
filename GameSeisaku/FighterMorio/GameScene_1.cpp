@@ -72,11 +72,7 @@ void GameScene_1::Update()
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	Pad::Update();
-
-	/*if (Pad::IsTrigger(input & PAD_INPUT_B))*/
-
-	m_pPlayer->Update(m_pCamera, m_pKuribou,1);
-	SpawnPos();
+	m_pPlayer->Update(m_pCamera, m_pKuribou, 1);
 	for (auto& item : m_pKuribou)
 	{
 		item->Update(1, m_pPlayer);
@@ -84,6 +80,7 @@ void GameScene_1::Update()
 	m_pCamera->Update(m_pPlayer);
 	m_pSystemEngineer->Update();
 	m_pSceneChange->Update();
+	SpawnPos();
 
 	// ゲームクリア
 	if (m_pPlayer->GetClear())
@@ -97,8 +94,7 @@ void GameScene_1::Update()
 	if (m_pPlayer->GetDeath())
 	{
 		m_FrameCounter++;
-
-		if (m_FrameCounter >= 60 * 1)
+		if (m_FrameCounter >= 60 * 3)
 		{
 			m_pSceneChange->SetDese(true);
 			if (m_pSceneChange->GetChange())
@@ -109,6 +105,7 @@ void GameScene_1::Update()
 			}
 		}
 	}
+
 
 	// 間に合えばポーズ画面を写す
 
@@ -125,7 +122,6 @@ void GameScene_1::Update()
 
 void GameScene_1::Draw()
 {
-	Kuribou* newKuribou = new Kuribou;
 	m_pMap->Draw(1, m_pCamera);
 	m_pPlayer->Draw(1,m_pCamera);
 	for (auto& item : m_pKuribou)
@@ -143,8 +139,8 @@ void GameScene_1::Draw()
 	DrawFormatString(0,   0 ,0xffffff, " GameScene_1         ", true);
 	DrawFormatString(0,  16, 0xcc0000, " PlayerPosX    : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);
-	DrawFormatString(0,  48, 0x00cc00, " KuribouPosX   : %.1f", newKuribou->GetKuribouPos().x, true);
-	DrawFormatString(0,  64, 0x00cc00, " KuribouPosY   : %.1f", newKuribou->GetKuribouPos().y, true);
+	//DrawFormatString(0,  48, 0x00cc00, " KuribouPosX   : %.1f", newKuribou->GetKuribouPos().x, true);
+	//DrawFormatString(0,  64, 0x00cc00, " KuribouPosY   : %.1f", newKuribou->GetKuribouPos().y, true);
 	DrawFormatString(0,  80, 0xaaaaaa, " Kuribou       : %d  ", m_pKuribou.size(), true);
 	DrawFormatString(0,  96, 0xaaaaaa, " PlayerDeath   : %1d ", m_pPlayer->GetPlayerDeath(), true);
 	DrawFormatString(0, 112, 0xaaaaaa, " Score         : %1d ", m_pSystemEngineer->GetScore(), true);
