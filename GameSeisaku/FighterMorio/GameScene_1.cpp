@@ -30,6 +30,7 @@ PlayerPosX(0.0f),
 enemyNum(0),
 m_FrameCounter(0),
 m_Timer(0),
+SetMenyu(false),
 PlayerDeath(false),
 m_kuribou00(true),
 m_kuribou01(true),
@@ -85,6 +86,8 @@ void GameScene_1::Update()
 	// ゲームクリア
 	if (m_pPlayer->GetClear())
 	{
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->Update();
 		auto next = std::make_shared<GameClearScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 		return;
@@ -93,6 +96,8 @@ void GameScene_1::Update()
 	// ゲームオーバー
 	if (m_pPlayer->GetDeath())
 	{
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->Update();
 		m_FrameCounter++;
 		if (m_FrameCounter >= 60 * 3)
 		{
@@ -105,14 +110,28 @@ void GameScene_1::Update()
 			}
 		}
 	}
-
-
-	// 間に合えばポーズ画面を写す
+	// 設定画面を写す
+	if (!SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+	{
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->Update();
+		SetMenyu = true;
+		return;
+	}
+	if (SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+	{
+		m_pSystemEngineer->SetBGM(false);
+		m_pSystemEngineer->Init();
+		SetMenyu = false;
+		return;
+	}
 
 	// シーン遷移
 #ifdef _DEBUG
 	if(Pad::IsTrigger(input & PAD_INPUT_L))
 	{
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->Update();
 		auto next = std::make_shared<GameScene_2>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 		return;

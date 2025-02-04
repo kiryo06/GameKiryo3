@@ -64,6 +64,8 @@ void GameScene::Update()
 	// ƒV[ƒ“‘JˆÚ
 	if (Pad::IsTrigger(input & PAD_INPUT_L))
 	{
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->Update();
 		auto next = std::make_shared<GameScene_1>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}

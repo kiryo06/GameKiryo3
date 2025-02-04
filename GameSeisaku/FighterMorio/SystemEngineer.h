@@ -36,7 +36,7 @@ public:
 	/// </summary>
 	/// <returns>現在のタイマー値</returns>
 	int GetTimer() const { return m_Timer; }
-	//void SetBGM(bool bgm) { m_Bgm = bgm; }
+	void SetBGM(bool bgm) { m_Bgm = bgm; }
 private:
 	bool IsScore;					// スコアフラグ
 	int m_Score;					// スコア
@@ -44,7 +44,6 @@ private:
 	int m_FrameCounter;				// カウンタ
 	int m_fontHandle;				// フォントの情報
 	int dsad;
-	//int m_bgmHandle;
-	//bool m_Bgm;
+	bool m_Bgm;
 };
 

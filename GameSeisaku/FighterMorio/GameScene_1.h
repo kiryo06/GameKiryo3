@@ -33,6 +33,7 @@ private:
 	int enemyNum;
 	int m_FrameCounter;
 	int m_Timer;
+	bool SetMenyu;
 	bool PlayerDeath;
 	bool m_kuribou00;
 	bool m_kuribou01;

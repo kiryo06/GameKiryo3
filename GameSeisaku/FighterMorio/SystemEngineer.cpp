@@ -11,7 +11,7 @@ namespace
 	constexpr int kScoreY = 60;							// スコア表示位置Y
 	constexpr const char* kFontName = "MS ゴシック";	// フォント名
 	constexpr int kFontSize = 25;						// フォントサイズ
-	//constexpr const char* kBGMFile = "data/Sound/BGM_3_Maker.mp3";			// BGMファイル
+	constexpr const char* kBGMFile = "data/Sound/BGM_3_Maker.mp3";			// BGMファイル
 }
 
 SystemEngineer::SystemEngineer():
@@ -20,33 +20,34 @@ SystemEngineer::SystemEngineer():
 	m_Timer(kTimer),
 	m_FrameCounter(0),
 	m_fontHandle(0),
-	dsad(0)
-	/*m_bgmHandle(-1),
-	m_Bgm(false)*/
+	dsad(0),
+	m_Bgm(false)
 {
 }
 
 SystemEngineer::~SystemEngineer()
 {
 	DeleteFontToHandle(m_fontHandle);
-	/*if (m_Bgm)
-	{
-		DeleteSoundMem(m_bgmHandle);
-	}*/
+	delete kBGMFile;
 }
 
 void SystemEngineer::Init()
 {
 	m_fontHandle = CreateFontToHandle("kFontName", kFontSize, -1, DX_FONTTYPE_ANTIALIASING);
-	/*m_bgmHandle = LoadSoundMem(kBGMFile);
-	if (m_bgmHandle != -1)
+	if (!m_Bgm)
 	{
-		PlaySoundMem(m_bgmHandle, DX_PLAYTYPE_LOOP);
-	}*/
+		PlayMusic(kBGMFile, DX_PLAYTYPE_LOOPBIT);
+	}
+	PlayMusic(kBGMFile, DX_PLAYTYPE_LOOPBIT);
+	//PlayMusicByMemImage(void kBGMFile, )
 }
 
 void SystemEngineer::Update()
 {
+	if (m_Bgm)
+	{
+		StopMusic();
+	}
 	m_FrameCounter++;
 	if (m_FrameCounter >= 60)
 	{

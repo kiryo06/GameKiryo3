@@ -56,14 +56,11 @@ void GameClear::Update()
 
 void GameClear::Draw()
 {
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x999999,TRUE);
 	int x = (currentFrame % frameCount) * frameWidth;
 	int y = frameHeight;
-	DrawRectGraph(64,128, x, y, frameWidth, frameHeight, m_Graph_, FALSE);
-	//DrawExtendGraph(0, 0,Game::kScreenWidth,Game::kScreenHeight, m_Graph_GAMECLEAR, true);
-	DrawRectExtendGraph(0,0,64,64, x, y, frameWidth, frameHeight, m_Graph_, FALSE);
-	//DrawGraph(0,0, m_Graph_, true);
+	DrawExtendGraph(0, 0,Game::kScreenWidth,Game::kScreenHeight, m_Graph_GAMECLEAR, true);
 #ifdef _DEBUG
+	DrawRectExtendGraph(0, 0, 64, 64, x, y, frameWidth, frameHeight, m_Graph_, FALSE);
 	// “_–Å—p‚Ì•Ï”‚Ì’l‚ª 30 –¢–‚Ì‚Æ‚«‚¾‚¯ --- PRESS SPACE KEY --- ‚ğ•`‰æ‚·‚é
 	if (m_BrinkCounter < 30)
 	{

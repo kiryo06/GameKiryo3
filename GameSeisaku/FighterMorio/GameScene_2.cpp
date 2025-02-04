@@ -64,10 +64,11 @@ void GameScene_2::Update()
 	}
 	m_pCamera->Update(m_pPlayer);
 	m_pSystemEngineer->Update();
-
 	// ゲームオーバー
 	if (m_pPlayer->GetDeath())
 	{
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->Update();
 		auto next = std::make_shared<GameOverScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
@@ -76,6 +77,8 @@ void GameScene_2::Update()
 	// シーン遷移
 	if (Pad::IsTrigger(input & PAD_INPUT_L))
 	{
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->Update();
 		auto next = std::make_shared<GameClearScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
