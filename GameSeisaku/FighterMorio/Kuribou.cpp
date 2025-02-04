@@ -100,6 +100,7 @@ void Kuribou::Update(int mapNumber, Player* player)
 {
 	if (isEnemyDeath)
 	{
+		DeleteGraph(m_EnemyGraph);
 		return;
 	}
 	// “ü—Íó‘Ô‚ğXV

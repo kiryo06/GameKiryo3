@@ -26,6 +26,7 @@ void StageSelectionScene::Update()
 	{
 		auto next = std::make_shared<GameScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
+		return;
 	}
 }
 

@@ -105,7 +105,6 @@ public:
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
-	Kuribou* m_pKuribou;
 	SystemEngineer* m_pSystemEngineer;
 	float w, h;					// プレイヤーの幅と高さ
 	float fallSpeed;			// 落下速度

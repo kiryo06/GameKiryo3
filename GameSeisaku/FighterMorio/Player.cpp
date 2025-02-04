@@ -19,7 +19,6 @@ namespace
 Player::Player() :
 	m_pMap(),
 	m_pCamera(),
-	//m_pKuribou(new Kuribou),
 	m_pSystemEngineer(new SystemEngineer),
 	w(32),
 	h(32),
@@ -47,7 +46,7 @@ Player::Player() :
 Player::~Player()
 {
 	DeleteGraph(m_PlayerGraph);
-	delete m_pSystemManager;
+	delete m_pSystemEngineer;
 }
 
 void Player::Init(int mapNumber, SystemEngineer* pSE)

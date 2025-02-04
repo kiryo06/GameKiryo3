@@ -41,6 +41,24 @@ void TitleScene::Update()
 	// “ü—Íó‘Ô‚ðXV
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 
+#ifdef _DEBUG
+	if (Pad::IsTrigger(input & PAD_INPUT_L))
+	{
+		m_pTitlePlayMovie->SetPlaySwitch(true);
+		auto next = std::make_shared<StageSelectionScene>(m_sceneManager);
+		m_sceneManager.ChangeScene(next);
+		return;
+	}
+#else	//_DEBUG
+	if (Pad::IsTrigger(input & PAD_INPUT_C))
+	{
+		m_pTitlePlayMovie->SetPlaySwitch(true);
+		auto next = std::make_shared<GameScene_1>(m_sceneManager);
+		m_sceneManager.ChangeScene(next);
+		return;
+	}
+#endif  //_DEBUG
+
 	if (m_pTitlePlayMovie != nullptr)
 	{
 		m_pTitlePlayMovie->Update();
@@ -54,21 +72,6 @@ void TitleScene::Update()
 	{
 		m_BrinkCounter = 0;
 	}
-#ifdef _DEBUG
-	if (Pad::IsTrigger(input & PAD_INPUT_L))
-	{
-		m_pTitlePlayMovie->SetPlaySwitch(true);
-		auto next = std::make_shared<StageSelectionScene>(m_sceneManager);
-		m_sceneManager.ChangeScene(next);
-	}
-#else	//_DEBUG
-	if (Pad::IsTrigger(input & PAD_INPUT_C))
-	{
-		m_pTitlePlayMovie->SetPlaySwitch(true);
-		auto next = std::make_shared<GameScene_1>(m_sceneManager);
-		m_sceneManager.ChangeScene(next);
-	}
-#endif  //_DEBUG
 }
 
 void TitleScene::Draw()
