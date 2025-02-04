@@ -49,43 +49,53 @@ void SystemEngineer::Draw()
 
 void SystemEngineer::DrawSetUp()
 {
+	int fontHandle = CreateFontToHandle("MS ゴシック", 25, -1, DX_FONTTYPE_ANTIALIASING);
 	// 残り時間の表示
 	if (m_Timer >= 0 && m_Timer < 10)
 	{
-		DrawFormatString(kTimerX, kTimerY, 0xff0000, "残り時間:00%d", m_Timer, true);
+		//DrawFormatString(kTimerX, kTimerY, 0xff0000, "残り時間:00%d", m_Timer, true);
+		DrawFormatStringToHandle(kTimerX, kTimerY, 0xff0000, fontHandle, "残り時間:00%d", m_Timer);
 	}
 	else if (m_Timer >= 10 && m_Timer < 100)
 	{
-		DrawFormatString(kTimerX, kTimerY, 0xff0000, "残り時間:0%d", m_Timer, true);
+		//DrawFormatString(kTimerX, kTimerY, 0xff0000, "残り時間:0%d", m_Timer, true);
+		DrawFormatStringToHandle(kTimerX, kTimerY, 0xff0000, fontHandle, "残り時間:0%d", m_Timer);
 	}
 	else if (m_Timer >= 100 && m_Timer < 1000)
 	{
-		DrawFormatString(kTimerX, kTimerY, 0xff0000, "残り時間:%d", m_Timer, true);
+		//DrawFormatString(kTimerX, kTimerY, 0xff0000, "残り時間:%d", m_Timer, true);
+		DrawFormatStringToHandle(kTimerX, kTimerY, 0xff0000, fontHandle, "残り時間:%d", m_Timer);
 	}
 	// スコアの表示
 	if (m_Score >= 0 && m_Score < 10)
 	{
-		DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:00000%d", m_Score, true);
+		//DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:00000%d", m_Score, true);
+		DrawFormatStringToHandle(kScoreX, kScoreY, 0xff0000, fontHandle, "スコア:00000%d", m_Score, true);
 	}
 	else if (m_Score >= 10 && m_Score < 100)
 	{
-		DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:0000%d", m_Score, true);
+		//DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:0000%d", m_Score, true);
+		DrawFormatStringToHandle(kScoreX, kScoreY, 0xff0000, fontHandle, "スコア:0000%d", m_Score, true);
 	}
 	else if (m_Score >= 100 && m_Score < 1000)
 	{
-		DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:000%d", m_Score, true);
+		//DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:000%d", m_Score, true);
+		DrawFormatStringToHandle(kScoreX, kScoreY, 0xff0000, fontHandle, "スコア:000%d", m_Score, true);
 	}
 	else if (m_Score >= 1000 && m_Score < 10000)
 	{
-		DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:00%d", m_Score, true);
+		//DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:00%d", m_Score, true);
+		DrawFormatStringToHandle(kScoreX, kScoreY, 0xff0000, fontHandle, "スコア:00%d", m_Score, true);
 	}
 	else if (m_Score >= 10000 && m_Score < 100000)
 	{
-		DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:0%d", m_Score, true);
+		//DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:0%d", m_Score, true);
+		DrawFormatStringToHandle(kScoreX, kScoreY, 0xff0000, fontHandle, "スコア:0%d", m_Score, true);
 	}
 	else if (m_Score >= 100000 && m_Score < 1000000)
 	{
-		DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:%d", m_Score, true);
+		//DrawFormatString(kScoreX, kScoreY, 0xff0000, "スコア:%d", m_Score, true);
+		DrawFormatStringToHandle(kScoreX, kScoreY, 0xff0000, fontHandle, "スコア:%d", m_Score, true);
 	}
 	else
 	{
@@ -94,4 +104,6 @@ void SystemEngineer::DrawSetUp()
 #ifdef _DEBUG
 	DrawFormatString(kScoreX, 90, 0xff0000, "スコア:%d", m_Score, true);
 #endif // _DEBUG
+	DeleteFontToHandle(fontHandle);
+}
 }

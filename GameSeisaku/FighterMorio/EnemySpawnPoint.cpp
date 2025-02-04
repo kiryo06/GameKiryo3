@@ -190,15 +190,11 @@ void EnemySpawnPoint::EnemyPos(int EnemyNumber)
 	// 敵5体目のスポーン位置
 	if (EnemyNumber == 5)
 	{
-		/*Kuribou* newKuribou = new Kuribou;
+		Kuribou* newKuribou = new Kuribou;
 		newKuribou->Init(1);
 		newKuribou->SetPosX(Master::kKuribouPosX05);
 		newKuribou->SetPosY(Master::kKuribouPosY05);
-		m_pKuribou.emplace_back(newKuribou);*/
-		m_pKuribou()->Init(1);
-		m_pKuribou->SetPosX(Master::kKuribouPosX05);
-		m_pKuribou->SetPosY(Master::kKuribouPosY05);
-		m_pKuribou.emplace_back(m_pKuribou)
+		m_pKuribou.emplace_back(newKuribou);
 	}
 	// 敵6体目のスポーン位置
 	if (EnemyNumber == 6)
