@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "game.h"
 #include "SceneManager.h"
+#include "resource.h"
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -13,6 +14,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #endif
 	// フルスクリーンでなく、ウィンドウモードで開くようにする
 	ChangeWindowMode(Game::kDefaultWindowMode);
+
+	SetWindowIconID(IDI_ICON1);
+	SetWindowText("FighterMorio");
 
 	// 画面のサイズを変更する。第三引数は色に使う情報量(ビット)
 	SetGraphMode(Game::kScreenWidth, Game::kScreenHeight, Game::kScreenBitNum);
