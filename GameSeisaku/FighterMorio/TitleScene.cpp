@@ -80,6 +80,7 @@ void TitleScene::Draw()
 	{
 		m_pTitlePlayMovie->Draw();
 	}
+	m_pTitlePlayMovie->Init();
 #ifdef _DEBUG
 	DrawBox(0, 0, 1280, 640, 0x999999, true);
 	DrawFormatString(0, 0, 0xffffff, "TitleScene", true);
