@@ -57,8 +57,6 @@ GameScene_1::~GameScene_1()
 	delete m_pMap;
 	delete m_pCamera;
 	delete m_pSceneChange;
-	//delete m_pSystemEngineer;
-	//delete m_pPlayer;
 }
 
 void GameScene_1::Init()
@@ -78,6 +76,25 @@ void GameScene_1::Update()
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	Pad::Update();
+	// 設定画面を写す
+	if (!SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+	{
+		m_pPlayer->SetStop(true);
+		/*m_pPlayer->Update(m_pCamera, m_pKuribou, 1);*/
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->Update();
+		SetMenyu = true;
+		return;
+	}
+	if (SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+	{
+		m_pPlayer->SetStop(false);
+		/*m_pPlayer->Update(m_pCamera, m_pKuribou, 1);*/
+		m_pSystemEngineer->SetBGM(false);
+		m_pSystemEngineer->Init();
+		SetMenyu = false;
+		return;
+	}
 	m_pPlayer->Update(m_pCamera, m_pKuribou, 1);
 	for (auto& item : m_pKuribou)
 	{
@@ -93,9 +110,17 @@ void GameScene_1::Update()
 	{
 		m_pSystemEngineer->SetBGM(true);
 		m_pSystemEngineer->Update();
-		auto next = std::make_shared<GameClearScene>(m_sceneManager);
-		m_sceneManager.ChangeScene(next);
-		return;
+		m_FrameCounter++;
+		if (m_FrameCounter >= 60 * 5)
+		{
+			m_pSceneChange->SetClear(true);
+			if (m_pSceneChange->GetChange())
+			{
+				auto next = std::make_shared<GameClearScene>(m_sceneManager);
+				m_sceneManager.ChangeScene(next);
+				return;
+			}
+		}
 	}
 
 	// ゲームオーバー
@@ -106,7 +131,7 @@ void GameScene_1::Update()
 		m_FrameCounter++;
 		if (m_FrameCounter >= 60 * 3)
 		{
-			m_pSceneChange->SetDese(true);
+			m_pSceneChange->SetDeath(true);
 			if (m_pSceneChange->GetChange())
 			{
 				auto next = std::make_shared<GameOverScene>(m_sceneManager);
@@ -114,21 +139,6 @@ void GameScene_1::Update()
 				return;
 			}
 		}
-	}
-	// 設定画面を写す
-	if (!SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
-	{
-		m_pSystemEngineer->SetBGM(true);
-		m_pSystemEngineer->Update();
-		SetMenyu = true;
-		return;
-	}
-	if (SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
-	{
-		m_pSystemEngineer->SetBGM(false);
-		m_pSystemEngineer->Init();
-		SetMenyu = false;
-		return;
 	}
 
 	// シーン遷移
@@ -159,7 +169,6 @@ void GameScene_1::Draw()
 	DrawBox(0, 0, 300, 200, 0x444444, true);
 	// ブレンドモードをリセット
 	DEBUG_RESET
-	DrawLine(0, 0, 200, 200, 0xff0000); // (50, 50) から (200, 200) まで赤い線を描画
 	DrawFormatString(0,   0 ,0xffffff, " GameScene_1         ", true);
 	DrawFormatString(0,  16, 0xcc0000, " PlayerPosX    : %.1f", m_pPlayer->GetPlayerPos().x, true);
 	DrawFormatString(0,  32, 0xcc0000, " PlayerPosY    : %.1f", m_pPlayer->GetPlayerPos().y, true);

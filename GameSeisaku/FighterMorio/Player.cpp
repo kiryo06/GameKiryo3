@@ -14,20 +14,26 @@ namespace
 	const float Speed = 4.5f;		// キャラの移動スピード
 	const float RunSpeed = 6.5f;		// キャラのダッシュ時移動スピード
 	const int	Width = 32;
-	const int GraphSizeX = 3840;
-	const int frameWidth = 32;  // フレームの幅
-	const int frameHeight = 32; // フレームの高さ
-	const int currentFrame = 0; // 現在のフレーム
-	const int frameCount = 2;   // フレームの総数
-	const int frameTime = 10;   // フレームの表示時間
-	const int frameTimer = 0;   // フレームタイマー
+	const int	Goolleft = 6320;
+	const int	GoolRight = 6352;
+	const int	GoolTop = 656;
+	const int	GoolBottom = 1008;
+	const int	GoolBottom2 = 976;
+
+	//const int GraphSizeX = 3840;
+	//const int frameWidth = 32;  // フレームの幅
+	//const int frameHeight = 32; // フレームの高さ
+	//const int currentFrame = 0; // 現在のフレーム
+	//const int frameCount = 2;   // フレームの総数
+	//const int frameTime = 10;   // フレームの表示時間
+	//const int frameTimer = 0;   // フレームタイマー
 }
 
 Player::Player() :
 	m_pMap(),
 	m_pCamera(),
 	m_pSystemEngineer(new SystemEngineer),
-	w(32),
+	w(28),
 	h(32),
 	fallSpeed(0.0f),
 	pos(VGet(40.0f + h * 0.5f, 992, 0)),
@@ -39,10 +45,16 @@ Player::Player() :
 	isDeath(false),
 	isClear(false),
 	GameoverJump(false),
+	GameOverInversion(false),
+	m_IsLeft(false),
+	m_IsRight(true),
+	m_IsStop(false),
 	m_FrameCounter(0),
 	mapChip(0),
 	_isHit(0),
+	m_PlayerPosXback(0),
 	m_PlayerGraph(0),
+	m_GoolGraph(0),
 	m_Graph_(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
@@ -56,6 +68,7 @@ Player::Player() :
 Player::~Player()
 {
 	DeleteGraph(m_PlayerGraph);
+	DeleteGraph(m_GoolGraph);
 	DeleteGraph(m_Graph_);
 	delete m_pSystemEngineer;
 }
@@ -63,6 +76,7 @@ Player::~Player()
 void Player::Init(int mapNumber, SystemEngineer* pSE)
 {
 	m_PlayerGraph = LoadGraph("data/image/player(kari).png");
+	m_GoolGraph = LoadGraph("data/image/kagu.png");
 	m_Graph_ = LoadGraph("data/image/BackGround.png");
 	mapChip = mapNumber;
 	m_pSystemEngineer = pSE;
@@ -114,12 +128,54 @@ void Player::Init(int mapNumber, SystemEngineer* pSE)
 
 void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 {
+	if (m_IsStop)
+	{
+		return;
+	}
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	// プレイヤーの移動処理
 	dir = VGet(0, 0, 0);
+	if (isClear)
+	{
+		fallSpeed = 3.0f;
+		if (!isGround)
+		{
+			// 落下速度を更新
+			velocity = VScale(dir, 0.0f);
+		}
+		if (isGround)
+		{
+			m_IsLeft = false;
+			m_IsRight = true;
+			dir = VAdd(dir, VGet(1, 0, 0));
+			velocity = VScale(dir, 1.5f);
+			if (pos.x >= 6530)
+			{
+				velocity = VScale(dir, 0.0f);
+			}
+		}
 
-	if (isDeath)
+		// 正規化
+		if (VSquareSize(dir) > 0)
+		{
+			dir = VNorm(dir);
+		}
+		// 先に設定判定をする
+		CheckIsGround(mapNumber);
+		CheckIsTopHit(mapNumber);
+
+		// 落下速度を移動量に加える
+		auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
+		velocity = VAdd(velocity, fallVelocity);
+
+		// 当たり判定をして、壁にめり込まないようにvelocityを操作する
+		velocity = CheckPlayerHitWithMap(mapNumber);
+
+		// 移動
+		pos = VAdd(pos, velocity);
+	}
+	else if (isDeath)
 	{
 		m_FrameCounter++;
 		if (m_FrameCounter >= 60 / 2)
@@ -132,6 +188,7 @@ void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 			else
 			{
 				fallSpeed += Gravity;
+				GameOverInversion = true;
 			}
 			// 落下速度を更新
 			//fallSpeed += Gravity;
@@ -155,19 +212,17 @@ void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 	{
 		if (input & PAD_INPUT_LEFT)
 		{
+			m_IsRight = false;
+			m_IsLeft = true;
 			dir = VAdd(dir, VGet(-1, 0, 0));
 		}
 		if (input & PAD_INPUT_RIGHT)
 		{
+			m_IsLeft = false;
+			m_IsRight = true;
 			dir = VAdd(dir, VGet(1, 0, 0));
+			m_PlayerPosXback = pos.x - 499;
 		}
-
-		// 正規化
-		if (VSquareSize(dir) > 0)
-		{
-			dir = VNorm(dir);
-		}
-
 		// 走っているかどうか
 		if (input & PAD_INPUT_A)
 		{
@@ -179,11 +234,16 @@ void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 			// 通常時移動量を出す
 			velocity = VScale(dir, Speed);
 		}
+		// 正規化
+		if (VSquareSize(dir) > 0)
+		{
+			dir = VNorm(dir);
+		}
 #ifdef _DEBUG
 		if (input & PAD_INPUT_C)
 		{
-			fallSpeed = -JumpPower + 4;
-			isGround = false;
+			pos.x = 6000;
+			pos.y = 700;
 		}
 #endif // _DEBUG
 
@@ -233,6 +293,10 @@ void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 		{
 			isClear = true;
 		}
+		if(m_PlayerPosXback >= pos.x)
+		{
+			velocity = VScale(dir, 0.0f);
+		}
 
 		// 落下速度を移動量に加える
 		auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
@@ -244,96 +308,6 @@ void Player::Update(Camera* camera, std::list<Kuribou*>& Kuribou, int mapNumber)
 		// 移動
 		pos = VAdd(pos, velocity);
 	}
-//	if (input & PAD_INPUT_LEFT)
-//	{
-//		dir = VAdd(dir, VGet(-1, 0, 0));
-//	}
-//	if (input & PAD_INPUT_RIGHT)
-//	{
-//		dir = VAdd(dir, VGet(1, 0, 0));
-//	}
-//
-//	// 正規化
-//	if (VSquareSize(dir) > 0)
-//	{
-//		dir = VNorm(dir);
-//	}
-//
-//	// 走っているかどうか
-//	if (input & PAD_INPUT_A)
-//	{
-//		// 走っている場合移動量を出す
-//		velocity = VScale(dir, RunSpeed);
-//	}
-//	else
-//	{
-//		// 通常時移動量を出す
-//		velocity = VScale(dir, Speed);
-//	}
-//#ifdef _DEBUG
-//	if (input & PAD_INPUT_C)
-//	{
-//		fallSpeed = -JumpPower + 4;
-//		isGround = false;
-//	}
-//#endif // _DEBUG
-//
-//	// 落下速度を更新
-//	fallSpeed += Gravity;
-//
-//	// 先に設定判定をする
-//	CheckIsGround(mapNumber);
-//	CheckIsTopHit(mapNumber);
-//	// 画面上にいる敵の数だけ繰り返して調べる
-//	for (auto& item : Kuribou)
-//	{
-//		if (!item->IsEnemyDeath())
-//		{
-//			if (CheckIsEnemyTopHit(item))
-//			{
-//				fallSpeed = -JumpPower + 4;	// ジャンプする
-//				item->SetEnemyDeath(true);
-//				m_pSystemEngineer->SetScore(true);
-//				break;
-//			}
-//			else
-//			{
-//				if ((ChickIsEnemyLeftHit(item)) || (ChickIsEnemyRightHit(item)))
-//				{
-//					playerDeath += 1;
-//					isDeath = true;
-//					break;
-//				}
-//			}
-//		}
-//	}
-//	// 地に足が着いている場合のみジャンプボタンを見る
-//	if (isGround && !isHitTop && Pad::IsTrigger(input & PAD_INPUT_B))
-//	{
-//		fallSpeed = -JumpPower;	// ジャンプボタンを押したら即座に上方向の力に代わる
-//		isGround = false;
-//	}
-//	// プレイヤーの死ぬ高さ
-//	if (pos.y > 1500)
-//	{
-//		isDeath = true;
-//		playerDeath += 1;
-//	}
-//	//976, 656
-//	if (pos.x >= 6320)
-//	{
-//		isClear = true;
-//	}
-//
-//	// 落下速度を移動量に加える
-//	auto fallVelocity = VGet(0, fallSpeed, 0);	// 落下をベクトルに。y座標しか変化しないので最後にベクトルにする
-//	velocity = VAdd(velocity, fallVelocity);
-//
-//	// 当たり判定をして、壁にめり込まないようにvelocityを操作する
-//	velocity = CheckPlayerHitWithMap(mapNumber);
-//
-//	// 移動
-//	pos = VAdd(pos, velocity);
 }
 
 
@@ -1089,32 +1063,81 @@ void Player::Draw(int mapNumber,Camera* camera)
 	auto leftBottom = static_cast<int>(pos.y - h * 0.5f);
 	auto rightTop = static_cast<int>(pos.x + w * 0.5f);
 	auto rightBottom = static_cast<int>(pos.y + h * 0.5f);
-	if (isDeath)
+	// 下の画像によって背景がおかしくなるので空を配置
+	DrawBox(
+		Goolleft + static_cast<int>(camera->GetCameraDrawOffset().x),
+		GoolTop + static_cast<int>(camera->GetCameraDrawOffset().y),
+		GoolRight + static_cast<int>(camera->GetCameraDrawOffset().x),
+		GoolBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		0x87cefa, TRUE);
+	// ゴールの旗
+	DrawRectExtendGraph(
+		Goolleft + static_cast<int>(camera->GetCameraDrawOffset().x),
+		GoolTop + static_cast<int>(camera->GetCameraDrawOffset().y),
+		GoolRight + static_cast<int>(camera->GetCameraDrawOffset().x),
+		GoolBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+		940, 32, 18, 96,
+		m_GoolGraph, TRUE);
+	// 生きているならfalse
+	// 死んでいるならtrue
+	if (GameOverInversion)
 	{
-		DrawRectExtendGraph(
+		// 左向き
+		if (m_IsLeft)
+		{
+			DrawRectExtendGraph(
 			rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 			rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 			leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 			leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 			0, 0, 540, 641,
 			m_PlayerGraph, TRUE);
+		}
+		// 右向き
+		if (m_IsRight)
+		{
+			DrawRectExtendGraph(
+			leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			0, 0, 540, 641,
+			m_PlayerGraph, TRUE);
+		}
 	}
 	else
 	{
-		DrawRectExtendGraph(
+		// 左向き
+		if (m_IsLeft)
+		{
+			DrawRectExtendGraph(
+			rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
+			rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
+			0, 0, 540, 641,
+			m_PlayerGraph, TRUE);
+		}
+		// 右向き
+		if (m_IsRight)
+		{
+
+			DrawRectExtendGraph(
 			leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 			leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 			rightTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 			rightBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
 			0, 0, 540, 641,
 			m_PlayerGraph, TRUE);
+		}
 	}
-	DrawLine(
-		6336 + static_cast<int>(camera->GetCameraDrawOffset().x),
-		976 + static_cast<int>(camera->GetCameraDrawOffset().y),
-		6336 + static_cast<int>(camera->GetCameraDrawOffset().x),
-		656 + static_cast<int>(camera->GetCameraDrawOffset().y), 0xff0000); // (50, 50) から (200, 200) まで赤い線を描画
 #ifdef _DEBUG
+	DrawBox(
+		Goolleft + static_cast<int>(camera->GetCameraDrawOffset().x),
+		GoolTop + static_cast<int>(camera->GetCameraDrawOffset().y),
+		GoolRight + static_cast<int>(camera->GetCameraDrawOffset().x),
+		GoolBottom2 + static_cast<int>(camera->GetCameraDrawOffset().y),
+		0xff0000,false);
 	DrawBox(
 		leftTop + static_cast<int>(camera->GetCameraDrawOffset().x),
 		leftBottom + static_cast<int>(camera->GetCameraDrawOffset().y),
@@ -1129,8 +1152,3 @@ void Player::Draw(int mapNumber,Camera* camera)
 		0xff0000, FALSE);
 #endif // _DEBUG
 }
-
-
-
-//x = 6336
-//y =976, 656

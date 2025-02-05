@@ -695,6 +695,42 @@ void Map::Draw(int mapNumber, Camera* camera)
 					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
 					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom,64, 0, 16, 16, m_CastleGraph, TRUE);
 				}
+				// 46は当たり判定がないチップ、46を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 46)
+				{
+					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 80, 32, 16, 16, m_WorldGraph, TRUE);
+				}
+				// 47は当たり判定がないチップ、47を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 47)
+				{
+					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 96, 32, 16, 16, m_WorldGraph, TRUE);
+				}
+				// 48は当たり判定がないチップ、48を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 48)
+				{
+					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 112, 32, 16, 16, m_WorldGraph, TRUE);
+				}
+				// 49は当たり判定がないチップ、49を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 49)
+				{
+					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 80, 48, 16, 16, m_WorldGraph, TRUE);
+				}
+				// 50は当たり判定がないチップ、50を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 50)
+				{
+					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 96, 48, 16, 16, m_WorldGraph, TRUE);
+				}
+				// 51は当たり判定がないチップ、51を描画
+				if (PrototypeChipData1[hChip][wChip].chipKind == 51)
+				{
+					DrawBox(leftTop, leftBottom, rightTop, rightBottom, BACKCOLOR, TRUE);
+					DrawRectExtendGraph(leftTop, leftBottom, rightTop, rightBottom, 112, 48, 16, 16, m_WorldGraph, TRUE);
+				}
 			}
 		}
 		break;

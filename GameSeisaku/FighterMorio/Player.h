@@ -102,6 +102,7 @@ public:
 	int GetPlayerDeath() const { return playerDeath; }
 	bool GetDeath() const { return isDeath; }
 	bool GetClear() const { return isClear; }
+	void SetStop(bool isStop) { m_IsStop = isStop; }
 private:
 	Map* m_pMap;
 	Camera* m_pCamera;
@@ -117,11 +118,16 @@ private:
 	bool isDeath;				// プレイヤーが死んだかどうか
 	bool isClear;				// プレイヤーがクリアしたかどうか
 	bool GameoverJump;
+	bool GameOverInversion;
+	bool m_IsLeft;
+	bool m_IsRight;
+	bool m_IsStop;
 	int m_FrameCounter;
-	/*bool m_;*/
 	int mapChip;                // マップチップ
 	int _isHit;                 // 衝突フラグ
+	int m_PlayerPosXback;
 	int m_PlayerGraph;			// プレイヤーグラフィック
+	int m_GoolGraph;
 	int m_Graph_;
 	int m_kChipNumY;
 	int m_kChipNumX;
