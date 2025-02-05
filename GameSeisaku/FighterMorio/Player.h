@@ -122,6 +122,7 @@ private:
 	int mapChip;                // マップチップ
 	int _isHit;                 // 衝突フラグ
 	int m_PlayerGraph;			// プレイヤーグラフィック
+	int m_Graph_;
 	int m_kChipNumY;
 	int m_kChipNumX;
 	int m_k1ChipNumY;

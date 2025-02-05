@@ -43,6 +43,7 @@ Player::Player() :
 	mapChip(0),
 	_isHit(0),
 	m_PlayerGraph(0),
+	m_Graph_(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),
 	m_k1ChipNumY(MapDataFile::k1ChipNumY),
@@ -55,12 +56,14 @@ Player::Player() :
 Player::~Player()
 {
 	DeleteGraph(m_PlayerGraph);
+	DeleteGraph(m_Graph_);
 	delete m_pSystemEngineer;
 }
 
 void Player::Init(int mapNumber, SystemEngineer* pSE)
 {
 	m_PlayerGraph = LoadGraph("data/image/player(kari).png");
+	m_Graph_ = LoadGraph("data/image/BackGround.png");
 	mapChip = mapNumber;
 	m_pSystemEngineer = pSE;
 	if (mapChip == 0)
