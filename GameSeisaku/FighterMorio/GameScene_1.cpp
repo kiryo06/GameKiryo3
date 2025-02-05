@@ -54,6 +54,11 @@ m_kuribou16(true)
 
 GameScene_1::~GameScene_1()
 {
+	delete m_pMap;
+	delete m_pCamera;
+	delete m_pSceneChange;
+	//delete m_pSystemEngineer;
+	//delete m_pPlayer;
 }
 
 void GameScene_1::Init()
