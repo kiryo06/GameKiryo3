@@ -28,7 +28,7 @@ TitleScene::~TitleScene()
 void TitleScene::Init()
 {
 	m_Graph = LoadGraph("data/image/FighterMorio.png");
-	m_TitleStart = LoadGraph("data/image/TitleUIStart.png");
+	m_TitleStart = LoadGraph("data/image/TitleUIStart_A.png");
 	if (m_pTitlePlayMovie != nullptr)
 	{
 		m_pTitlePlayMovie->Init();
@@ -50,7 +50,7 @@ void TitleScene::Update()
 		return;
 	}
 #else	//_DEBUG
-	if (Pad::IsTrigger(input & PAD_INPUT_C))
+	if (Pad::IsTrigger(input & PAD_INPUT_A))
 	{
 		m_pTitlePlayMovie->SetPlaySwitch(true);
 		auto next = std::make_shared<GameScene_1>(m_sceneManager);
@@ -80,8 +80,8 @@ void TitleScene::Draw()
 	{
 		m_pTitlePlayMovie->Draw();
 	}
-	DrawBox(0, 0, 1280, 640, 0x999999,true);
 #ifdef _DEBUG
+	DrawBox(0, 0, 1280, 640, 0x999999, true);
 	DrawFormatString(0, 0, 0xffffff, "TitleScene", true);
 	DrawFormatString(550, 500, 0xffffff, "Aキーを押してください", true);
 	DrawFormatString(550, 516, 0xffffff, "Yボタンを押してください", true);

@@ -15,7 +15,7 @@ TitlePlayMovie::~TitlePlayMovie()
 void TitlePlayMovie::Init()
 {
     // 動画ファイルを開く
-    MovieGraphHandle = LoadGraph("data/image/Teitle.mp4");
+    MovieGraphHandle = LoadGraph("data/image/Title_2.mp4");
     PlayMovieToGraph(MovieGraphHandle);
 }
 
@@ -36,7 +36,7 @@ void TitlePlayMovie::Update()
 void TitlePlayMovie::Draw()
 {
     // 動画を描画
-    //DrawGraph(0, 0, MovieGraphHandle, TRUE);
+    DrawGraph(0, 0, MovieGraphHandle, TRUE);
    // DrawRectExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, );
-    DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, MovieGraphHandle, TRUE);
+   // DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, MovieGraphHandle, TRUE);
 }

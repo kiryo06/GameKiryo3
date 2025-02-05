@@ -36,14 +36,14 @@ void GameClearScene::Update()
 	m_pGameClear->Update();
 
 	// もう一度
-	if (Pad::IsTrigger(input & PAD_INPUT_B))
+	if (Pad::IsTrigger(input & PAD_INPUT_A))
 	{
 		auto next = std::make_shared<GameScene_1>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
 	}
 
 	// タイトル画面に戻る
-	if (Pad::IsTrigger(input & PAD_INPUT_A))
+	if (Pad::IsTrigger(input & PAD_INPUT_B))
 	{
 		auto next = std::make_shared<TitleScene>(m_sceneManager);
 		m_sceneManager.ChangeScene(next);
