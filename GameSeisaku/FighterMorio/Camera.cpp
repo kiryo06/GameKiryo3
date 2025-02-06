@@ -56,10 +56,10 @@ VECTOR Camera::CalculateAimCameraPos(const VECTOR& playerPos)
 	{
 		aimCameraPos.x = playerPos.x - (CameraScopeRangeRight * 1.0f);
 	}
-	else if (playerPos.x < pos.x - (CameraScopeRangeLeft * 5.0f))
+	/*else if (playerPos.x < pos.x - (CameraScopeRangeLeft * 5.0f))
 	{
 		aimCameraPos.x = playerPos.x + (CameraScopeRangeLeft * 5.0f);
-	}
+	}*/
 	if (playerPos.y > pos.y + (CameraScopeRangeH * 0.5f))
 	{
 		aimCameraPos.y = playerPos.y - (CameraScopeRangeH * 0.5f);

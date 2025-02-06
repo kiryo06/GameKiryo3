@@ -8,14 +8,17 @@ public:
 	void Init();
 	void Update();
 	void Draw();
-	void SetDese(bool isdese) { Change = isdese; }
+	void SetDeath(bool isdeath) { ChangeDeath = isdeath; }
+	void SetClear(bool isclear) { ChangeClear = isclear; }
 	int GetChange()const {return isSceneChange; }
 private:
 	float w, h;
 	int x; 
 	int y;
 	int X;
-	bool Change;
+	int Y;
+	bool ChangeDeath;
+	bool ChangeClear;
 	bool isSceneChange;
 	int m_FrameCounter;
 };
