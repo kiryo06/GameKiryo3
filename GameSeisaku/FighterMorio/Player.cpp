@@ -668,7 +668,7 @@ bool Player::IsHitPlayerWithMapChip(int mapNumber, const VECTOR& checkPos, int h
 		// マップチップが当たらない種類なら早期return
 		if ((chip.chipKind == 0) ||
 			(chip.chipKind >= 9) &&
-			(chip.chipKind <= 45))
+			(chip.chipKind <= 51))
 		{
 			return false;
 		}
