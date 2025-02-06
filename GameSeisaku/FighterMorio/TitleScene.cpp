@@ -76,6 +76,7 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
+	DrawBox(0, 0, 1280, 640, 0x87cefa, true);
 	if (m_pTitlePlayMovie != nullptr)
 	{
 		m_pTitlePlayMovie->Draw();

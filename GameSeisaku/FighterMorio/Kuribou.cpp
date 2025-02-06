@@ -30,6 +30,7 @@ Kuribou::Kuribou() :
 	isLeft(false),
 	isRight(false),
 	isEnemyDeath(false),
+	m_IsStop(false),
 	m_EnemyGraph(0),
 	mapChip(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
@@ -99,6 +100,10 @@ void Kuribou::Init(int mapNumber)
 
 void Kuribou::Update(int mapNumber, Player* player)
 {
+	if (m_IsStop)
+	{
+		return;
+	}
 	if (isEnemyDeath)
 	{
 		DeleteGraph(m_EnemyGraph);

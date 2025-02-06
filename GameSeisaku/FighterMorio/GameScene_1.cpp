@@ -76,25 +76,6 @@ void GameScene_1::Update()
 	// 入力状態を更新
 	auto input = GetJoypadInputState(DX_INPUT_KEY_PAD1);
 	Pad::Update();
-	// 設定画面を写す
-	if (!SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
-	{
-		m_pPlayer->SetStop(true);
-		/*m_pPlayer->Update(m_pCamera, m_pKuribou, 1);*/
-		m_pSystemEngineer->SetBGM(true);
-		m_pSystemEngineer->Update();
-		SetMenyu = true;
-		return;
-	}
-	if (SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
-	{
-		m_pPlayer->SetStop(false);
-		/*m_pPlayer->Update(m_pCamera, m_pKuribou, 1);*/
-		m_pSystemEngineer->SetBGM(false);
-		m_pSystemEngineer->Init();
-		SetMenyu = false;
-		return;
-	}
 	m_pPlayer->Update(m_pCamera, m_pKuribou, 1);
 	for (auto& item : m_pKuribou)
 	{
@@ -140,7 +121,33 @@ void GameScene_1::Update()
 			}
 		}
 	}
-
+	// 設定画面を写す
+	if (!SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+	{
+		m_pPlayer->SetStop(true);
+		for (auto& item : m_pKuribou)
+		{
+			item->SetStop(true);
+		}
+		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->SetStop(true);
+		m_pSystemEngineer->Update();
+		SetMenyu = true;
+		return;
+	}
+	if (SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+	{
+		m_pPlayer->SetStop(false);
+		for (auto& item : m_pKuribou)
+		{
+			item->SetStop(false);
+		}
+		m_pSystemEngineer->SetBGM(false);
+		m_pSystemEngineer->SetStop(false);
+		m_pSystemEngineer->Init();
+		SetMenyu = false;
+		return;
+	}
 	// シーン遷移
 #ifdef _DEBUG
 	if(Pad::IsTrigger(input & PAD_INPUT_L))

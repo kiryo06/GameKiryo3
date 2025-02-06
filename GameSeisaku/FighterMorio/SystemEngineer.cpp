@@ -21,7 +21,8 @@ SystemEngineer::SystemEngineer():
 	m_FrameCounter(0),
 	m_fontHandle(0),
 	dsad(0),
-	m_Bgm(false)
+	m_Bgm(false),
+	m_IsStop(false)
 {
 }
 
@@ -47,6 +48,10 @@ void SystemEngineer::Update()
 	if (m_Bgm)
 	{
 		StopMusic();
+	}
+	if (m_IsStop)
+	{
+		return;
 	}
 	m_FrameCounter++;
 	if (m_FrameCounter >= 60)

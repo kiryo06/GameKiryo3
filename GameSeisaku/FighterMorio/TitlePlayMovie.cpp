@@ -16,7 +16,7 @@ void TitlePlayMovie::Init()
 {
     // 動画ファイルを開く
     MovieGraphHandle = LoadGraph("data/image/Title_2.mp4");
-    PlayMovieToGraph(MovieGraphHandle,1);
+    PlayMovieToGraph(MovieGraphHandle,2);
     //PlayMovie("data/image/Title_2.mp4",0,0);
 }
 

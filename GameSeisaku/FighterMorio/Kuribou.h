@@ -80,6 +80,7 @@ public:
     /// </summary>
     /// <returns>死んだかどうかのフラグ</returns>
 	bool IsEnemyDeath()const { return isEnemyDeath; }
+    void SetStop(bool isStop) { m_IsStop = isStop; }
 private:
 	float w, h;					// 幅、高さ
 	float fallSpeed;			// 敵の落下速度。ジャンプ時は反転する
@@ -93,7 +94,8 @@ private:
 	bool isHitTop;				// 敵の頭が天井に当たっているか
 	bool isLeft;				// 敵が左に当たったか
 	bool isRight;				// 敵が右に当たったか
-	bool isEnemyDeath;			// 敵が死んだかどうか    
+	bool isEnemyDeath;			// 敵が死んだかどうか  
+    bool m_IsStop;
 	int m_EnemyGraph;			// クリボウ仮実装
 	int mapChip;				// マップチップ
 	int m_kChipNumY;			// マップの大きさ横軸デバック
