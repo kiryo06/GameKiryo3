@@ -16,5 +16,8 @@ private:
 	int m_GameOverGraph_O;
 	int m_GameOverGraph_R;
 	int m_GameOverGraph_V;
+	int m_Graph_MojiA;
+	int m_Graph_MojiB;
+	int m_BrinkCounter;
 };
 

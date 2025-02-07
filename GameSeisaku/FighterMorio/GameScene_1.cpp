@@ -1,5 +1,6 @@
 #include "GameScene_1.h"
 #include "SceneManager.h"
+#include "TitleScene.h"
 #include "GameScene_2.h"
 #include "GameOverScene.h"
 #include "GameClearScene.h"
@@ -17,7 +18,10 @@
 #include "SystemEngineer.h"
 #include "SceneChange.h"
 
-
+namespace
+{
+	int PoozuSize = 20;
+}
 
 GameScene_1::GameScene_1(SceneManager& manager) : BaseScene(manager),
 m_pMap(new Map()),
@@ -30,6 +34,7 @@ PlayerPosX(0.0f),
 enemyNum(0),
 m_FrameCounter(0),
 m_Timer(0),
+m_Poozu(false),
 SetMenyu(false),
 PlayerDeath(false),
 m_kuribou00(true),
@@ -90,6 +95,7 @@ void GameScene_1::Update()
 	if (m_pPlayer->GetClear())
 	{
 		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->SetStop(true);
 		m_pSystemEngineer->Update();
 		m_FrameCounter++;
 		if (m_FrameCounter >= 60 * 5)
@@ -108,6 +114,7 @@ void GameScene_1::Update()
 	if (m_pPlayer->GetDeath())
 	{
 		m_pSystemEngineer->SetBGM(true);
+		m_pSystemEngineer->SetStop(true);
 		m_pSystemEngineer->Update();
 		m_FrameCounter++;
 		if (m_FrameCounter >= 60 * 3)
@@ -121,32 +128,48 @@ void GameScene_1::Update()
 			}
 		}
 	}
-	// 設定画面を写す
-	if (!SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+	if (SetMenyu)
 	{
-		m_pPlayer->SetStop(true);
-		for (auto& item : m_pKuribou)
+		if (Pad::IsTrigger(input & PAD_INPUT_B))
 		{
-			item->SetStop(true);
+			m_pSystemEngineer->SetBGM(true);
+			m_pSystemEngineer->Update();
+			auto next = std::make_shared<TitleScene>(m_sceneManager);
+			m_sceneManager.ChangeScene(next);
+			return;
 		}
-		m_pSystemEngineer->SetBGM(true);
-		m_pSystemEngineer->SetStop(true);
-		m_pSystemEngineer->Update();
-		SetMenyu = true;
-		return;
 	}
-	if (SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+	// 一時停止画面を写す
+	if (!m_pPlayer->GetClear() && !m_pPlayer->GetDeath())
 	{
-		m_pPlayer->SetStop(false);
-		for (auto& item : m_pKuribou)
+		if (!SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
 		{
-			item->SetStop(false);
+			m_pPlayer->SetStop(true);
+			for (auto& item : m_pKuribou)
+			{
+				item->SetStop(true);
+			}
+			m_pSystemEngineer->SetBGM(true);
+			m_pSystemEngineer->SetStop(true);
+			m_Poozu = true;
+			m_pSystemEngineer->Update();
+			SetMenyu = true;
+			return;
 		}
-		m_pSystemEngineer->SetBGM(false);
-		m_pSystemEngineer->SetStop(false);
-		m_pSystemEngineer->Init();
-		SetMenyu = false;
-		return;
+		if (SetMenyu && Pad::IsTrigger(input & PAD_INPUT_R))
+		{
+			m_pPlayer->SetStop(false);
+			for (auto& item : m_pKuribou)
+			{
+				item->SetStop(false);
+			}
+			m_pSystemEngineer->SetBGM(false);
+			m_pSystemEngineer->SetStop(false);
+			m_Poozu = false;
+			m_pSystemEngineer->Init();
+			SetMenyu = false;
+			return;
+		}
 	}
 	// シーン遷移
 #ifdef _DEBUG
@@ -170,6 +193,13 @@ void GameScene_1::Draw()
 		item->Draw(m_pCamera);
 	}
 	m_pSystemEngineer->Draw();
+	if (m_Poozu)
+	{
+		DEBUG_TRANSPARENCY
+			DrawBox(PoozuSize, PoozuSize, Game::kScreenWidth - PoozuSize, Game::kScreenHeight - PoozuSize, 0x444444, true);
+		// ブレンドモードをリセット
+		DEBUG_RESET
+	}
 #ifdef _DEBUG
 	// 半透明の設定
 	DEBUG_TRANSPARENCY

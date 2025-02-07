@@ -128,6 +128,7 @@ private:
 	int m_PlayerPosXback;
 	int m_PlayerGraph;			// プレイヤーグラフィック
 	int m_GoolGraph;
+	float m_RunSpeed;
 	int m_Graph_;
 	int m_kChipNumY;
 	int m_kChipNumX;

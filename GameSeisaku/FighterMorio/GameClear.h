@@ -11,6 +11,8 @@ public:
 private:
 	int m_Graph_GAMECLEAR;
 	int m_Graph_;
+	int m_Graph_MojiA;
+	int m_Graph_MojiB;
 	int m_BrinkCounter;
 };
 
