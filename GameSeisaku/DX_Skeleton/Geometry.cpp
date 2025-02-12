@@ -1,5 +1,6 @@
 #include "Geometry.h"
 #include <cmath>
+#include "DxLib.h"
 
 void Vector2::operator+=(const Vector2& vec)
 {
@@ -69,4 +70,29 @@ Vector2 Vector2::Normalized() const
 float Vector2::Length() const
 {
 	return hypotf(x, y);
+}
+
+float Rect::Left() const
+{
+	return center.x - size.w / 2;
+}
+
+float Rect::Top() const
+{
+	return center.y - size.h / 2;
+}
+
+float Rect::Right() const
+{
+	return center.x + size.w / 2;
+}
+
+float Rect::Bottom() const
+{
+	return center.y + size.h / 2;
+}
+
+void Rect::Draw()
+{
+	DrawBox(Left(),Top(),Right(),Bottom(),col,false,2.0f);
 }

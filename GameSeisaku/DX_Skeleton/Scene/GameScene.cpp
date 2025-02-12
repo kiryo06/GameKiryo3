@@ -6,6 +6,7 @@
 #include "GameScene.h"
 #include "PauseScene.h"
 #include "SceneController.h"
+#include <cmath>
 
 namespace
 {
@@ -89,6 +90,29 @@ void GameScene::NomalDraw()
 	{
 		actor->Draw();
 	}
+}
+
+void GameScene::DrawGround()
+{
+}
+
+void GameScene::CheckHit()
+{
+	for (auto& actA : actors_)
+	{
+		for (auto& actB : actors_)
+		{
+			if (actA == actB)
+			{
+				continue;
+			}
+		}
+	}
+}
+
+void GameScene::IsHit(const Rect& rcA, const Rect& rcB) const
+{
+	return !(fabsf(rcA.conter.x - rcB.conter.x) > (rcA.size.w - rcB.size.w))
 }
 
 // 派生クラスで基底クラスの初期化をする

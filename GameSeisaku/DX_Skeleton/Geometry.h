@@ -40,3 +40,19 @@ struct Size
 	int w, h;
 };
 
+/// <summary>
+/// 矩形(くけい)構造体
+/// 矩形とは長方形のこと
+/// </summary>
+struct Rect
+{
+	Position2 center;//中心点
+	Size size;//
+	float Left() const;
+	float Top() const;
+	float Right() const;
+	float Bottom() const;
+
+	void Draw();
+};
+

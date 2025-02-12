@@ -29,6 +29,8 @@ private:
 	ActorVector_t actors_;
 
 	void DrawGround();
+	void CheckHit();
+	void IsHit(const Rect& rcA, const Rect& rcB)const;
 public:
 	GameScene(SceneController& cont);
 	/// <summary>

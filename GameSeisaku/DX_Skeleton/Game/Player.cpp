@@ -77,6 +77,7 @@ Player::Player(GameScene& gameScene) :
 	idleH_ = LoadGraph(kIdlePath.c_str());
 	walkH_ = LoadGraph(kWalkPath.c_str());
 	pos_ = kInitPos;
+	//pos_ = { center_pos_x };
 }
 
 Player::~Player()
