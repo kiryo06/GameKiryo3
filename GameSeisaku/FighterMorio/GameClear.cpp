@@ -16,6 +16,8 @@ namespace
 GameClear::GameClear():
 	m_Graph_GAMECLEAR(0),
 	m_Graph_(0),
+	m_Graph_MojiA(0),
+	m_Graph_MojiB(0),
 	m_BrinkCounter(0)
 {
 }
@@ -24,12 +26,16 @@ GameClear::~GameClear()
 {
 	DeleteGraph(m_Graph_GAMECLEAR);
 	DeleteGraph(m_Graph_);
+	DeleteGraph(m_Graph_MojiA);
+	DeleteGraph(m_Graph_MojiB);
 }
 
 void GameClear::Init()
 {
 	m_Graph_GAMECLEAR = LoadGraph("data/image/GameClear.png");
 	m_Graph_ = LoadGraph("data/image/BackGround.png");
+	m_Graph_MojiA = LoadGraph("data/image/Botann_A.png");
+	m_Graph_MojiB = LoadGraph("data/image/Botann_B.png");
 	//m_Graph_ = LoadGraph("data/image/GameClear.png");
 }
 
@@ -59,6 +65,8 @@ void GameClear::Draw()
 	int x = (currentFrame % frameCount) * frameWidth;
 	int y = frameHeight;
 	DrawExtendGraph(0, 0,Game::kScreenWidth,Game::kScreenHeight, m_Graph_GAMECLEAR, true);
+	DrawExtendGraph(350, 350, 450, 450, m_Graph_MojiA, true);
+	DrawExtendGraph(450, 480, 550, 580, m_Graph_MojiB, true);
 #ifdef _DEBUG
 	DrawRectExtendGraph(0, 0, 64, 64, x, y, frameWidth, frameHeight, m_Graph_, FALSE);
 	// ì_ñ≈ópÇÃïœêîÇÃílÇ™ 30 ñ¢ñûÇÃÇ∆Ç´ÇæÇØ --- PRESS SPACE KEY --- Çï`âÊÇ∑ÇÈ

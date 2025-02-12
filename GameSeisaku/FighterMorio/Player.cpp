@@ -12,7 +12,7 @@ namespace
 	const float Gravity = 0.5f;		// キャラに掛かる重力加速度
 	const float JumpPower = 11.75f;	// キャラのジャンプ力
 	const float Speed = 4.5f;		// キャラの移動スピード
-	const float RunSpeed = 6.5f;		// キャラのダッシュ時移動スピード
+	const float RunSpeed = 6.0f;		// キャラのダッシュ時移動スピード
 	const int	Width = 32;
 	const int	Goolleft = 6320;
 	const int	GoolRight = 6352;
@@ -55,6 +55,7 @@ Player::Player() :
 	m_PlayerPosXback(0),
 	m_PlayerGraph(0),
 	m_GoolGraph(0),
+	m_RunSpeed(0.0f),
 	m_Graph_(0),
 	m_kChipNumY(MapDataFile::kChipNumY),
 	m_kChipNumX(MapDataFile::kChipNumX),

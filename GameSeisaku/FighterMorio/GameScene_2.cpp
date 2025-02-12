@@ -52,7 +52,7 @@ void GameScene_2::Update()
 
 	m_pPlayer->Update(m_pCamera,m_pKuribou, 2);
 	// XƒL[‚ð‰Ÿ‚µ‚½‚ç“G‚Ì’†g‚ª‘‚¦‚é
-	if (input & PAD_INPUT_C)
+	if (input & PAD_INPUT_X)
 	{
 		Kuribou* newKuribou = new Kuribou;
 		newKuribou->Init(2);
