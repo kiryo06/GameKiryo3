@@ -1,7 +1,6 @@
 #pragma once
 #include "SceneBase.h"
-
-#include "ObjectTest.h"
+#include "DxLib.h"
 
 class SceneTest : public SceneBase
 {
@@ -12,6 +11,7 @@ public:
 	virtual ~SceneTest() {}
 
 
+
 	virtual void init() override;
 	virtual void end() override;
 
@@ -19,7 +19,8 @@ public:
 	virtual void draw() override;
 
 private:
-	int			m_hPlayer;
-
-	ObjectTest	m_obj;
+	// カメラの位置
+	VECTOR m_cameraPos;
+	// カメラの注視点(見ている場所)
+	VECTOR m_cameraTarget;
 };
