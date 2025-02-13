@@ -1,11 +1,18 @@
 #include "DxLib.h"
 #include "game.h"
 #include "SceneTest.h"
+#include <cmath>
+#include "Pad.h"
 
 
 namespace
 {
+}
 
+SceneTest::SceneTest():
+	m_viewAngle(0.0f),
+	m_cameraMoveAngle(0.0f)
+{
 }
 
 void SceneTest::init()
@@ -24,6 +31,21 @@ void SceneTest::init()
 
 	// カメラの位置と注視点を指定する
 	SetCameraPositionAndTarget_UpVecY(m_cameraPos, m_cameraTarget);
+
+
+
+	// カメラの視野角を設定する
+	m_viewAngle = DX_PI_F / 3.0f;	// 60度
+	SetupCamera_Perspective(m_viewAngle);
+
+
+
+	// カメラのnear, farを設定する
+	// 画面に表示される距離の範囲を設定する
+	// カメラからnear以上離れていて、farより近くにあるものが
+	// ゲーム内に表示される
+	// farはあまり大きすぎる数字を設定しないように気を付ける(表示バグにつながる)
+	SetCameraNearFar(10.0f, 1800.0f);
 }
 
 void SceneTest::end()
@@ -33,12 +55,91 @@ void SceneTest::end()
 
 SceneBase* SceneTest::update()
 {
+	// カメラの位置を回転させる
+	m_cameraMoveAngle += 0.02f;
+	m_cameraPos.x = cosf(m_cameraMoveAngle) * 720.0f;
+	m_cameraPos.z = sinf(m_cameraMoveAngle) * 720.0f;
 
+
+	/*if (Pad::isPress(PAD_INPUT_3))
+	{
+		if (m_cameraTarget.x <= 360.0f)
+		{
+			m_cameraTarget.x += 20.0f;
+		}
+		if (m_cameraTarget.x <= 0.0f)
+		{
+			m_cameraTarget.x -= 20.0f;
+		}
+	}*/
+	SetCameraPositionAndTarget_UpVecY(m_cameraPos, m_cameraTarget);
+
+
+
+
+
+	// ボタンでカメラの視野角を変更する
+	if (Pad::isPress(PAD_INPUT_1))
+	{
+		m_viewAngle -= 0.01f;
+		if (m_viewAngle < DX_PI_F / 180.0f * 5.0f)
+		{
+			m_viewAngle < DX_PI_F / 180.0f * 5.0f;
+		}
+	}
+	if (Pad::isPress(PAD_INPUT_B))
+	{
+		m_viewAngle += 0.01f;
+		if (m_viewAngle < DX_PI_F / 180.0f * 120.0f)
+		{
+			m_viewAngle < DX_PI_F / 180.0f * 120.0f;
+		}
+	}
+	SetupCamera_Perspective(m_viewAngle);
 	return this;
 }
 
 void SceneTest::draw()
 {
+	// 三角形
+	VECTOR Pos1;
+	VECTOR Pos2;
+	VECTOR Pos3;
+	Pos1.x =  300.0f;
+	Pos1.y =  300.0f;
+	Pos1.z =    0.0f;
+	Pos2.x = -300.0f;
+	Pos2.y =  300.0f;
+	Pos2.z =    0.0f;
+	Pos3.x = -300.0f;
+	Pos3.y = -300.0f;
+	Pos3.z =    0.0f;
+	DrawTriangle3D(Pos1, Pos2, Pos3, 0x0000ff, true);
+
+	// 球体
+	VECTOR Posball;
+	float Hankei;
+	int vertex;
+	Posball.x = 0.0f;
+	Posball.y = 200.0f;
+	Posball.z = 0.0f;
+	Hankei = 128.0f;
+	vertex = 12;
+	DrawSphere3D(Posball, Hankei, vertex, 0xffffff, true, false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// VECTOR構造体
 	// 3D座標を表現するのに必要なx,y,zの3つをメンバーとして持つ構造体
 	VECTOR start;	// 始点
@@ -76,6 +177,16 @@ void SceneTest::draw()
 		end.x = x;
 		DrawLine3D(start, end, 0xffff00);
 	}
+	// 高さグリッドを同様に引く
+	start.x = 0.0f;
+	start.y = -1200.0f;
+	start.z = 0.0f;
+
+	end.x = 0.0f;
+	end.y = 1200.0f;
+	end.z = 0.0f;
+	DrawLine3D(start, end, 0x00ffff);
+
 
 	DrawString(  0,   0, "3Dの勉強", 0xffffff);	// X,Y座標でどこに表示しているか
 //	DrawString(128,   0, "3Dの勉強", 0xffffff);

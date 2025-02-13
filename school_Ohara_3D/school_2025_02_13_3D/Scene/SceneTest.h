@@ -5,9 +5,7 @@
 class SceneTest : public SceneBase
 {
 public:
-	SceneTest() 
-	{
-	}
+	SceneTest();
 	virtual ~SceneTest() {}
 
 
@@ -23,4 +21,8 @@ private:
 	VECTOR m_cameraPos;
 	// ƒJƒƒ‰‚Ì’‹“_(Œ©‚Ä‚¢‚éêŠ)
 	VECTOR m_cameraTarget;
+	// ƒJƒƒ‰‚Ì‹–ìŠp
+	float m_viewAngle;
+	// 
+	float m_cameraMoveAngle;
 };
