@@ -17,6 +17,10 @@ SceneTest::SceneTest():
 
 void SceneTest::init()
 {
+	SetUseZBuffer3D(true);		// Zバッファを使用する
+	SetWriteZBuffer3D(true);	// Zバッファへの書き込みを行う
+	SetUseBackCulling(true);	// ポリゴンの裏面を表示しない
+
 	// カメラの初期化を行う
 	// 600*600のグリッドが画面中央あたりに来るように設定
 	// カメラ(視点)の位置
@@ -61,17 +65,10 @@ SceneBase* SceneTest::update()
 	m_cameraPos.z = sinf(m_cameraMoveAngle) * 720.0f;
 
 
-	/*if (Pad::isPress(PAD_INPUT_3))
+	if (Pad::isPress(PAD_INPUT_3))
 	{
-		if (m_cameraTarget.x <= 360.0f)
-		{
-			m_cameraTarget.x += 20.0f;
-		}
-		if (m_cameraTarget.x <= 0.0f)
-		{
-			m_cameraTarget.x -= 20.0f;
-		}
-	}*/
+		m_cameraTarget.x += 20.0f;
+	}
 	SetCameraPositionAndTarget_UpVecY(m_cameraPos, m_cameraTarget);
 
 
@@ -102,19 +99,23 @@ SceneBase* SceneTest::update()
 void SceneTest::draw()
 {
 	// 三角形
-	VECTOR Pos1;
-	VECTOR Pos2;
-	VECTOR Pos3;
-	Pos1.x =  300.0f;
-	Pos1.y =  300.0f;
-	Pos1.z =    0.0f;
-	Pos2.x = -300.0f;
-	Pos2.y =  300.0f;
-	Pos2.z =    0.0f;
-	Pos3.x = -300.0f;
-	Pos3.y = -300.0f;
-	Pos3.z =    0.0f;
+	VECTOR Pos1,Pos2,Pos3;
+	Pos1 = VGet(-300,  300,   0);
+	Pos2 = VGet( 300,  300,   0);
+	Pos3 = VGet(-300, -300,   0);
+	DrawTriangle3D(Pos1, Pos2, Pos3, 0x00ff00, true);
+
+	Pos1 = VGet( 300, -300,   0);
+	Pos2 = VGet( 300,  300,   0);
+	Pos3 = VGet(-300, -300,   0);
+	DrawTriangle3D(Pos1, Pos2, Pos3, 0x00ff00, true);
+
+	Pos1 = VGet(-300,   0,  300);
+	Pos2 = VGet( 300,   0,  300);
+	Pos3 = VGet(-300,   0, -300);
 	DrawTriangle3D(Pos1, Pos2, Pos3, 0x0000ff, true);
+
+
 
 	// 球体
 	VECTOR Posball;
@@ -124,8 +125,8 @@ void SceneTest::draw()
 	Posball.y = 200.0f;
 	Posball.z = 0.0f;
 	Hankei = 128.0f;
-	vertex = 12;
-	DrawSphere3D(Posball, Hankei, vertex, 0xffffff, true, false);
+	vertex = 200;
+	DrawSphere3D(Posball, Hankei, vertex, 0xffffff, true, true);
 
 
 
@@ -155,7 +156,7 @@ void SceneTest::draw()
 	// 横方向のグリッドをfor文を使って描画する
 	// 始点終点のXY座標は変わらない
 	// Zのみfor文を使って変化させる
-	for (int z = -300; z <= 300; z += 100)
+	for (float z = -300.0f; z <= 300.0f; z += 100.0f)
 	{
 		start.z = z;
 		end.z = z;
@@ -171,7 +172,7 @@ void SceneTest::draw()
 	end.y = 0.0f;
 	end.z = 300.0f;
 
-	for (int x = -300; x <= 300; x += 100)
+	for (float x = -300.0f; x <= 300.0f; x += 100.0f)
 	{
 		start.x = x;
 		end.x = x;
@@ -188,6 +189,19 @@ void SceneTest::draw()
 	DrawLine3D(start, end, 0x00ffff);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+	DrawFormatString(0, 16, 0xffffff, "FOV : %f", m_viewAngle, true);
 	DrawString(  0,   0, "3Dの勉強", 0xffffff);	// X,Y座標でどこに表示しているか
 //	DrawString(128,   0, "3Dの勉強", 0xffffff);
 //	DrawString(  0, 128, "3Dの勉強", 0xffffff);
