@@ -1,12 +1,12 @@
 #pragma once
 #include "SceneBase.h"
 #include "DxLib.h"
-class ScenePolygon : 
-	public SceneBase
+class ScenePolygonKiryo :
+    public SceneBase
 {
 public:
-	ScenePolygon();
-	virtual ~ScenePolygon() {}
+	ScenePolygonKiryo();
+	virtual ~ScenePolygonKiryo() {}
 
 
 	virtual void init() override;
@@ -16,9 +16,5 @@ public:
 	virtual void draw() override;
 
 private:
-
-	// ポリゴンに貼り付けるテクスチャのハンドル
 	int m_textureHandle;
-
 };
-

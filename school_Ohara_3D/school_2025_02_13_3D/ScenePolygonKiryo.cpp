@@ -1,10 +1,10 @@
-#include "ScenePolygon.h"
+#include "ScenePolygonKiryo.h"
 
-ScenePolygon::ScenePolygon()
+ScenePolygonKiryo::ScenePolygonKiryo()
 {
 }
 
-void ScenePolygon::init()
+void ScenePolygonKiryo::init()
 {
 	SetUseZBuffer3D(true);		// Zバッファを使用する
 	SetWriteZBuffer3D(true);	// Zバッファへの書き込みを行う
@@ -12,7 +12,7 @@ void ScenePolygon::init()
 	SetUseBackCulling(true);	// ポリゴンの裏面を表示しない
 
 	// カメラの設定
-	
+
 	// カメラの位置と注視点を指定する
 	//SetCameraPositionAndTarget_UpVecY(VGet(-200,200,720), VGet(0,0,0));
 	SetCameraPositionAndTarget_UpVecY(VGet(0, 400, -360), VGet(0, 0, 0));
@@ -27,34 +27,20 @@ void ScenePolygon::init()
 	m_textureHandle = LoadGraph("Data/car.jpg");
 }
 
-void ScenePolygon::end()
+void ScenePolygonKiryo::end()
 {
 	// テクスチャメモリを開放する
 	DeleteGraph(m_textureHandle);
 }
 
-SceneBase* ScenePolygon::update()
+SceneBase* ScenePolygonKiryo::update()
 {
-	return this;
+	return nullptr;
 }
 
-void ScenePolygon::draw()
+void ScenePolygonKiryo::draw()
 {
-	// X軸の線	赤
-	DrawLine3D(VGet(-200, 0, 0), VGet(200, 0, 0), 0xff0000);
-	// Y軸の線	黄
-	DrawLine3D(VGet(0, -200, 0), VGet(0, 200, 0), 0xffff00);
-	// Z軸の線	緑
-	DrawLine3D(VGet(0, 0, -200), VGet(0, 0, 200), 0x00ff00);
-
-	/*DrawTriangle3D(
-		VGet(-200, 0,  200),
-		VGet( 200, 0,  200),
-		VGet(-200, 0, -200),
-		0xff0000, true);*/
-
-	// ↑の三角形をDrawPolygon3Dを使って表示してみる
-	VERTEX3D Vertex[6];	// 頂点データの配列を3つ準備する
+	VERTEX3D Vertex[1*3];	// 頂点データの配列を3つ準備する
 
 	Vertex[0].pos = VGet(-200, 0, 200);	// 頂点座標
 	Vertex[0].norm = VGet(0, 1, 0);	// 法線 ポリゴンの向いている方向
@@ -83,34 +69,6 @@ void ScenePolygon::draw()
 	Vertex[2].su = 0.0f;
 	Vertex[2].sv = 0.0f;
 
-	Vertex[3].pos = VGet(200, 0, 200);	// 頂点座標
-	Vertex[3].norm = VGet(0, 1, 0);	// 法線 ポリゴンの向いている方向
-	Vertex[3].dif = GetColorU8(255, 255, 255, 255);	// デフューズ?カラー
-	Vertex[3].spc = GetColorU8(255, 255, 255, 255);	// スペキュラ?カラー
-	Vertex[3].u = 0.5f;		// テクスチャ座標	今回は使わない
-	Vertex[3].v = 0.0f;
-	Vertex[3].su = 0.0f;
-	Vertex[3].sv = 0.0f;
-
-	Vertex[4].pos = VGet(200, 0, -200);	// 頂点座標
-	Vertex[4].norm = VGet(0, 1, 0);	// 法線 ポリゴンの向いている方向
-	Vertex[4].dif = GetColorU8(255, 255, 255, 255);	// デフューズ?カラー
-	Vertex[4].spc = GetColorU8(255, 255, 255, 255);	// スペキュラ?カラー
-	Vertex[4].u = 0.5f;		// テクスチャ座標	今回は使わない
-	Vertex[4].v = 1.0f;
-	Vertex[4].su = 0.0f;
-	Vertex[4].sv = 0.0f;
-
-	Vertex[5].pos = VGet(-200, 0, -200);	// 頂点座標
-	Vertex[5].norm = VGet(0, 1, 0);	// 法線 ポリゴンの向いている方向
-	Vertex[5].dif = GetColorU8(255, 255, 255, 255);	// デフューズ?カラー
-	Vertex[5].spc = GetColorU8(255, 255, 255, 255);	// スペキュラ?カラー
-	Vertex[5].u = 0.0f;		// テクスチャ座標	今回は使わない
-	Vertex[5].v = 1.0f;
-	Vertex[5].su = 0.0f;
-	Vertex[5].sv = 0.0f;
-
-	DrawPolygon3D(Vertex, 2, m_textureHandle, false);
 
 
 
@@ -123,18 +81,12 @@ void ScenePolygon::draw()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+	// X軸の線	赤
+	DrawLine3D(VGet(-2000, 0, 0), VGet(2000, 0, 0), 0xff0000);
+	// Y軸の線	黄
+	DrawLine3D(VGet(0, -2000, 0), VGet(0, 2000, 0), 0xffff00);
+	// Z軸の線	緑
+	DrawLine3D(VGet(0, 0, -2000), VGet(0, 0, 2000), 0x00ff00);
 	// 3D空間上の座標を2D座標に変換して文字列に表示したい！
 	VECTOR pos2D;
 	pos2D = ConvWorldPosToScreenPos(VGet(330, 0, 0));
@@ -149,5 +101,5 @@ void ScenePolygon::draw()
 	DrawString(pos2D.x, pos2D.y, "Z+", 0xffffff);
 	pos2D = ConvWorldPosToScreenPos(VGet(0, 0, -330));
 	DrawString(pos2D.x, pos2D.y, "Z-", 0xffffff);
-	DrawString(0, 0, "ScenePolygon", 0xffffff);
+	DrawString(0, 0, "遊び", 0xffffff);
 }

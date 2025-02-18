@@ -67,7 +67,9 @@ SceneBase* SceneTest::update()
 
 	if (Pad::isPress(PAD_INPUT_3))
 	{
-		m_cameraTarget.x += 20.0f;
+		m_cameraMoveAngle += 20.0f;
+		m_cameraTarget.x = cosf(m_cameraMoveAngle) * 720.0f;
+		m_cameraTarget.z = sinf(m_cameraMoveAngle) * 720.0f;
 	}
 	SetCameraPositionAndTarget_UpVecY(m_cameraPos, m_cameraTarget);
 
@@ -116,17 +118,16 @@ void SceneTest::draw()
 	DrawTriangle3D(Pos1, Pos2, Pos3, 0x0000ff, true);
 
 
-
 	// 球体
 	VECTOR Posball;
 	float Hankei;
 	int vertex;
 	Posball.x = 0.0f;
-	Posball.y = 200.0f;
+	Posball.y = 100.0f;
 	Posball.z = 0.0f;
 	Hankei = 128.0f;
 	vertex = 200;
-	DrawSphere3D(Posball, Hankei, vertex, 0xffffff, true, true);
+	DrawSphere3D(Posball, Hankei, vertex, 0xffffff, 0xff00ff, true);
 
 
 
@@ -198,8 +199,26 @@ void SceneTest::draw()
 
 
 
+	// test		3D空間上に3次元座標を指定して物を表示する	これはできそう
+//	DrawSphere3D(VGet(300, 0, 0), 50.0f, 8, 0xffffff, 0xffffff, false);
 
 
+
+
+	// 3D空間上の座標を2D座標に変換して文字列に表示したい！
+	VECTOR pos2D;
+	pos2D = ConvWorldPosToScreenPos(VGet( 330, 0, 0));
+	DrawString(pos2D.x, pos2D.y,"X+", 0xffffff);
+	pos2D = ConvWorldPosToScreenPos(VGet(-330, 0, 0));
+	DrawString(pos2D.x, pos2D.y, "X-", 0xffffff);
+	pos2D = ConvWorldPosToScreenPos(VGet(0,  330, 0));
+	DrawString(pos2D.x, pos2D.y, "Y+", 0xffffff);
+	pos2D = ConvWorldPosToScreenPos(VGet(0, -330, 0));
+	DrawString(pos2D.x, pos2D.y, "Y-", 0xffffff);
+	pos2D = ConvWorldPosToScreenPos(VGet(0, 0,  330));
+	DrawString(pos2D.x, pos2D.y, "Z+", 0xffffff);
+	pos2D = ConvWorldPosToScreenPos(VGet(0, 0, -330));
+	DrawString(pos2D.x, pos2D.y, "Z-", 0xffffff);
 
 	DrawFormatString(0, 16, 0xffffff, "FOV : %f", m_viewAngle, true);
 	DrawString(  0,   0, "3Dの勉強", 0xffffff);	// X,Y座標でどこに表示しているか

@@ -16,8 +16,11 @@ SceneManager::~SceneManager()
 
 void SceneManager::init()
 {
-	m_pScene = new SceneTest;
-	//m_pScene = new ScenePolygon;
+	// テストシーン
+	// m_pScene = new SceneTest;
+
+	// ポリゴンシーン
+	 m_pScene = new ScenePolygon;
 	m_pScene->init();
 }
 

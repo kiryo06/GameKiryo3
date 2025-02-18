@@ -60,6 +60,9 @@
     <ClCompile Include="Scene\ScenePolygon.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="ScenePolygonKiryo.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="Scene\ScenePolygon.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ScenePolygonKiryo.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

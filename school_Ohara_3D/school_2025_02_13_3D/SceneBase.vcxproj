@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object\ObjectTest.cpp" />
+    <ClCompile Include="ScenePolygonKiryo.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\ScenePolygon.cpp" />
@@ -152,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="Object\ObjectTest.h" />
+    <ClInclude Include="ScenePolygonKiryo.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\ScenePolygon.h" />
